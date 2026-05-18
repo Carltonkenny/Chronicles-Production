@@ -52,6 +52,9 @@ class ShowrunnerAgent(BaseAgent):
         story_request: Any,
         wiki_context: str,
         bridge: dict | None = None,
+        director_fn=None,
+        pd_fn=None,
+        ad_fn=None,
     ) -> AsyncGenerator[ProgressEvent, None]:
         yield ProgressEvent("story", "planning", 0, "Creating story blueprint...")
         logger.info("Showrunner: Phase 1 — Planner")
@@ -122,17 +125,96 @@ class ShowrunnerAgent(BaseAgent):
         scenes_data = scene_result.output_data if scene_result.success else {"scenes": []}
 
         yield ProgressEvent(
-            "story",
-            "complete",
-            66,
+            "story", "complete", 50,
             f"Story ready: {story_data.get('title', 'Untitled')} ({len(story_data.get('story', '').split())} words, {len(scenes_data.get('scenes', []))} scenes)",
         )
+
+        visual_bible = {}
+        if director_fn:
+            yield ProgressEvent("visual_bible", "director", 55, "Creating visual vision...")
+
+            try:
+                director_work_order = WorkOrder(
+                    agent_type="director",
+                    input_data={
+                        "title": story_data.get("title", ""),
+                        "culture": story_request.culture.value,
+                        "timeline": story_request.timeline.value,
+                        "theme": story_request.theme.value,
+                        "story": story_data.get("story", ""),
+                        "characters": story_data.get("characters", []),
+                        "scenes": scenes_data.get("scenes", []),
+                        "visual_elements": visual_bible.get("visual_elements", {}),
+                    },
+                    story_hash=getattr(story_request, "seed_idea", "unknown"),
+                )
+                director_result = await director_fn(director_work_order)
+                if director_result.success:
+                    visual_bible["director"] = director_result.output_data
+            except Exception as e:
+                logger.error(f"Director failed: {e}")
+
+        if pd_fn and "director" in visual_bible:
+            yield ProgressEvent("visual_bible", "production_design", 58, "Building world...")
+
+            try:
+                locations = [s.get("location", "") for s in scenes_data.get("scenes", [])]
+                pd_work_order = WorkOrder(
+                    agent_type="production_designer",
+                    input_data={
+                        "culture": story_request.culture.value,
+                        "timeline": story_request.timeline.value,
+                        "theme": story_request.theme.value,
+                        "setting": story_data.get("setting", ""),
+                        "characters": story_data.get("characters", []),
+                        "locations": list(set(locations)),
+                    },
+                    story_hash=getattr(story_request, "seed_idea", "unknown"),
+                )
+                pd_result = await pd_fn(pd_work_order)
+                if pd_result.success:
+                    visual_bible["production_designer"] = pd_result.output_data
+            except Exception as e:
+                logger.error(f"PD failed: {e}")
+
+        if ad_fn and "production_designer" in visual_bible:
+            yield ProgressEvent("visual_bible", "art_director", 61, "Designing props and symbols...")
+
+            try:
+                from utils.visual_engine import visual_engine
+                ve_data = await visual_engine.get(story_request.culture.value, story_request.timeline.value)
+                ad_work_order = WorkOrder(
+                    agent_type="art_director",
+                    input_data={
+                        "culture": story_request.culture.value,
+                        "timeline": story_request.timeline.value,
+                        "theme": story_request.theme.value,
+                        "characters": story_data.get("characters", []),
+                        "scenes": scenes_data.get("scenes", []),
+                        "pd_output": visual_bible.get("production_designer", {}),
+                        "visual_elements": ve_data,
+                    },
+                    story_hash=getattr(story_request, "seed_idea", "unknown"),
+                )
+                ad_result = await ad_fn(ad_work_order)
+                if ad_result.success:
+                    visual_bible["art_director"] = ad_result.output_data
+            except Exception as e:
+                logger.error(f"AD failed: {e}")
+
+        vb_agents = sum(1 for k in ["director", "production_designer", "art_director"] if k in visual_bible)
+        if vb_agents > 0:
+            yield ProgressEvent(
+                "visual_bible", "complete", 66,
+                f"Visual Bible ready ({vb_agents} agents)", visual_bible,
+            )
 
         combined = {
             "story": story_data,
             "blueprint": blueprint.output_data if blueprint.success else {},
             "scenes": scenes_data,
+            "visual_bible": visual_bible,
             "mode": bridge.get("mode", "historical") if bridge else "historical",
         }
 
-        yield ProgressEvent("done", "story_complete", 66, "Story pipeline complete — handing off to production", combined)
+        yield ProgressEvent("done", "story_complete", 66, "Story + Visual Bible complete — handing off to production", combined)

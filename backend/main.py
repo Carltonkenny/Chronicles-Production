@@ -392,9 +392,25 @@ async def generate_film(fastapi_request: Request, body: StoryGenerationRequest):
             agent = ScriptSupervisorAgent()
             return await agent.execute(wo)
 
+        async def director_fn(wo):
+            from agents.director import DirectorAgent
+            agent = DirectorAgent()
+            return await agent.execute(wo)
+
+        async def pd_fn(wo):
+            from agents.production_designer import ProductionDesignerAgent
+            agent = ProductionDesignerAgent()
+            return await agent.execute(wo)
+
+        async def ad_fn(wo):
+            from agents.art_director import ArtDirectorAgent
+            agent = ArtDirectorAgent()
+            return await agent.execute(wo)
+
         async for event in showrunner.orchestrate(
             planner_fn, writer_fn, supervisor_fn,
-            story_request, wiki_context, bridge
+            story_request, wiki_context, bridge,
+            director_fn, pd_fn, ad_fn,
         ):
             if event.phase == "done":
                 continue

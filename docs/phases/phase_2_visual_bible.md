@@ -137,17 +137,11 @@ DON'T:
 
 ## Database Dependencies
 
-This phase reads heavily from the `visual_elements` table:
+Visual elements are generated on-demand via `VisualElementsEngine`, not pre-seeded.
 
-```sql
--- Example query for Viking × High Medieval:
-SELECT category, name, description, materials, colors
-FROM visual_elements
-WHERE culture = 'viking' AND timeline = 'high_medieval'
-ORDER BY category, id;
-```
+**Architecture decision**: The DB `fallback_text` (1,600-2,200 chars per culture) provides rich cultural context. The LLM generates structured visual elements from this context + Wikipedia (skipped silently if unavailable). Results are cached in Redis (90-day TTL). The `visual_elements` table in SQLite is an optional enrichment layer — it may contain pre-validated data for some combos, but the engine works without it.
 
-Expected rows per combo: 15-20 items across 6 categories.
+**Why not pre-seed 100+ combos**: 6 hours of manual curation saves one 10-second LLM call per film. Break-even requires thousands of films. The engine covers 100% of combos immediately and self-enriches over time.
 
 ---
 

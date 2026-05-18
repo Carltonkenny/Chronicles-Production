@@ -252,10 +252,12 @@ dev = [
 - Cultural symbols and motifs
 - Set dressing details
 
-### Task 2.5: Database Seeding
-- Seed `visual_elements` table: ALL 100 combos (10 cultures × 10 timelines)
-- Each combo has: clothing (2-4 items), architecture (2-3), artifacts (3-5), lighting (2-3), hairstyles (2-3), color_palette (4-6 colors)
-- Pull from enhanced Wikipedia + manual curation
+### Task 2.5: VisualElementsEngine
+- Generates visual elements on-demand from DB fallback_text + LLM + Wikipedia
+- Validates with deep proof (anachronism check, hex codes, stereotype scan) allowing creativity
+- Caches in Redis (90-day TTL) for instant future hits
+- No manual DB seeding needed — self-enriching architecture
+- Covers all 15×15 = 225 culture×timeline combos immediately
 
 ---
 
@@ -432,8 +434,8 @@ render deploy --service chronicles-api
 | Week | Milestone | Deliverable |
 |------|-----------|-------------|
 | 1-2 | Foundation | ✅ Complete — Project setup, DB schema, config, base agent, 15×15×15 enums |
-| 3-4 | Core Pipeline | 🔨 In Progress — Force-blending, Script Supervisor, Showrunner, image agent |
-| 5-6 | Visual Bible | Director → PD → AD, visual_elements seeded |
+| 3-4 | Core Pipeline | ✅ Complete — Force-blending, Script Supervisor, Showrunner, image agent, Edge TTS audio |
+| 5-6 | Visual Bible | ✅ Complete — Director, Production Designer, Art Director agents, VisualElementsEngine |
 | 7-8 | Image Swarm | Character portraits + Scene keyframes |
 | 9-10 | Video Swarm | 8-12 video clips, QC validated |
 | 11-12 | Post-Production | FFmpeg assembly, full film output |

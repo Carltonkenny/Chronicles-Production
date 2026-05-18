@@ -19,8 +19,8 @@ python main.py
 | Phase | Status |
 |-------|--------|
 | Phase 0: Foundation | ✅ Complete |
-| Phase 1: Core Pipeline | 🔨 In Progress |
-| Phase 2: Visual Bible | ⬜ Pending |
+| Phase 1: Core Pipeline | ✅ Complete |
+| Phase 2: Visual Bible | ✅ Complete |
 | Phase 3: Image Swarm | ⬜ Pending |
 | Phase 4: Video Swarm | ⬜ Pending |
 | Phase 5: Post-Production | ⬜ Pending |
