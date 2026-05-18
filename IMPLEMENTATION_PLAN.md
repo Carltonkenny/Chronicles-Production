@@ -431,9 +431,9 @@ render deploy --service chronicles-api
 
 | Week | Milestone | Deliverable |
 |------|-----------|-------------|
-| 1-2 | Foundation | Project setup, DB schema, config, base agent |
-| 3-4 | Core Pipeline | Planner → Writer → Script Supervisor working |
-| 5-6 | Visual Bible | Director → PD → AD, Database seeded |
+| 1-2 | Foundation | ✅ Complete — Project setup, DB schema, config, base agent, 15×15×15 enums |
+| 3-4 | Core Pipeline | 🔨 In Progress — Force-blending, Script Supervisor, Showrunner, image agent |
+| 5-6 | Visual Bible | Director → PD → AD, visual_elements seeded |
 | 7-8 | Image Swarm | Character portraits + Scene keyframes |
 | 9-10 | Video Swarm | 8-12 video clips, QC validated |
 | 11-12 | Post-Production | FFmpeg assembly, full film output |

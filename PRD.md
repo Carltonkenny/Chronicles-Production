@@ -107,11 +107,12 @@ Creating short films requires: writers, concept artists, cinematographers, edito
 - Sort by date
 
 ### FR9: Configuration
-- Culture: 10 options (roman, egyptian, japanese, viking, aztec, mali_empire, polynesian, ottoman, nazi_germany, indian)
-- Timeline: 10 options (bronze_age through interplanetary_frontier)
-- Theme: 10 options (ambition through freedom)
+- Culture: 15 curated options (see DEEP_DIVE_PLAN.md for full list)
+- Timeline: 15 options spanning paleolithic through interplanetary frontier
+- Theme: 15 options across core, love, power, psychological, and identity categories
 - Narration: on/off
 - Video duration target: configurable
+- Force-blending: automatic counterfactual bridge for distant culture×timeline combos
 
 ---
 

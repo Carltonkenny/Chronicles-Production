@@ -12,7 +12,7 @@ Chronicles Production is an AI-native film studio. You provide a seed idea, a cu
 
 - Full narrative prose (600–900 words, literary quality)
 - 10–15 AI-generated still images (character portraits + scene settings)
-- 8–12 AI-generated video clips (stitched into a continuous film)
+- 8–12 AI-generated video clips (consistent)(stitched into a continuous film)
 - Narration audio (Amazon Polly, configurable)
 - Background music + ambient sound
 - Netflix-style cinematic UI with chapter navigation
@@ -21,54 +21,76 @@ Chronicles Production is an AI-native film studio. You provide a seed idea, a cu
 
 ---
 
-## THE 10×10×10 MATRIX (1,000 Combinations)
+## THE 15×15×15 MATRIX (3,375 Combinations)
 
-### CULTURES — 10 Civilization Types
+### CULTURES — 15 Civilization Types
 
-| # | Enum | Display | Narrative DNA |
-|---|-------|---------|---------------|
-| 1 | `roman` | Imperial Rome | Law, legions, republic-to-autocracy, cursus honorum |
-| 2 | `egyptian` | Ancient Egypt | Nile theocracy, ma'at, afterlife civilization, scribal elite |
-| 3 | `japanese` | Feudal Japan | Bushido, isolation, zen aesthetic, daimyo rivalry |
-| 4 | `viking` | Norse Scandinavia | Thing-democracy, saga tradition, maritime trade, reputation economy |
-| 5 | `aztec` | Aztec Triple Alliance | Flower wars, nahualism, chinampas, tribute empire |
-| 6 | `mali_empire` | Mali Empire | Gold-salt trade, griot oral tradition, Sankore university |
-| 7 | `polynesian` | Polynesian Voyagers | Wayfinding navigation, mana/tapu, star compass |
-| 8 | `ottoman` | Ottoman Empire | Millet system, gunpowder empire, three-continent bridge |
-| 9 | `nazi_germany` | Third Reich | Totalitarian surveillance, propaganda state, moral descent, resistance |
-| 10 | `indian` | Indian Subcontinent | Caste dharma, temple economies, bhakti devotion, nonviolent resistance |
+| # | Enum | Display | Natural Era |
+|---|-------|---------|-------------|
+| 1 | `roman` | Imperial Rome | ancient |
+| 2 | `egyptian` | Ancient Egypt | ancient |
+| 3 | `japanese` | Feudal Japan | medieval |
+| 4 | `viking` | Norse Scandinavia | medieval |
+| 5 | `aztec` | Aztec Triple Alliance | medieval |
+| 6 | `mauryan` | Maurya Empire | ancient |
+| 7 | `chola` | Chola Dynasty | medieval |
+| 8 | `mali_empire` | Mali Empire | medieval |
+| 9 | `swahili_coast` | Swahili Coast | medieval |
+| 10 | `yoruba` | Yoruba Kingdoms | medieval |
+| 11 | `maya` | Maya Civilization | ancient |
+| 12 | `nazi_germany` | Third Reich | modern |
+| 13 | `soviet_union` | Soviet Union | modern |
+| 14 | `british_empire` | British Empire | early_modern |
+| 15 | `spanish_empire` | Spanish Empire | early_modern |
 
-### TIMELINES — 10 Material Eras
+### TIMELINES — 15 Eras
 
-| # | Enum | Display | Defining Tech |
-|---|-------|---------|---------------|
-| 1 | `bronze_age` | Bronze Age | Copper-tin alloying, palace economies, chariots, first writing |
-| 2 | `iron_age` | Iron Age | Iron smelting, coinage, alphabet, axial age philosophy |
-| 3 | `classical_antiquity` | Classical Antiquity | Roads, standing armies, maritime empires, philosophy |
-| 4 | `high_medieval` | High Medieval | 3-field rotation, Gothic, guilds, scholasticism |
-| 5 | `early_modern` | Early Modern | Printing press, gunpowder, transoceanic ships |
-| 6 | `industrial_revolution` | Industrial Revolution | Steam, factories, railways, class consciousness |
-| 7 | `digital_age` | Digital Age | Internet, AI, surveillance capitalism |
-| 8 | `post_apocalyptic` | Post-Apocalyptic | Collapse, salvage, neo-tribalism |
-| 9 | `ai_hegemony` | AI Hegemony | Autonomous AI, neural interfaces, algorithmic caste |
-| 10 | `interplanetary_frontier` | Interplanetary Frontier | Mars colonies, asteroid mining, vacuum survival |
+| # | Enum | Display | Bucket |
+|---|-------|---------|--------|
+| 1 | `paleolithic` | Paleolithic | ancient |
+| 2 | `early_bronze_age` | Early Bronze Age | ancient |
+| 3 | `classical_antiquity` | Classical Antiquity | ancient |
+| 4 | `early_medieval` | Early Medieval | medieval |
+| 5 | `high_medieval` | High Medieval | medieval |
+| 6 | `age_of_exploration` | Age of Exploration | early_modern |
+| 7 | `world_war_era` | World War Era | modern |
+| 8 | `cold_war` | Cold War | modern |
+| 9 | `globalization` | Globalization | contemporary |
+| 10 | `polarization_era` | Polarization Era | contemporary |
+| 11 | `ai_hegemony` | AI Hegemony | near_future |
+| 12 | `climate_migration` | Climate Migration | near_future |
+| 13 | `systemic_collapse` | Systemic Collapse | collapse |
+| 14 | `post_collapse_tribal` | Post-Collapse Tribal | collapse |
+| 15 | `interplanetary_frontier` | Interplanetary Frontier | space |
 
-### THEMES — 10 Emotional Arcs
+### THEMES — 15 Emotional Arcs
 
-| # | Enum | Story Shape |
-|---|-------|-------------|
-| 1 | `ambition` | Rise → cost → reckoning |
-| 2 | `betrayal` | Trust → fracture → consequence |
-| 3 | `redemption` | Fall → darkness → atonement |
-| 4 | `sacrifice` | Choice → loss → earned meaning |
-| 5 | `discovery` | Ignorance → search → revelation |
-| 6 | `resistance` | Oppression → defiance → cost |
-| 7 | `loss` | Attachment → severance → aftermath |
-| 8 | `legacy` | Action → inheritance → meaning |
-| 9 | `love` | Vulnerability → connection → test |
-| 10 | `freedom` | Chains → break → consequence |
+| # | Enum | Category |
+|---|-------|----------|
+| 1 | `ambition` | Core |
+| 2 | `betrayal` | Core |
+| 3 | `loss` | Core |
+| 4 | `redemption` | Core |
+| 5 | `discovery` | Core |
+| 6 | `forbidden_love` | Love |
+| 7 | `jealousy` | Love |
+| 8 | `corruption` | Power |
+| 9 | `justice` | Power |
+| 10 | `obsession` | Psychological |
+| 11 | `deception` | Psychological |
+| 12 | `survival` | Survival |
+| 13 | `identity` | Identity |
+| 14 | `truth` | Identity |
+| 15 | `memory` | Identity |
 
-**Total combinations: 10 × 10 × 10 = 1,000 unique story universes.**
+**Total combinations: 15 × 15 × 15 = 3,375 unique story universes.**
+
+### Force-Blending: Counterfactual Bridge
+
+Combos where culture natural-era and timeline bucket are 2+ apart trigger a counterfactual bridge:
+- Planner receives 6 required bridge fields (framing_label, divergence_point, continuity_rules, diffusion_rules, cost, integration_notes)
+- Writer receives bridge context for coherence enforcement
+- Safety-constrained cultures (nazi_germany, british_empire, spanish_empire) have mandatory POV rules
 
 ---
 
@@ -846,3 +868,38 @@ CREATE TABLE agent_lineage (
 | Caching | In-memory LRU | Redis + DB persistent |
 | Cost | $0.10/story | $0.00/story (free tier) |
 | Folder | Nazi/ | Chronicles-Production/ |
+
+---
+
+## OPTIMIZATION AND EFFICIENCY IMPROVEMENTS
+
+Based on the deep dive, the following optimizations are prioritized for efficiency and cost-effectiveness:
+
+### High-Priority Optimizations (for initial MVP build):
+
+1.  **Enhanced Caching Strategy & Granularity**:
+    *   **Description**: Proactively cache `visual_elements` upon application startup. Ensure persistent Redis caching for `Story Bibles` and `Visual Bibles` (from Phases 1 and 2). Introduce intermediate agent output caching with shorter TTLs to reuse valid upstream outputs without re-running entire LLM chains.
+    *   **Impact**: Directly reduces redundant LLM calls, API requests, database load, and improves overall speed and cost.
+    *   **Implementation Focus**: Integrate Redis early for `story_bibles`, `visual_bibles`, and `visual_elements`. Implement `warm_cache()` on backend startup.
+
+2.  **Smart Retry & Degradation Strategies (for Video Generation)**:
+    *   **Description**: Implement intelligent retries for video generation failures. If a `VIDEO QUALITY CONTROLLER` rejects a clip due to a specific issue, the `VIDEO PROMPT CRAFTER` should receive targeted "fix" instructions. Implement adaptive degradation, potentially trying other low-cost video APIs before resorting to the Ken Burns effect.
+    *   **Impact**: Ensures film completion even with API unreliability, improving system resilience and user experience.
+    *   **Implementation Focus**: Design structured feedback from `VideoQC` to `VideoPromptCrafter` for retries. Prioritize alternative video providers before static image fallback.
+
+### Medium-Priority Optimizations (for later sprints):
+
+1.  **Dynamic LLM Model Selection**:
+    *   **Description**: Implement a mechanism to dynamically select LLM models based on the agent's role and criticality (e.g., cheaper/faster models for less critical steps, higher-quality models for creative/impactful steps).
+    *   **Impact**: Significant cost savings and improved throughput as the system scales.
+    *   **Implementation Focus**: Develop a `get_llm_model()` function based on agent type and criticality.
+
+2.  **Asynchronous Processing & Message Queues**:
+    *   **Description**: Decouple agent invocation from immediate execution using a message queue for long-running or resource-intensive tasks (e.g., video generation).
+    *   **Impact**: Improves system responsiveness, reliability, and allows for independent horizontal scaling of worker processes.
+    *   **Implementation Focus**: Integrate a message queue (e.g., Redis Streams, RabbitMQ) for work order distribution.
+
+3.  **Enhanced Observability & Feedback Loop**:
+    *   **Description**: Beyond basic logging, implement real-time agent performance monitoring using `OpenTelemetry` and `Prometheus`. Track success rates, retry counts, and specific failure reasons for each agent.
+    *   **Impact**: Provides critical insights for identifying bottlenecks, optimizing agent prompts, and informing future architectural decisions.
+    *   **Implementation Focus**: Integrate monitoring tools and create dashboards to visualize agent metrics.

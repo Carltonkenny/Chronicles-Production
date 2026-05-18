@@ -1,0 +1,55 @@
+from enum import Enum
+
+
+class Timeline(str, Enum):
+    PALEOLITHIC = "paleolithic"
+    EARLY_BRONZE_AGE = "early_bronze_age"
+    CLASSICAL_ANTIQUITY = "classical_antiquity"
+    EARLY_MEDIEVAL = "early_medieval"
+    HIGH_MEDIEVAL = "high_medieval"
+    AGE_OF_EXPLORATION = "age_of_exploration"
+    WORLD_WAR_ERA = "world_war_era"
+    COLD_WAR = "cold_war"
+    GLOBALIZATION = "globalization"
+    POLARIZATION_ERA = "polarization_era"
+    AI_HEGEMONY = "ai_hegemony"
+    CLIMATE_MIGRATION = "climate_migration"
+    SYSTEMIC_COLLAPSE = "systemic_collapse"
+    POST_COLLAPSE_TRIBAL = "post_collapse_tribal"
+    INTERPLANETARY_FRONTIER = "interplanetary_frontier"
+
+
+class Culture(str, Enum):
+    ROMAN = "roman"
+    EGYPTIAN = "egyptian"
+    VIKING = "viking"
+    JAPANESE = "japanese"
+    AZTEC = "aztec"
+    MAURYAN = "mauryan"
+    CHOLA = "chola"
+    MALI_EMPIRE = "mali_empire"
+    SWAHILI_COAST = "swahili_coast"
+    YORUBA = "yoruba"
+    MAYA = "maya"
+    NAZI_GERMANY = "nazi_germany"
+    SOVIET_UNION = "soviet_union"
+    BRITISH_EMPIRE = "british_empire"
+    SPANISH_EMPIRE = "spanish_empire"
+
+
+class Theme(str, Enum):
+    AMBITION = "ambition"
+    BETRAYAL = "betrayal"
+    LOSS = "loss"
+    REDEMPTION = "redemption"
+    DISCOVERY = "discovery"
+    FORBIDDEN_LOVE = "forbidden_love"
+    JEALOUSY = "jealousy"
+    CORRUPTION = "corruption"
+    JUSTICE = "justice"
+    OBSESSION = "obsession"
+    DECEPTION = "deception"
+    SURVIVAL = "survival"
+    IDENTITY = "identity"
+    TRUTH = "truth"
+    MEMORY = "memory"

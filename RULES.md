@@ -77,8 +77,8 @@ All constants in UPPER_SNAKE_CASE. All config values in a single Config dataclas
 
 ## DATABASE RULES
 
-### DR1: PostgreSQL Only (Supabase)
-SQLite is legacy. All new code uses PostgreSQL via Supabase client or async SQLAlchemy. Migrations via Alembic.
+### DR1: PostgreSQL Preferred (SQLite Accepted for Development)
+PostgreSQL via Supabase is the production target. SQLite is the current development database with full fallback data seeded. All queries abstracted through wiki_context.py utils — switching DBs requires changing only the connection layer.
 
 ### DR2: JSONB for Unstructured
 All agent outputs (blueprint, story, visual bible, work orders) go into JSONB columns. Never try to normalize deeply nested agent outputs.
