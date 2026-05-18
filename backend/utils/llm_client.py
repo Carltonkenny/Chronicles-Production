@@ -103,6 +103,16 @@ async def call_llm(
 
                 except (httpx.HTTPError, KeyError) as e:
                     last_error = e
+                    status_code = getattr(e, 'response', None)
+                    if hasattr(status_code, 'status_code'):
+                        sc = status_code.status_code
+                        if sc == 429:
+                            retry_after = int(status_code.headers.get('Retry-After', 5))
+                            logger.warning(
+                                f"LLM {pname} rate-limited (429), waiting {retry_after}s"
+                            )
+                            await asyncio.sleep(retry_after)
+                            continue
                     logger.warning(
                         f"LLM {pname} attempt {attempt}/{CONFIG.MAX_RETRIES} failed: {type(e).__name__}"
                     )

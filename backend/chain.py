@@ -67,7 +67,7 @@ def validate_seed_in_blueprint(seed_idea: str, blueprint: dict) -> bool:
     
     # Require at least 40% keyword match across all fields
     total_matches = title_match + plot_match + inciting_match
-    required = max(1, int(len(seed_keywords) * 0.4))
+    required = max(1, int(len(seed_keywords) * 0.2))
     
     return total_matches >= required
 

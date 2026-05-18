@@ -18,7 +18,7 @@ class Config:
 
     LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "openrouter")
 
-    MAX_STORY_WORDS: int = 800
+    MAX_STORY_WORDS: int = 700
     MIN_STORY_WORDS: int = 350
 
     PLANNER_TEMPERATURE: float = 0.92
