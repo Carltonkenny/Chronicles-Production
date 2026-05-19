@@ -21,37 +21,42 @@ python main.py
 | Phase 0: Foundation | ✅ Complete |
 | Phase 1: Core Pipeline | ✅ Complete |
 | Phase 2: Visual Bible | ✅ Complete |
-| Phase 3: Image Swarm | ⬜ Pending |
-| Phase 4: Video Swarm | ⬜ Pending |
+| Phase 3: Image Swarm | ✅ Complete |
+| Phase 4: Video Swarm | 🔜 Next |
 | Phase 5: Post-Production | ⬜ Pending |
 | Phase 6: Frontend | ⬜ Pending |
 
-## Phase 1 Completed Components
+## Completed Components
 
-✅ 15×15×15 enum system (cultures, timelines, themes)
-✅ DB fallback data seeded (all 15 cultures, timelines, themes)
-✅ Force-blending mode detection (counterfactual bridge for distant combos)
+### Phase 1: Core Pipeline
+✅ 15×15×15 enum system (15 cultures, 15 timelines, 15 themes)
+✅ DB fallback data seeded
+✅ Force-blending mode detection + counterfactual bridge
 ✅ Safety constraints (nazi_germany, british_empire, spanish_empire)
-✅ Image generation agent (Pollinations Flux, 916 lines)
-✅ Visual elements DB query layer
-✅ Script Supervisor agent (LLM-powered scene breakdown)
-✅ Showrunner agent (async generator orchestration)
-✅ Config system (frozen dataclass with validation)
-✅ Logger (structlog + standard fallback)
-✅ Planner + Writer pipeline (battle-tested)
-✅ Prompts (1000+ lines with agent personalities)
-✅ JSON repair utilities (self-healing LLM output)
-✅ Wikipedia integration + DB fallback cache
+✅ Planner → Writer → Script Supervisor pipeline
+✅ Showrunner async generator orchestrator
+✅ BaseAgent (timeout, cache, lineage)
+✅ LLM client (OpenRouter → Pollinations fallback)
+✅ Caching (Redis + in-memory LRU)
 ✅ Stereotype detection + culture traps
-✅ Audio service (Polly + SSML generation)
-✅ Database (SQLite with full culture/timeline/theme data)
-✅ FastAPI main app (health, options, generate-story)
-✅ Docker + docker-compose with Redis
+
+### Phase 2: Visual Bible
+✅ Director → Production Designer → Art Director pipeline
+✅ Visual Bible schema (color palette, lighting, character bibles, props, camera language)
+✅ VisualElementsEngine (on-demand generation, anachronism validation, cached 90-day)
+✅ Signature items enforced (RULES.md R7)
+✅ 15 unit + 8 edge case + 2 pipeline audit tests
+
+### Phase 3: Image Swarm
+✅ ImageAPIClient (async Pollinations Flux, deterministic SHA256 seeds, semaphore 8)
+✅ CharacterPortraitGen (3 variations per character: full body, close-up, action)
+✅ SceneKeyframeGen (1 keyframe per scene, 16:9 landscape)
+✅ ImageSwarmLead (parallel orchestrator, asyncio.gather)
+✅ Old 657-line monolith archived
+✅ 26 new tests, 61 total passing
 
 ## Next Steps
 
-1. Wire Redis caching (docker-compose already configured)
-2. Add SSE progress endpoint to main.py
-3. Add rate limiting (slowapi)
-4. Write unit + integration tests
-5. Implement Phase 2: Visual Bible agents
+1. Phase 4: Video Generation Swarm — per-scene video prompts, multi-provider API client, quality validation
+2. Phase 5: Post-Production — Editor, Sound Designer, Colorist, FFmpeg assembly
+3. Phase 6: Frontend — Netflix-style SPA (Landing, Forge, Viewer, Library)

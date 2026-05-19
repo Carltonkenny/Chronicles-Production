@@ -23,6 +23,17 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
-"chronicles.db"  
-"*.log"  
-"__pycache__/"  
+
+# Database
+chronicles.db
+
+# Logs
+*.log
+logs/
+
+# Test artifacts
+edge_case_results.json
+phase2_edge_results.json
+
+# External tools (not part of project)
+graphify-out/
