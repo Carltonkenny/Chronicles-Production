@@ -1,0 +1,922 @@
+{
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\chain.py": {
+    "mtime": 1779126176.7781367,
+    "ast_hash": "1443a680b5e4227176af2cb06f6ef77c",
+    "semantic_hash": "1443a680b5e4227176af2cb06f6ef77c"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\config.py": {
+    "mtime": 1779126213.9985943,
+    "ast_hash": "79da3bebc201752eddcb4e0476b4d846",
+    "semantic_hash": "79da3bebc201752eddcb4e0476b4d846"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\db_service.py": {
+    "mtime": 1779112938.3386838,
+    "ast_hash": "131e3c9143b807e789c2efa19d095c5c",
+    "semantic_hash": "131e3c9143b807e789c2efa19d095c5c"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\image_agent.py": {
+    "mtime": 1779117466.5683818,
+    "ast_hash": "0115b3a4dcb9b25b9430c8f297214e66",
+    "semantic_hash": "0115b3a4dcb9b25b9430c8f297214e66"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\logger_config.py": {
+    "mtime": 1779098463.3433886,
+    "ast_hash": "c4a7baaf31b897ff03c4e8bc632f140c",
+    "semantic_hash": "c4a7baaf31b897ff03c4e8bc632f140c"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\main.py": {
+    "mtime": 1779123634.465009,
+    "ast_hash": "8b03419d5a827d535f2aebbb5adb5ffc",
+    "semantic_hash": "8b03419d5a827d535f2aebbb5adb5ffc"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\tasks.py": {
+    "mtime": 1772396622.688462,
+    "ast_hash": "fd226f6d27cbdfc12719d428403f0f41",
+    "semantic_hash": "fd226f6d27cbdfc12719d428403f0f41"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\__init__.py": {
+    "mtime": 1779097655.7097185,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\agents\\art_director.py": {
+    "mtime": 1779123508.5074222,
+    "ast_hash": "d4044963d4d4c8defcfa6f10c50ac9da",
+    "semantic_hash": "d4044963d4d4c8defcfa6f10c50ac9da"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\agents\\base_agent.py": {
+    "mtime": 1779098437.9883313,
+    "ast_hash": "8328de3554c9d7d0a1b142720d3cb89d",
+    "semantic_hash": "8328de3554c9d7d0a1b142720d3cb89d"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\agents\\director.py": {
+    "mtime": 1779123460.9430044,
+    "ast_hash": "99e254d854eb9b62761dc4793168fb5b",
+    "semantic_hash": "99e254d854eb9b62761dc4793168fb5b"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\agents\\planner.py": {
+    "mtime": 1779098542.4465432,
+    "ast_hash": "c161e17eff017578716bd735aa064b6f",
+    "semantic_hash": "c161e17eff017578716bd735aa064b6f"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\agents\\production_designer.py": {
+    "mtime": 1779123484.6753173,
+    "ast_hash": "90f4e0c30c7faab92ac92dd413a9a21e",
+    "semantic_hash": "90f4e0c30c7faab92ac92dd413a9a21e"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\agents\\script_supervisor.py": {
+    "mtime": 1779110613.3093219,
+    "ast_hash": "5ae95391c7ba392d1814b0035e56f16d",
+    "semantic_hash": "5ae95391c7ba392d1814b0035e56f16d"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\agents\\showrunner.py": {
+    "mtime": 1779123597.2831378,
+    "ast_hash": "c4be24e344da9294e962bdf276327e74",
+    "semantic_hash": "c4be24e344da9294e962bdf276327e74"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\agents\\writer.py": {
+    "mtime": 1779098548.024087,
+    "ast_hash": "e742b38facc3acfd52795c6d3b5efcad",
+    "semantic_hash": "e742b38facc3acfd52795c6d3b5efcad"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\agents\\__init__.py": {
+    "mtime": 1779098564.0141265,
+    "ast_hash": "a1ea87f9411188bc404815641e6195d0",
+    "semantic_hash": "a1ea87f9411188bc404815641e6195d0"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\cache.py": {
+    "mtime": 1772269927.172748,
+    "ast_hash": "020fd61273b557dc0121644fd1344829",
+    "semantic_hash": "020fd61273b557dc0121644fd1344829"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\edge_tts_service.py": {
+    "mtime": 1779117633.8627794,
+    "ast_hash": "7de7ba1ac0c8921580401575f2abc9bc",
+    "semantic_hash": "7de7ba1ac0c8921580401575f2abc9bc"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\__init__.py": {
+    "mtime": 1779117883.3235383,
+    "ast_hash": "dbbb5959082a6b4dde9d8fc96caf3252",
+    "semantic_hash": "dbbb5959082a6b4dde9d8fc96caf3252"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\_archived\\polly_service.py": {
+    "mtime": 1772396525.1308434,
+    "ast_hash": "07166a712d326b21942e07394e60bb05",
+    "semantic_hash": "07166a712d326b21942e07394e60bb05"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\_archived\\ssml_generator.py": {
+    "mtime": 1772396598.2939897,
+    "ast_hash": "0620414be6d8e6649d94a980708712cd",
+    "semantic_hash": "0620414be6d8e6649d94a980708712cd"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\cache\\story_cache.py": {
+    "mtime": 1779112975.871796,
+    "ast_hash": "26081634b6187555c347e74196015492",
+    "semantic_hash": "26081634b6187555c347e74196015492"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\cache\\__init__.py": {
+    "mtime": 1779112223.8545775,
+    "ast_hash": "7173c2f859c23960317b929eedf2e072",
+    "semantic_hash": "7173c2f859c23960317b929eedf2e072"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\db_setup\\init_db.py": {
+    "mtime": 1772447960.0421195,
+    "ast_hash": "b8edb77f22187f7557592f4de54a5d93",
+    "semantic_hash": "b8edb77f22187f7557592f4de54a5d93"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\db_setup\\schema.sql": {
+    "mtime": 1772447407.1195712,
+    "ast_hash": "76d9022f6c91540482cca257e84d05d4",
+    "semantic_hash": "76d9022f6c91540482cca257e84d05d4"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\prompts\\art_director_prompt.py": {
+    "mtime": 1779123434.061152,
+    "ast_hash": "329f0cffc0a01edb09c2b9aba1f7560e",
+    "semantic_hash": "329f0cffc0a01edb09c2b9aba1f7560e"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\prompts\\director_prompt.py": {
+    "mtime": 1779123365.0763893,
+    "ast_hash": "8e3ad90d96dc49d6f0b78cac16929ef8",
+    "semantic_hash": "8e3ad90d96dc49d6f0b78cac16929ef8"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\prompts\\production_designer_prompt.py": {
+    "mtime": 1779123398.3243906,
+    "ast_hash": "bebbfef39bbe09995f387f77cd4539fd",
+    "semantic_hash": "bebbfef39bbe09995f387f77cd4539fd"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\prompts\\script_supervisor_prompt.py": {
+    "mtime": 1779110565.1387842,
+    "ast_hash": "fbfbf273b5a8e6d88cddf4efdd162987",
+    "semantic_hash": "fbfbf273b5a8e6d88cddf4efdd162987"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\prompts\\__init__.py": {
+    "mtime": 1772747035.142414,
+    "ast_hash": "1fdef18de576fb21f23286c0154ea4f0",
+    "semantic_hash": "1fdef18de576fb21f23286c0154ea4f0"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\schemas\\enums.py": {
+    "mtime": 1779106675.0947676,
+    "ast_hash": "427b49402f7432d89342c9a1651f0529",
+    "semantic_hash": "427b49402f7432d89342c9a1651f0529"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\schemas\\film.py": {
+    "mtime": 1779097351.3902261,
+    "ast_hash": "f7e5adb1aa444e95d37fe20395d4bce3",
+    "semantic_hash": "f7e5adb1aa444e95d37fe20395d4bce3"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\schemas\\story.py": {
+    "mtime": 1779097335.0131555,
+    "ast_hash": "9155a7c6ed62217fb1f5f25667478d12",
+    "semantic_hash": "9155a7c6ed62217fb1f5f25667478d12"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\schemas\\visual_bible.py": {
+    "mtime": 1779123211.058503,
+    "ast_hash": "32a06aee4907b4b928de029d1aace614",
+    "semantic_hash": "32a06aee4907b4b928de029d1aace614"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\schemas\\work_order.py": {
+    "mtime": 1779097339.94022,
+    "ast_hash": "6450dbfc5b79b97d82906b33170ea0f7",
+    "semantic_hash": "6450dbfc5b79b97d82906b33170ea0f7"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\schemas\\__init__.py": {
+    "mtime": 1779097317.0158153,
+    "ast_hash": "f9af4cfd4cc12fdc03826b2de2a6d626",
+    "semantic_hash": "f9af4cfd4cc12fdc03826b2de2a6d626"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\tests\\edge_case_results.json": {
+    "mtime": 1779114217.870435,
+    "ast_hash": "438c5ccbe2b4cfb764cfc3fd9e5af1e2",
+    "semantic_hash": "438c5ccbe2b4cfb764cfc3fd9e5af1e2"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\tests\\phase2_edge_results.json": {
+    "mtime": 1779125075.4071512,
+    "ast_hash": "158b409c32da9df7c53daf7e8b02d3c3",
+    "semantic_hash": "158b409c32da9df7c53daf7e8b02d3c3"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\tests\\test_e2e.py": {
+    "mtime": 1779113056.053427,
+    "ast_hash": "829edafefad623f91b3db6a9447e3dde",
+    "semantic_hash": "829edafefad623f91b3db6a9447e3dde"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\tests\\test_edge_cases.py": {
+    "mtime": 1779113884.9703379,
+    "ast_hash": "4dea8617a83e614538bb689fdf46b4d2",
+    "semantic_hash": "4dea8617a83e614538bb689fdf46b4d2"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\tests\\test_full_pipeline_audit.py": {
+    "mtime": 1779125407.4906757,
+    "ast_hash": "064aca352736fdd68608e116c1d62475",
+    "semantic_hash": "064aca352736fdd68608e116c1d62475"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\tests\\test_phase2_edge_cases.py": {
+    "mtime": 1779124919.6977446,
+    "ast_hash": "46f810f7b97acdaf33e37cc1f9b2bbcb",
+    "semantic_hash": "46f810f7b97acdaf33e37cc1f9b2bbcb"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\tests\\test_pipeline.py": {
+    "mtime": 1779112705.3709264,
+    "ast_hash": "b0630062caed1a769404b41d7c8ea779",
+    "semantic_hash": "b0630062caed1a769404b41d7c8ea779"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\tests\\test_visual_bible.py": {
+    "mtime": 1779123694.9920068,
+    "ast_hash": "4c6b2aa3df69e943d3705d9e1494ae62",
+    "semantic_hash": "4c6b2aa3df69e943d3705d9e1494ae62"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\tests\\test_visual_bible_e2e.py": {
+    "mtime": 1779123819.1318133,
+    "ast_hash": "0ce383e5a9e4c5acedfcd5ee119a0d07",
+    "semantic_hash": "0ce383e5a9e4c5acedfcd5ee119a0d07"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\tests\\__init__.py": {
+    "mtime": 1779097657.2645898,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\utils\\hash_utils.py": {
+    "mtime": 1779097403.1755793,
+    "ast_hash": "37f30086bdedbcf3bc185f57b2ebf522",
+    "semantic_hash": "37f30086bdedbcf3bc185f57b2ebf522"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\utils\\json_repair.py": {
+    "mtime": 1779097401.5202982,
+    "ast_hash": "67c5aa8f8857646e58dc9b279fddd715",
+    "semantic_hash": "67c5aa8f8857646e58dc9b279fddd715"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\utils\\llm_client.py": {
+    "mtime": 1779126166.1947732,
+    "ast_hash": "91080447740bfbc396fdf824d6f5355b",
+    "semantic_hash": "91080447740bfbc396fdf824d6f5355b"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\utils\\stereotype_scan.py": {
+    "mtime": 1779097447.0978034,
+    "ast_hash": "4c1d0849d4b3907df288702719fbd4f1",
+    "semantic_hash": "4c1d0849d4b3907df288702719fbd4f1"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\utils\\visual_engine.py": {
+    "mtime": 1779123294.7308617,
+    "ast_hash": "3932a28128a4e6d0284aa2ad481051c6",
+    "semantic_hash": "3932a28128a4e6d0284aa2ad481051c6"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\utils\\wiki_context.py": {
+    "mtime": 1779110234.9673803,
+    "ast_hash": "18889031a29b8730f09857ac52f5ca54",
+    "semantic_hash": "18889031a29b8730f09857ac52f5ca54"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\utils\\__init__.py": {
+    "mtime": 1779110261.18679,
+    "ast_hash": "c4fdd82e7f6b27337b1be77fac396ff7",
+    "semantic_hash": "c4fdd82e7f6b27337b1be77fac396ff7"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\CLAUDE.md": {
+    "mtime": 1778715241.7804747,
+    "ast_hash": "70d5711dd09a92b6f38bc5c6fbfb11c4",
+    "semantic_hash": "70d5711dd09a92b6f38bc5c6fbfb11c4"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\DEEP_DIVE_PLAN.md": {
+    "mtime": 1779110857.343801,
+    "ast_hash": "e0f3b567f4cc0ad23805b1dffaf707dc",
+    "semantic_hash": "e0f3b567f4cc0ad23805b1dffaf707dc"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\docker-compose.yml": {
+    "mtime": 1779098500.884301,
+    "ast_hash": "21b4aca85c3be99bb66fc6d10e50f93a",
+    "semantic_hash": "21b4aca85c3be99bb66fc6d10e50f93a"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\ENUM_QUALITY_ASSESSMENT.md": {
+    "mtime": 1779106706.8997877,
+    "ast_hash": "55de7af6327bbeccb5a36eda587bf3c2",
+    "semantic_hash": "55de7af6327bbeccb5a36eda587bf3c2"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\IMPLEMENTATION_PLAN.md": {
+    "mtime": 1779123928.351974,
+    "ast_hash": "323a22bf86aa6a759173b121c38a830f",
+    "semantic_hash": "323a22bf86aa6a759173b121c38a830f"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\PHASE_0_SUMMARY.md": {
+    "mtime": 1779110775.921605,
+    "ast_hash": "f265e13b3430f43a81401682ab6d7671",
+    "semantic_hash": "f265e13b3430f43a81401682ab6d7671"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\PHASE_1_COMPLETE.md": {
+    "mtime": 1779118314.2678196,
+    "ast_hash": "ce0b8ffa2381d4bd0d127ee0bafc7caa",
+    "semantic_hash": "ce0b8ffa2381d4bd0d127ee0bafc7caa"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\PHASE_1_SUMMARY.md": {
+    "mtime": 1779113485.6507509,
+    "ast_hash": "7aeb8a0f8418dccfb64c8d6392e34e82",
+    "semantic_hash": "7aeb8a0f8418dccfb64c8d6392e34e82"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\PHASE_2_SUMMARY.md": {
+    "mtime": 1779126286.9957466,
+    "ast_hash": "c56bfca206dce9cac5747cc8318aabb3",
+    "semantic_hash": "c56bfca206dce9cac5747cc8318aabb3"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\PRD.md": {
+    "mtime": 1779110704.859846,
+    "ast_hash": "a2a0a1843c9483fd6b120248e01cc76b",
+    "semantic_hash": "a2a0a1843c9483fd6b120248e01cc76b"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\README.md": {
+    "mtime": 1779123944.8930466,
+    "ast_hash": "b8d0e0579952180df235f47a2b1cc2c8",
+    "semantic_hash": "b8d0e0579952180df235f47a2b1cc2c8"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\requirements.txt": {
+    "mtime": 1779097293.9259048,
+    "ast_hash": "95e2d3cea085a1173f4506799d2c52b8",
+    "semantic_hash": "95e2d3cea085a1173f4506799d2c52b8"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\RULES.md": {
+    "mtime": 1779110790.0448556,
+    "ast_hash": "dc35c235d875bb235f2e9f0271a5958a",
+    "semantic_hash": "dc35c235d875bb235f2e9f0271a5958a"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\SDK_DESIGN.md": {
+    "mtime": 1778715655.7857132,
+    "ast_hash": "445518adb84f1b5172c520e4af5759a9",
+    "semantic_hash": "445518adb84f1b5172c520e4af5759a9"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\docs\\phases\\phase_0_foundation.md": {
+    "mtime": 1778715856.6884892,
+    "ast_hash": "3a814069f6de0a102cea5420b533215d",
+    "semantic_hash": "3a814069f6de0a102cea5420b533215d"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\docs\\phases\\phase_1_core_pipeline.md": {
+    "mtime": 1778715860.1695795,
+    "ast_hash": "e2295d3f4263d3e0c1bf0f7b5c825809",
+    "semantic_hash": "e2295d3f4263d3e0c1bf0f7b5c825809"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\docs\\phases\\phase_2_visual_bible.md": {
+    "mtime": 1779123962.475109,
+    "ast_hash": "9ae4840d82734e52ba62b5cd8eafbbd9",
+    "semantic_hash": "9ae4840d82734e52ba62b5cd8eafbbd9"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\docs\\phases\\phase_3_image_swarm.md": {
+    "mtime": 1778717248.73862,
+    "ast_hash": "143b5f666b3f89c45cae3b40ca40cacb",
+    "semantic_hash": "143b5f666b3f89c45cae3b40ca40cacb"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\docs\\phases\\phase_4_video_swarm.md": {
+    "mtime": 1778717252.6467223,
+    "ast_hash": "59b7d994c88878026fefa759098a5954",
+    "semantic_hash": "59b7d994c88878026fefa759098a5954"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\docs\\phases\\phase_5_post_production.md": {
+    "mtime": 1778717252.71144,
+    "ast_hash": "6e7075011784ab80deef2afccd691fa9",
+    "semantic_hash": "6e7075011784ab80deef2afccd691fa9"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\docs\\phases\\phase_6_frontend.md": {
+    "mtime": 1778717328.6493669,
+    "ast_hash": "d29466493d9b6cd31e092a24393df507",
+    "semantic_hash": "d29466493d9b6cd31e092a24393df507"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\033666f67afdde56.mp3": {
+    "mtime": 1772575426.5649223,
+    "ast_hash": "f31ade8d3078567160b793f914cd0acf",
+    "semantic_hash": "f31ade8d3078567160b793f914cd0acf"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\050fd221bfbf9779.mp3": {
+    "mtime": 1772745585.9566603,
+    "ast_hash": "e15dc7da06942068a0f48a83c5aac907",
+    "semantic_hash": "e15dc7da06942068a0f48a83c5aac907"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\1088bd84fc60a7d7.mp3": {
+    "mtime": 1772618771.111013,
+    "ast_hash": "5b07bf2118790c10cee0380861896027",
+    "semantic_hash": "5b07bf2118790c10cee0380861896027"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\139d26b4c3cc0a84.mp3": {
+    "mtime": 1772746144.3683746,
+    "ast_hash": "a14059b629f538a249317142b68a9f23",
+    "semantic_hash": "a14059b629f538a249317142b68a9f23"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\14db03acebc8f58e.mp3": {
+    "mtime": 1772550257.8054562,
+    "ast_hash": "6a1942aa54bf4c4f096a0ac5f8ca9863",
+    "semantic_hash": "6a1942aa54bf4c4f096a0ac5f8ca9863"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\157c328bc015c653.mp3": {
+    "mtime": 1772377805.7565868,
+    "ast_hash": "741d1f4ea3c6b603746e48c8c8068311",
+    "semantic_hash": "741d1f4ea3c6b603746e48c8c8068311"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\15fbb34408ed65a2.mp3": {
+    "mtime": 1772375121.0099373,
+    "ast_hash": "96fdb75f1793798abc5f261e49109e5d",
+    "semantic_hash": "96fdb75f1793798abc5f261e49109e5d"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\1680292381eed941.mp3": {
+    "mtime": 1772576647.9177845,
+    "ast_hash": "b9f8cd9c7e99c5af9a55d00d74081e42",
+    "semantic_hash": "b9f8cd9c7e99c5af9a55d00d74081e42"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\1a52defc2d7ab69f.mp3": {
+    "mtime": 1772614798.1835082,
+    "ast_hash": "92814565e9346dbae408f27213699a07",
+    "semantic_hash": "92814565e9346dbae408f27213699a07"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\1a9aeef2f2fe7a92.mp3": {
+    "mtime": 1772396765.293164,
+    "ast_hash": "e53865f403ececf31cbeb7e9a44f09cc",
+    "semantic_hash": "e53865f403ececf31cbeb7e9a44f09cc"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\1dae1307f516773d.mp3": {
+    "mtime": 1772738681.3370354,
+    "ast_hash": "69900507f7aef84bbc448883d77ab7c5",
+    "semantic_hash": "69900507f7aef84bbc448883d77ab7c5"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\1dcbf17619993801.mp3": {
+    "mtime": 1772477296.3037848,
+    "ast_hash": "ea90120c51f2daab8f1c71713922fde4",
+    "semantic_hash": "ea90120c51f2daab8f1c71713922fde4"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\1e199cef48c2be15.mp3": {
+    "mtime": 1772383751.6944845,
+    "ast_hash": "ab7ae4f75519391bed0bf798896d749e",
+    "semantic_hash": "ab7ae4f75519391bed0bf798896d749e"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\1ed78b85e93bca52.mp3": {
+    "mtime": 1772397082.1693635,
+    "ast_hash": "17f824842524f12ac0a4df0e5b5745e4",
+    "semantic_hash": "17f824842524f12ac0a4df0e5b5745e4"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\1ef3758c23738f0d.mp3": {
+    "mtime": 1772392364.6370876,
+    "ast_hash": "1900a3ac43f74654ba0b1ca2d1d83b60",
+    "semantic_hash": "1900a3ac43f74654ba0b1ca2d1d83b60"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\1f6fc368ca51b6b3.mp3": {
+    "mtime": 1772651270.9766033,
+    "ast_hash": "ab750a3220f8d2f84e430aeb2e72a0e0",
+    "semantic_hash": "ab750a3220f8d2f84e430aeb2e72a0e0"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\21abc84791a62d4f.mp3": {
+    "mtime": 1772468177.1883802,
+    "ast_hash": "e200b86421c9e7555eaf50bd666169d2",
+    "semantic_hash": "e200b86421c9e7555eaf50bd666169d2"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\24052e67fe870646.mp3": {
+    "mtime": 1772477078.3440804,
+    "ast_hash": "add1fb2068fbb2c0d29c34e5aba6cc08",
+    "semantic_hash": "add1fb2068fbb2c0d29c34e5aba6cc08"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\278901ca4f25d0e0.mp3": {
+    "mtime": 1772393299.031206,
+    "ast_hash": "77dc2ba61e499f1648614ede2869d237",
+    "semantic_hash": "77dc2ba61e499f1648614ede2869d237"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\27e892e3b52a2a83.mp3": {
+    "mtime": 1772387022.3931088,
+    "ast_hash": "2f1f6d63cd896a5a7353fe5467dce18e",
+    "semantic_hash": "2f1f6d63cd896a5a7353fe5467dce18e"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\28f3cc87814ee702.mp3": {
+    "mtime": 1772568605.9982007,
+    "ast_hash": "f5638a4b85c552acc7f96f1f7f10fcf4",
+    "semantic_hash": "f5638a4b85c552acc7f96f1f7f10fcf4"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\29238acb27c1ec2d.mp3": {
+    "mtime": 1772383324.0363255,
+    "ast_hash": "8a2d85d94e8c23539b813dc92e70b212",
+    "semantic_hash": "8a2d85d94e8c23539b813dc92e70b212"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\2f71bc5fb2e28049.mp3": {
+    "mtime": 1772581749.425033,
+    "ast_hash": "801cca837943e2b20c6de62c83881d2f",
+    "semantic_hash": "801cca837943e2b20c6de62c83881d2f"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\34af0a740bdde835.mp3": {
+    "mtime": 1772463218.5141232,
+    "ast_hash": "e5ba00d84a3a8cda4c62006de9019a1e",
+    "semantic_hash": "e5ba00d84a3a8cda4c62006de9019a1e"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\3911cbeec090e094.mp3": {
+    "mtime": 1772585988.1858487,
+    "ast_hash": "d8d3b26e0193daa15752046c86a6b4b5",
+    "semantic_hash": "d8d3b26e0193daa15752046c86a6b4b5"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\3937b696475fe187.mp3": {
+    "mtime": 1772585696.4948273,
+    "ast_hash": "1423543c69fce8eb3d3ac0332cd36b32",
+    "semantic_hash": "1423543c69fce8eb3d3ac0332cd36b32"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\3cb8831a92a17371.mp3": {
+    "mtime": 1772442122.7069986,
+    "ast_hash": "1e29ddc56b4409571290737cce3b8954",
+    "semantic_hash": "1e29ddc56b4409571290737cce3b8954"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\3f132e963d1b7ef5.mp3": {
+    "mtime": 1772473507.1601968,
+    "ast_hash": "d6d492ac01c754319576df05803e3491",
+    "semantic_hash": "d6d492ac01c754319576df05803e3491"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\3f1903921d3c67d7.mp3": {
+    "mtime": 1772614673.0398538,
+    "ast_hash": "a6b7c0fbb9b2a4435c63560006884af3",
+    "semantic_hash": "a6b7c0fbb9b2a4435c63560006884af3"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\41797c985a4775d2.mp3": {
+    "mtime": 1772718742.699438,
+    "ast_hash": "352421b0eed6c81b0313f79c11e9fa6d",
+    "semantic_hash": "352421b0eed6c81b0313f79c11e9fa6d"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\430b5f9b11197254.mp3": {
+    "mtime": 1772405720.915678,
+    "ast_hash": "9ed2f21e087e5c2b3402915263a40a34",
+    "semantic_hash": "9ed2f21e087e5c2b3402915263a40a34"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\4e2c10f697751351.mp3": {
+    "mtime": 1772477173.7620537,
+    "ast_hash": "4ba2e8a2cc1c6d1455814b3b1aa408a5",
+    "semantic_hash": "4ba2e8a2cc1c6d1455814b3b1aa408a5"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\50042d7f9c967499.mp3": {
+    "mtime": 1772487483.2198133,
+    "ast_hash": "3d3569ee7e3b71d9180f6c60dab8b5cc",
+    "semantic_hash": "3d3569ee7e3b71d9180f6c60dab8b5cc"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\52a1ca938acfe480.mp3": {
+    "mtime": 1772280291.855446,
+    "ast_hash": "d79be618a401b67c2374e9e26c01389f",
+    "semantic_hash": "d79be618a401b67c2374e9e26c01389f"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\54f51effd0d4175b.mp3": {
+    "mtime": 1772440910.3349404,
+    "ast_hash": "f27197c4549609cd84a7c48a20edd4e6",
+    "semantic_hash": "f27197c4549609cd84a7c48a20edd4e6"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\5517dd7415f30e12.mp3": {
+    "mtime": 1772384204.677349,
+    "ast_hash": "2bd6e3f9abf9effac0b24e77377b474a",
+    "semantic_hash": "2bd6e3f9abf9effac0b24e77377b474a"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\560782f29562c70c.mp3": {
+    "mtime": 1772284264.774355,
+    "ast_hash": "40499b1f1f1ab3e493f525f65c96f616",
+    "semantic_hash": "40499b1f1f1ab3e493f525f65c96f616"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\5c0a36e0060242c1.mp3": {
+    "mtime": 1772483866.654467,
+    "ast_hash": "128235681ddf36f91a97a565f6009dd3",
+    "semantic_hash": "128235681ddf36f91a97a565f6009dd3"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\5c2d0174503a3f40.mp3": {
+    "mtime": 1772388348.9090357,
+    "ast_hash": "259ffa7ab2ec6f268064d7dd9ea9b2dc",
+    "semantic_hash": "259ffa7ab2ec6f268064d7dd9ea9b2dc"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\5cec42624ab53298.mp3": {
+    "mtime": 1772585811.4835804,
+    "ast_hash": "ae1acf378475386b49372fc042afccb9",
+    "semantic_hash": "ae1acf378475386b49372fc042afccb9"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\5e6dfa1ceea0f9d6.mp3": {
+    "mtime": 1772461723.2251663,
+    "ast_hash": "8c2d2e015b278e4917d1b5a787dcc071",
+    "semantic_hash": "8c2d2e015b278e4917d1b5a787dcc071"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\60206d6d7267e17f.mp3": {
+    "mtime": 1772570752.5775144,
+    "ast_hash": "3fa161055d023a60c138a5b3c689103e",
+    "semantic_hash": "3fa161055d023a60c138a5b3c689103e"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\603079f3799b1525.mp3": {
+    "mtime": 1772636646.7498453,
+    "ast_hash": "8df1236d8ff481d10cd746545e663986",
+    "semantic_hash": "8df1236d8ff481d10cd746545e663986"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\62fadd555b56f076.mp3": {
+    "mtime": 1772471886.4619646,
+    "ast_hash": "168a525d258dddedbdaf180076913ae5",
+    "semantic_hash": "168a525d258dddedbdaf180076913ae5"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\651fcdfc18db7f7f.mp3": {
+    "mtime": 1772730448.9067724,
+    "ast_hash": "f7c99332f6854f4dbbcc66d0dcdca1f0",
+    "semantic_hash": "f7c99332f6854f4dbbcc66d0dcdca1f0"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\6704bc052baa15dd.mp3": {
+    "mtime": 1772535559.2552166,
+    "ast_hash": "fc1642d5b810e5dfe990f2ce0349edff",
+    "semantic_hash": "fc1642d5b810e5dfe990f2ce0349edff"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\6bcf4373b40f555c.mp3": {
+    "mtime": 1772779581.191622,
+    "ast_hash": "0cc87bd3519c07747173f29ac04a8e81",
+    "semantic_hash": "0cc87bd3519c07747173f29ac04a8e81"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\6ca8ef7baf7f11e2.mp3": {
+    "mtime": 1772618902.4411151,
+    "ast_hash": "6bfbe5e462aed8f0577e7aba4566b835",
+    "semantic_hash": "6bfbe5e462aed8f0577e7aba4566b835"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\6f76b75278206e86.mp3": {
+    "mtime": 1772584249.7906487,
+    "ast_hash": "7704f97c46443faed9d37c25ed4732cb",
+    "semantic_hash": "7704f97c46443faed9d37c25ed4732cb"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\6f941793ef6e5188.mp3": {
+    "mtime": 1772708390.5476494,
+    "ast_hash": "397778999d8e37387db58c1c5b433d1c",
+    "semantic_hash": "397778999d8e37387db58c1c5b433d1c"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\6fc99dff10ec4cae.mp3": {
+    "mtime": 1772586093.6809373,
+    "ast_hash": "162a0948da54e9563f95fac9db6aac53",
+    "semantic_hash": "162a0948da54e9563f95fac9db6aac53"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\72d01754b1eaf32f.mp3": {
+    "mtime": 1772571797.1406999,
+    "ast_hash": "522b969570946dda0af4d84f89634127",
+    "semantic_hash": "522b969570946dda0af4d84f89634127"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\732c2af1e2fdd5e1.mp3": {
+    "mtime": 1772479611.0859094,
+    "ast_hash": "b287e273df4f556a3425910f702e87a3",
+    "semantic_hash": "b287e273df4f556a3425910f702e87a3"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\73a953d92c21d54f.mp3": {
+    "mtime": 1772584154.7488668,
+    "ast_hash": "398c9dbb620ccd578e4dbe7c67d26a47",
+    "semantic_hash": "398c9dbb620ccd578e4dbe7c67d26a47"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\796edf12792b9cb2.mp3": {
+    "mtime": 1772585899.1077137,
+    "ast_hash": "d78039700a507f6c6ab787b2e2df20ea",
+    "semantic_hash": "d78039700a507f6c6ab787b2e2df20ea"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\7bc61835e35ed522.mp3": {
+    "mtime": 1772585335.153609,
+    "ast_hash": "f02899543ff7e2200c95b02749ed16e2",
+    "semantic_hash": "f02899543ff7e2200c95b02749ed16e2"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\7d378beaac1b5d0c.mp3": {
+    "mtime": 1772279237.835758,
+    "ast_hash": "a36bc6319d13e242e46096f990569754",
+    "semantic_hash": "a36bc6319d13e242e46096f990569754"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\7daa9d8e08c59241.mp3": {
+    "mtime": 1772560872.7665288,
+    "ast_hash": "41a4a1a19d864f2148a14c54ed2a1b15",
+    "semantic_hash": "41a4a1a19d864f2148a14c54ed2a1b15"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\7e51dcde9c85f759.mp3": {
+    "mtime": 1772579940.5743697,
+    "ast_hash": "4af2f0df36562637f617cea7dec9212c",
+    "semantic_hash": "4af2f0df36562637f617cea7dec9212c"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\806e636f90a11103.mp3": {
+    "mtime": 1772486764.6588593,
+    "ast_hash": "9ca280e81586d7b00c2550edf8cdcdef",
+    "semantic_hash": "9ca280e81586d7b00c2550edf8cdcdef"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\80a5d1819cc025fe.mp3": {
+    "mtime": 1772560069.790755,
+    "ast_hash": "a8a9059fea2f71c226cbd7f68ad98a5d",
+    "semantic_hash": "a8a9059fea2f71c226cbd7f68ad98a5d"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\81c394527bc1b024.mp3": {
+    "mtime": 1772614567.1600697,
+    "ast_hash": "3ac56bc69951b7622663969da76d13cc",
+    "semantic_hash": "3ac56bc69951b7622663969da76d13cc"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\82350c2a9711c55f.mp3": {
+    "mtime": 1772473289.1426666,
+    "ast_hash": "2ad609ee8e424cbdda537c4c1219347d",
+    "semantic_hash": "2ad609ee8e424cbdda537c4c1219347d"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\838640cf52af7891.mp3": {
+    "mtime": 1772779365.0921252,
+    "ast_hash": "6b2dd21b1e87a55ebdd5b5f1372a435c",
+    "semantic_hash": "6b2dd21b1e87a55ebdd5b5f1372a435c"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\839a453c86feec82.mp3": {
+    "mtime": 1772411397.1804428,
+    "ast_hash": "0f989a3aacd7ba47e5e3a3e5cb07cab6",
+    "semantic_hash": "0f989a3aacd7ba47e5e3a3e5cb07cab6"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\83b335abfbac3d3e.mp3": {
+    "mtime": 1772584069.4677129,
+    "ast_hash": "23e0e13d5d407fd620a2bafa40889992",
+    "semantic_hash": "23e0e13d5d407fd620a2bafa40889992"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\83ca6636e9262a77.mp3": {
+    "mtime": 1772279518.734986,
+    "ast_hash": "9274767391a12fc8a90c806430a8f745",
+    "semantic_hash": "9274767391a12fc8a90c806430a8f745"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\8aa0cca2f31a6325.mp3": {
+    "mtime": 1772783400.189485,
+    "ast_hash": "b5f16c666d8b9a6976e74d2aeaad00e7",
+    "semantic_hash": "b5f16c666d8b9a6976e74d2aeaad00e7"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\8c2f9df5754deefa.mp3": {
+    "mtime": 1772387775.3457894,
+    "ast_hash": "7bd02edab3a2b95bd3a44ba3b2b38263",
+    "semantic_hash": "7bd02edab3a2b95bd3a44ba3b2b38263"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\8f877e1fbf931047.mp3": {
+    "mtime": 1772479779.0190427,
+    "ast_hash": "ad9477004535b2f1825ab10fd1bc8738",
+    "semantic_hash": "ad9477004535b2f1825ab10fd1bc8738"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\96cb9f8c7da19182.mp3": {
+    "mtime": 1772585220.723482,
+    "ast_hash": "27b9323327cafa3ebd79de9b2e10f4e7",
+    "semantic_hash": "27b9323327cafa3ebd79de9b2e10f4e7"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\9c280f619d939b62.mp3": {
+    "mtime": 1772462151.8227184,
+    "ast_hash": "e23212b7ab5b3c2b1514c53f843bf492",
+    "semantic_hash": "e23212b7ab5b3c2b1514c53f843bf492"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\a039ae220d0b920e.mp3": {
+    "mtime": 1772387681.6054964,
+    "ast_hash": "630b4f7376b83293714ce155bcc59ea3",
+    "semantic_hash": "630b4f7376b83293714ce155bcc59ea3"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\a14f900d32419f6f.mp3": {
+    "mtime": 1772279856.9716768,
+    "ast_hash": "4e135032fbb28086696481dd06bd9e6d",
+    "semantic_hash": "4e135032fbb28086696481dd06bd9e6d"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\a4005ed33c106137.mp3": {
+    "mtime": 1772377672.3024988,
+    "ast_hash": "46bb3cb2f20fbd311576269594db78c6",
+    "semantic_hash": "46bb3cb2f20fbd311576269594db78c6"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\a57ec8c7114164ae.mp3": {
+    "mtime": 1772730107.2914886,
+    "ast_hash": "501401511af5843acba25f4cd8340b49",
+    "semantic_hash": "501401511af5843acba25f4cd8340b49"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\afbebd0a03cac129.mp3": {
+    "mtime": 1772374543.9753144,
+    "ast_hash": "0f8f70e77e31c9943691e65f39ce5541",
+    "semantic_hash": "0f8f70e77e31c9943691e65f39ce5541"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\b02eb8d8774acb9d.mp3": {
+    "mtime": 1772280024.3022013,
+    "ast_hash": "4f388e406a89b83b7c34508970a78f3d",
+    "semantic_hash": "4f388e406a89b83b7c34508970a78f3d"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\b38591af8e426cb5.mp3": {
+    "mtime": 1772746542.888394,
+    "ast_hash": "35daa2aac5473a2f711a9128080ac317",
+    "semantic_hash": "35daa2aac5473a2f711a9128080ac317"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\b4255c0d1faf31de.mp3": {
+    "mtime": 1772585120.535632,
+    "ast_hash": "7988edd66e050cec9421536e18724998",
+    "semantic_hash": "7988edd66e050cec9421536e18724998"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\b5f224fa0f1a7199.mp3": {
+    "mtime": 1772614272.9054708,
+    "ast_hash": "ec586685082f4669fce16991ab13fec9",
+    "semantic_hash": "ec586685082f4669fce16991ab13fec9"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\bca9de78173d6d48.mp3": {
+    "mtime": 1772374318.5926466,
+    "ast_hash": "3e8683860d1206f2b05d6a970b40d79a",
+    "semantic_hash": "3e8683860d1206f2b05d6a970b40d79a"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\be83020b6d91bb2a.mp3": {
+    "mtime": 1772618673.667422,
+    "ast_hash": "bff4c940d8648a9b2a8e031ae091a74b",
+    "semantic_hash": "bff4c940d8648a9b2a8e031ae091a74b"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\bf2e2f17b1748ea9.mp3": {
+    "mtime": 1772618377.1242614,
+    "ast_hash": "53fac06f94c0c002d43ca657d569e227",
+    "semantic_hash": "53fac06f94c0c002d43ca657d569e227"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\c2fa3d2c2e3a0284.mp3": {
+    "mtime": 1772390363.7690365,
+    "ast_hash": "3ef1d0f0539df1eb999ce9d78d915646",
+    "semantic_hash": "3ef1d0f0539df1eb999ce9d78d915646"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\c3cd06218a53b166.mp3": {
+    "mtime": 1772482923.492001,
+    "ast_hash": "a90bd5d56726726f4171a096013c9791",
+    "semantic_hash": "a90bd5d56726726f4171a096013c9791"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\c45b006433483fea.mp3": {
+    "mtime": 1772576104.3394516,
+    "ast_hash": "47095eaa57270d92d6a0b55e17871497",
+    "semantic_hash": "47095eaa57270d92d6a0b55e17871497"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\c5ab2c5ca2e55f72.mp3": {
+    "mtime": 1772585613.037248,
+    "ast_hash": "3b7bf57043c16f09d03ee0beed6af2f1",
+    "semantic_hash": "3b7bf57043c16f09d03ee0beed6af2f1"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\c790bf5190441a73.mp3": {
+    "mtime": 1772718176.1981204,
+    "ast_hash": "40c5efe16ed31a8a202d205e88769dbb",
+    "semantic_hash": "40c5efe16ed31a8a202d205e88769dbb"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\c81de339bb0ce9c4.mp3": {
+    "mtime": 1772567710.7263029,
+    "ast_hash": "7541567bed29ba9105b30976c051a746",
+    "semantic_hash": "7541567bed29ba9105b30976c051a746"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\c98002ba52e5fb18.mp3": {
+    "mtime": 1772479680.4870534,
+    "ast_hash": "80fbe9ac9bc197ba6628383338166e20",
+    "semantic_hash": "80fbe9ac9bc197ba6628383338166e20"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\ccd9406a62f7bb5a.mp3": {
+    "mtime": 1772585423.77872,
+    "ast_hash": "b95ad32a4c4ec29d1977310c57f3f843",
+    "semantic_hash": "b95ad32a4c4ec29d1977310c57f3f843"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\d05b8b51d6915e85.mp3": {
+    "mtime": 1772707711.1228313,
+    "ast_hash": "b6be4243bdbea99a69a2f6961048a398",
+    "semantic_hash": "b6be4243bdbea99a69a2f6961048a398"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\d0e89de11b447cd1.mp3": {
+    "mtime": 1772470282.2053416,
+    "ast_hash": "8bbd81c95b6781ca2cf7b2a82471f6f7",
+    "semantic_hash": "8bbd81c95b6781ca2cf7b2a82471f6f7"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\d21628af7f312023.mp3": {
+    "mtime": 1772534838.075505,
+    "ast_hash": "3b42377761d585788a312277c3e4c8ac",
+    "semantic_hash": "3b42377761d585788a312277c3e4c8ac"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\d7be7b4fec986425.mp3": {
+    "mtime": 1772397566.5432868,
+    "ast_hash": "b143cd8095e1989b53e14bec32010d9c",
+    "semantic_hash": "b143cd8095e1989b53e14bec32010d9c"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\d8b575492c1ef501.mp3": {
+    "mtime": 1772746309.9363189,
+    "ast_hash": "3bd3e4f94acaf1d613b72a19079882aa",
+    "semantic_hash": "3bd3e4f94acaf1d613b72a19079882aa"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\d947cfdb3bac1ffa.mp3": {
+    "mtime": 1772477402.4064825,
+    "ast_hash": "bf79946ccbd6c3a388c8be453e77e58a",
+    "semantic_hash": "bf79946ccbd6c3a388c8be453e77e58a"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\da300a0e2c6ea1ca.mp3": {
+    "mtime": 1772377572.5182617,
+    "ast_hash": "624aa0e076daa564d3b8d95a1dfac802",
+    "semantic_hash": "624aa0e076daa564d3b8d95a1dfac802"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\de5e9469e6369c50.mp3": {
+    "mtime": 1772721060.8566508,
+    "ast_hash": "5e36893ea556c7431b086a53c49baf27",
+    "semantic_hash": "5e36893ea556c7431b086a53c49baf27"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\e0549edd7766322b.mp3": {
+    "mtime": 1772390792.1830096,
+    "ast_hash": "e0665fa4a85b6ca1938545a4d82fadc3",
+    "semantic_hash": "e0665fa4a85b6ca1938545a4d82fadc3"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\e63baa4ab8139499.mp3": {
+    "mtime": 1772479536.0403326,
+    "ast_hash": "1378ddf7275455eb3eb1231dfc1ea73e",
+    "semantic_hash": "1378ddf7275455eb3eb1231dfc1ea73e"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\e8282e5e1c794401.mp3": {
+    "mtime": 1772441542.1138446,
+    "ast_hash": "54c2ffef4e91f4ec7602a19079a6f9e5",
+    "semantic_hash": "54c2ffef4e91f4ec7602a19079a6f9e5"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\ef38e602bfde05be.mp3": {
+    "mtime": 1772468911.3157609,
+    "ast_hash": "2e95c86448fb27f9b60e5f40b269f121",
+    "semantic_hash": "2e95c86448fb27f9b60e5f40b269f121"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\f3893176a9eaffa0.mp3": {
+    "mtime": 1772585029.2708952,
+    "ast_hash": "8282dd989ef498961157a938e60a5da8",
+    "semantic_hash": "8282dd989ef498961157a938e60a5da8"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\f7a177d24e72139f.mp3": {
+    "mtime": 1772623132.5289667,
+    "ast_hash": "90e54d4253f66a5d7cd17439c1825309",
+    "semantic_hash": "90e54d4253f66a5d7cd17439c1825309"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\f84faf5045a17b34.mp3": {
+    "mtime": 1772462818.389542,
+    "ast_hash": "b60619cde161d10c78d6bbb6631d8e0f",
+    "semantic_hash": "b60619cde161d10c78d6bbb6631d8e0f"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\fabb39522ce25525.mp3": {
+    "mtime": 1772614422.0816486,
+    "ast_hash": "727590cd75c62625923db3d5195fc6b1",
+    "semantic_hash": "727590cd75c62625923db3d5195fc6b1"
+  },
+  "C:\\Users\\user\\OneDrive\\Desktop\\Chronicles-Production\\backend\\audio\\audio_cache\\fb22b005ed00e995.mp3": {
+    "mtime": 1772565883.8173354,
+    "ast_hash": "379fb6f41dd3f42f50d56b4e3c1abdda",
+    "semantic_hash": "379fb6f41dd3f42f50d56b4e3c1abdda"
+  }
+}

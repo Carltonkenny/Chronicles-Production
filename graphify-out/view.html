@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>/ — graphify tree viewer</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      margin: 20px 0 0 24px;
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: #1e3a56;
+    }
+    .controls {
+      margin: 20px 0 15px 24px;
+    }
+    button {
+      margin-right: 10px;
+      padding: 8px 18px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s ease-in-out;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    button:active {
+      background: #004085;
+    }
+    #tree-container {
+      width: calc(100vw - 48px); /* Adjust for body margin/padding */
+      height: 85vh;
+      overflow: auto;
+      border-radius: 8px;
+      background: #fff;
+      margin-left: 24px;
+      margin-right: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border: 1px solid #ddd;
+    }
+    svg {
+      background: #fff;
+      border-radius: 8px;
+      display: block; /* Important for D3 */
+    }
+    .node circle {
+      stroke-width: 2.5px;
+    }
+    .node text { /* Base style for the <text> container */
+      font: 13px 'Segoe UI', sans-serif;
+      paint-order: stroke fill; /* Ensures text is readable over lines */
+      stroke: #fff; /* White halo */
+      stroke-width: 3px; /* Halo thickness */
+      stroke-linejoin: round;
+      stroke-opacity: 0.85; /* Halo opacity */
+    }
+    .link {
+      fill: none;
+      stroke-opacity: 0.7;
+      stroke-width: 2px;
+    }
+  </style>
+</head>
+<body>
+  <h1>/ — Knowledge Graph</h1>
+  <div class="controls">
+    <button onclick="expandAll()">Expand All</button>
+    <button onclick="collapseAll()">Collapse All</button>
+    <button onclick="resetView()">Reset View</button>
+  </div>
+  <div id="tree-container">
+    <svg id="tree-svg" width="6000" height="8000"></svg>
+  </div>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    const initialJsonData = {"name":"/","total_count":282,"children":[{"name":"agents","total_count":27,"children":[{"name":"art_director.py","total_count":2,"children":[{"name":"._execute_internal()","total_count":1,"children":[]},{"name":"ArtDirectorAgent","total_count":1,"children":[]}]},{"name":"base_agent.py","total_count":8,"children":[{"name":".__init__()","total_count":1,"children":[]},{"name":"._check_cache()","total_count":1,"children":[]},{"name":"._compute_cache_key()","total_count":1,"children":[]},{"name":"._save_to_cache()","total_count":1,"children":[]},{"name":"._write_lineage()","total_count":1,"children":[]},{"name":".execute()","total_count":1,"children":[]},{"name":"_execute_internal()","total_count":1,"children":[]},{"name":"BaseAgent","total_count":1,"children":[]}]},{"name":"director.py","total_count":2,"children":[{"name":"._execute_internal()","total_count":1,"children":[]},{"name":"DirectorAgent","total_count":1,"children":[]}]},{"name":"planner.py","total_count":2,"children":[{"name":"._execute_internal()","total_count":1,"children":[]},{"name":"PlannerAgent","total_count":1,"children":[]}]},{"name":"production_designer.py","total_count":2,"children":[{"name":"._execute_internal()","total_count":1,"children":[]},{"name":"ProductionDesignerAgent","total_count":1,"children":[]}]},{"name":"script_supervisor.py","total_count":2,"children":[{"name":"._execute_internal()","total_count":1,"children":[]},{"name":"ScriptSupervisorAgent","total_count":1,"children":[]}]},{"name":"showrunner.py","total_count":6,"children":[{"name":".__init__()","total_count":1,"children":[]},{"name":"._execute_internal()","total_count":1,"children":[]},{"name":".orchestrate()","total_count":1,"children":[]},{"name":".to_dict()","total_count":1,"children":[]},{"name":"ProgressEvent","total_count":1,"children":[]},{"name":"ShowrunnerAgent","total_count":1,"children":[]}]},{"name":"writer.py","total_count":2,"children":[{"name":"._execute_internal()","total_count":1,"children":[]},{"name":"WriterAgent","total_count":1,"children":[]}]},{"name":"__init__.py","total_count":1,"children":[]}]},{"name":"audio","total_count":63,"children":[{"name":"_archived","total_count":30,"children":[{"name":"polly_service.py","total_count":21,"children":[{"name":".__init__()","total_count":1,"children":[]},{"name":"._split_ssml()","total_count":1,"children":[]},{"name":"._synthesize_chunk()","total_count":1,"children":[]},{"name":".get_voice_for_culture()","total_count":1,"children":[]},{"name":".synthesize()","total_count":1,"children":[]},{"name":"Amazon Polly TTS service integration.  Handles authentication, voice selection,","total_count":1,"children":[]},{"name":"Amazon Polly TTS service.          Synthesizes speech from SSML text using cultu","total_count":1,"children":[]},{"name":"Check if a voice supports prosody tags (rate, pitch, volume).          All neura","total_count":1,"children":[]},{"name":"Custom exception for Polly service errors.","total_count":1,"children":[]},{"name":"Get AWS Polly voice ID for a given culture.                  Args:             c","total_count":1,"children":[]},{"name":"Get AWS Polly voice ID for a given culture.          Convenience function for us","total_count":1,"children":[]},{"name":"Get SSML feature capabilities for a specific voice.          Production systems","total_count":1,"children":[]},{"name":"get_voice_capabilities()","total_count":1,"children":[]},{"name":"get_voice_for_culture()","total_count":1,"children":[]},{"name":"Initialize Polly client with AWS credentials from config.                  Sets","total_count":1,"children":[]},{"name":"PollyError","total_count":1,"children":[]},{"name":"PollyService","total_count":1,"children":[]},{"name":"Split long SSML into chunks at sentence boundaries.          Simple, reliable ch","total_count":1,"children":[]},{"name":"supports_prosody()","total_count":1,"children":[]},{"name":"Synthesize a single SSML chunk.","total_count":1,"children":[]},{"name":"Synthesize speech from SSML text.                  Handles long SSML by chunking","total_count":1,"children":[]}]},{"name":"ssml_generator.py","total_count":9,"children":[{"name":"Generate SSML using LLM agent.          Args:         story_text: Story text to","total_count":1,"children":[]},{"name":"Generate SSML using simple regex rules.          Fast fallback when LLM fails or","total_count":1,"children":[]},{"name":"Generate SSML with caching, LLM (30s timeout), and rule-based fallback.      Arg","total_count":1,"children":[]},{"name":"generate_ssml()","total_count":1,"children":[]},{"name":"generate_ssml_llm()","total_count":1,"children":[]},{"name":"generate_ssml_rule_based()","total_count":1,"children":[]},{"name":"SSML (Speech Synthesis Markup Language) generator.  Three-tier approach: 1. Chec","total_count":1,"children":[]},{"name":"Validate and sanitize SSML from LLM to fix common hallucination patterns.      T","total_count":1,"children":[]},{"name":"validate_and_sanitize_ssml()","total_count":1,"children":[]}]}]},{"name":"cache.py","total_count":23,"children":[{"name":".__init__()","total_count":1,"children":[]},{"name":".compute_hash()","total_count":1,"children":[]},{"name":".exists()","total_count":1,"children":[]},{"name":".get()","total_count":1,"children":[]},{"name":".get_path()","total_count":1,"children":[]},{"name":".get_ssml()","total_count":1,"children":[]},{"name":".get_ssml_path()","total_count":1,"children":[]},{"name":".save()","total_count":1,"children":[]},{"name":".save_ssml()","total_count":1,"children":[]},{"name":".ssml_exists()","total_count":1,"children":[]},{"name":"Audio file caching service.  Stores generated MP3 files and SSML for instant rep","total_count":1,"children":[]},{"name":"AudioCache","total_count":1,"children":[]},{"name":"Check if audio is cached.                  Args:             story_hash: Story h","total_count":1,"children":[]},{"name":"Check if SSML is cached.          Args:             story_hash: Story hash","total_count":1,"children":[]},{"name":"Compute cache key from story text and voice ID.                  Args:","total_count":1,"children":[]},{"name":"Get file path for a cached audio file.                  Args:             story_","total_count":1,"children":[]},{"name":"Get file path for a cached SSML file.          Args:             story_hash: Sto","total_count":1,"children":[]},{"name":"Initialize cache directories with absolute paths.          Args:             cac","total_count":1,"children":[]},{"name":"Retrieve cached audio data.                  Args:             story_hash: Story","total_count":1,"children":[]},{"name":"Retrieve cached SSML.          Args:             story_hash: Story hash","total_count":1,"children":[]},{"name":"Save audio data to cache.          Args:             story_hash: Story hash","total_count":1,"children":[]},{"name":"Save SSML to cache.          Args:             story_hash: Story hash","total_count":1,"children":[]},{"name":"Simple file-based cache for generated audio and SSML.      Stores MP3 files in b","total_count":1,"children":[]}]},{"name":"edge_tts_service.py","total_count":9,"children":[{"name":".__init__()","total_count":1,"children":[]},{"name":".cache()","total_count":1,"children":[]},{"name":".generate()","total_count":1,"children":[]},{"name":".get_cached()","total_count":1,"children":[]},{"name":".narrate_scenes()","total_count":1,"children":[]},{"name":".narrate_story()","total_count":1,"children":[]},{"name":"EdgeTTSService","total_count":1,"children":[]},{"name":"get_rate_for_beat()","total_count":1,"children":[]},{"name":"get_voice_for_culture()","total_count":1,"children":[]}]},{"name":"__init__.py","total_count":1,"children":[]}]},{"name":"cache","total_count":6,"children":[{"name":"__init__.py","total_count":1,"children":[{"name":"Cache module for Chronicles Story Engine.  Provides server-side story caching","total_count":1,"children":[]}]},{"name":"story_cache.py","total_count":5,"children":[{"name":"_get_redis()","total_count":1,"children":[]},{"name":"cache_story()","total_count":1,"children":[]},{"name":"cache_visuals()","total_count":1,"children":[]},{"name":"get_cached_story()","total_count":1,"children":[]},{"name":"warm_cache()","total_count":1,"children":[]}]}]},{"name":"chain.py","total_count":13,"children":[{"name":"_run_planner()","total_count":1,"children":[]},{"name":"_run_writer()","total_count":1,"children":[]},{"name":"build_bridge_prompt_fragment()","total_count":1,"children":[]},{"name":"build_safety_appendix()","total_count":1,"children":[]},{"name":"build_writer_bridge_context()","total_count":1,"children":[]},{"name":"Check if seed idea is incorporated in blueprint.     Returns True if seed keywor","total_count":1,"children":[]},{"name":"Check if theme is demonstrated in story.     Returns True if theme word or relat","total_count":1,"children":[]},{"name":"Chronicles Story Engine - Story Generation Pipeline ============================","total_count":1,"children":[]},{"name":"detect_mode()","total_count":1,"children":[]},{"name":"Full pipeline: Wikipedia → Planner → Writer → stereotype scan.     Returns a val","total_count":1,"children":[]},{"name":"generate_story()","total_count":1,"children":[]},{"name":"validate_seed_in_blueprint()","total_count":1,"children":[]},{"name":"validate_theme()","total_count":1,"children":[]}]},{"name":"config.py","total_count":3,"children":[{"name":".validate()","total_count":1,"children":[]},{"name":"Config","total_count":1,"children":[]},{"name":"headers()","total_count":1,"children":[]}]},{"name":"db_service.py","total_count":5,"children":[{"name":".__init__()","total_count":1,"children":[]},{"name":".save_story()","total_count":1,"children":[]},{"name":"Chronicles Story Engine - Database Service =====================================","total_count":1,"children":[]},{"name":"DBService","total_count":1,"children":[]},{"name":"Saves a generated story to Supabase.         Uses a dummy user_id for public dem","total_count":1,"children":[]}]},{"name":"db_setup","total_count":4,"children":[{"name":"init_db.py","total_count":4,"children":[{"name":"Create database and all tables.","total_count":1,"children":[]},{"name":"Display what content already exists in the database.","total_count":1,"children":[]},{"name":"init_database()","total_count":1,"children":[]},{"name":"show_existing_content()","total_count":1,"children":[]}]}]},{"name":"image_agent.py","total_count":17,"children":[{"name":".__init__()","total_count":1,"children":[]},{"name":"._apply_llm_visuals()","total_count":1,"children":[]},{"name":"._build_character_visual_cues()","total_count":1,"children":[]},{"name":"._build_image_url()","total_count":1,"children":[]},{"name":"._extract_atmosphere()","total_count":1,"children":[]},{"name":"._generate_llm_visuals()","total_count":1,"children":[]},{"name":".build_character_prompt()","total_count":1,"children":[]},{"name":".build_setting_prompt()","total_count":1,"children":[]},{"name":".compute_seed()","total_count":1,"children":[]},{"name":".extract_characters()","total_count":1,"children":[]},{"name":".extract_setting_scene()","total_count":1,"children":[]},{"name":".generate_all_images()","total_count":1,"children":[]},{"name":".get_visual_context()","total_count":1,"children":[]},{"name":"_sanitize_prompt()","total_count":1,"children":[]},{"name":"Chronicles Story Engine - Image Generation Agent ===============================","total_count":1,"children":[]},{"name":"ImageGenerationAgent","total_count":1,"children":[]},{"name":"Multi-image generation agent with consistency tracking.      Generates:     - 1","total_count":1,"children":[]}]},{"name":"logger_config.py","total_count":3,"children":[{"name":"_setup_standard_logger()","total_count":1,"children":[]},{"name":"_setup_structlog_logger()","total_count":1,"children":[]},{"name":"setup_logger()","total_count":1,"children":[]}]},{"name":"main.py","total_count":9,"children":[{"name":"create_story()","total_count":1,"children":[]},{"name":"generate_film()","total_count":1,"children":[]},{"name":"get_audio_file()","total_count":1,"children":[]},{"name":"get_audio_status_endpoint()","total_count":1,"children":[]},{"name":"get_options()","total_count":1,"children":[]},{"name":"health_check()","total_count":1,"children":[]},{"name":"http_exception_handler()","total_count":1,"children":[]},{"name":"lifespan()","total_count":1,"children":[]},{"name":"root()","total_count":1,"children":[]}]},{"name":"prompts","total_count":7,"children":[{"name":"__init__.py","total_count":3,"children":[{"name":"Chronicles Story Engine - Prompts ================================= Two-agent sy","total_count":1,"children":[]},{"name":"Get culture-specific stereotype trap phrases for the Planner prompt.          Ar","total_count":1,"children":[]},{"name":"get_culture_traps()","total_count":1,"children":[]}]},{"name":"script_supervisor_prompt.py","total_count":1,"children":[{"name":"Script Supervisor Agent Prompt ============================== Analyzes completed","total_count":1,"children":[]}]},{"name":"art_director_prompt.py","total_count":1,"children":[]},{"name":"director_prompt.py","total_count":1,"children":[]},{"name":"production_designer_prompt.py","total_count":1,"children":[]}]},{"name":"schemas","total_count":22,"children":[{"name":"enums.py","total_count":3,"children":[{"name":"Culture","total_count":1,"children":[]},{"name":"Theme","total_count":1,"children":[]},{"name":"Timeline","total_count":1,"children":[]}]},{"name":"film.py","total_count":2,"children":[{"name":"FilmOutput","total_count":1,"children":[]},{"name":"FilmStatus","total_count":1,"children":[]}]},{"name":"story.py","total_count":5,"children":[{"name":"Config","total_count":1,"children":[]},{"name":"StoryGenerationRequest","total_count":1,"children":[]},{"name":"StoryGenerationResponse","total_count":1,"children":[]},{"name":"StoryOutput","total_count":1,"children":[]},{"name":"StoryRequest","total_count":1,"children":[]}]},{"name":"visual_bible.py","total_count":8,"children":[{"name":"CharacterBible","total_count":1,"children":[]},{"name":"ColorPalette","total_count":1,"children":[]},{"name":"EmotionCameraMap","total_count":1,"children":[]},{"name":"LocationDescription","total_count":1,"children":[]},{"name":"ShotVariation","total_count":1,"children":[]},{"name":"VisualBible","total_count":1,"children":[]},{"name":"VisualElement","total_count":1,"children":[]},{"name":"VisualElementsDict","total_count":1,"children":[]}]},{"name":"work_order.py","total_count":3,"children":[{"name":"AgentLineage","total_count":1,"children":[]},{"name":"WorkOrder","total_count":1,"children":[]},{"name":"WorkResult","total_count":1,"children":[]}]},{"name":"__init__.py","total_count":1,"children":[]}]},{"name":"tasks.py","total_count":11,"children":[{"name":"Background task runner for audio generation.  Handles async audio generation wit","total_count":1,"children":[]},{"name":"Build complete narration script from story data.      Structure:     1. INTRO: T","total_count":1,"children":[]},{"name":"build_full_narration_script()","total_count":1,"children":[]},{"name":"Clean up status tracking for a story.          Call this after frontend has retr","total_count":1,"children":[]},{"name":"cleanup_status()","total_count":1,"children":[]},{"name":"Convert narration script to SSML.      Replaces [pause: Xs] markers with <break","total_count":1,"children":[]},{"name":"convert_script_to_ssml()","total_count":1,"children":[]},{"name":"Generate full audio narration in background (fire-and-forget).      Builds compl","total_count":1,"children":[]},{"name":"generate_audio_background()","total_count":1,"children":[]},{"name":"Get audio generation status for a story.          Args:         story_hash: Stor","total_count":1,"children":[]},{"name":"get_audio_status()","total_count":1,"children":[]}]},{"name":"tests","total_count":62,"children":[{"name":"edge_case_results.json","total_count":3,"children":[{"name":"fail","total_count":1,"children":[]},{"name":"ok","total_count":1,"children":[]},{"name":"results","total_count":1,"children":[]}]},{"name":"phase2_edge_results.json","total_count":3,"children":[{"name":"failed","total_count":1,"children":[]},{"name":"passed","total_count":1,"children":[]},{"name":"results","total_count":1,"children":[]}]},{"name":"test_e2e.py","total_count":1,"children":[{"name":"main()","total_count":1,"children":[]}]},{"name":"test_edge_cases.py","total_count":3,"children":[{"name":"Chronicles Production - Extreme Edge Case Tests ================================","total_count":1,"children":[]},{"name":"main()","total_count":1,"children":[]},{"name":"run_test()","total_count":1,"children":[]}]},{"name":"test_full_pipeline_audit.py","total_count":2,"children":[{"name":"main()","total_count":1,"children":[]},{"name":"run_combo()","total_count":1,"children":[]}]},{"name":"test_phase2_edge_cases.py","total_count":3,"children":[{"name":"main()","total_count":1,"children":[]},{"name":"Phase 2 Edge Case Tests — Visual Bible Pipeline Tests extreme combos, safety cul","total_count":1,"children":[]},{"name":"run_test()","total_count":1,"children":[]}]},{"name":"test_pipeline.py","total_count":25,"children":[{"name":".test_agent_type()","total_count":1,"children":[]},{"name":".test_all_cultures_have_display_name()","total_count":1,"children":[]},{"name":".test_all_cultures_have_natural_era()","total_count":1,"children":[]},{"name":".test_all_timelines_have_bucket()","total_count":1,"children":[]},{"name":".test_base_agent_cache_key()","total_count":1,"children":[]},{"name":".test_base_agent_initialization()","total_count":1,"children":[]},{"name":".test_bridge_prompt_fragment()","total_count":1,"children":[]},{"name":".test_bucket_order_contains_all_buckets()","total_count":1,"children":[]},{"name":".test_culture_count()","total_count":1,"children":[]},{"name":".test_execute_with_empty_story()","total_count":1,"children":[]},{"name":".test_mode_detection_counterfactual()","total_count":1,"children":[]},{"name":".test_mode_detection_historical()","total_count":1,"children":[]},{"name":".test_mode_detection_near()","total_count":1,"children":[]},{"name":".test_safety_appendix()","total_count":1,"children":[]},{"name":".test_safety_constrained_cultures()","total_count":1,"children":[]},{"name":".test_story_request_invalid_culture()","total_count":1,"children":[]},{"name":".test_story_request_validation()","total_count":1,"children":[]},{"name":".test_theme_count()","total_count":1,"children":[]},{"name":".test_timeline_count()","total_count":1,"children":[]},{"name":".test_writer_bridge_context()","total_count":1,"children":[]},{"name":"TestBaseAgent","total_count":1,"children":[]},{"name":"TestEnumSystem","total_count":1,"children":[]},{"name":"TestForceBlending","total_count":1,"children":[]},{"name":"TestSchemas","total_count":1,"children":[]},{"name":"TestScriptSupervisorAgent","total_count":1,"children":[]}]},{"name":"test_visual_bible.py","total_count":20,"children":[{"name":".test_agent_type()","total_count":1,"children":[]},{"name":".test_agent_type()","total_count":1,"children":[]},{"name":".test_agent_type()","total_count":1,"children":[]},{"name":".test_bucket_material_map_coverage()","total_count":1,"children":[]},{"name":".test_character_bible_requires_name()","total_count":1,"children":[]},{"name":".test_engine_initialization()","total_count":1,"children":[]},{"name":".test_execute_empty_story()","total_count":1,"children":[]},{"name":".test_has_stereotype_detection()","total_count":1,"children":[]},{"name":".test_is_valid_hex()","total_count":1,"children":[]},{"name":".test_merge_merges_correctly()","total_count":1,"children":[]},{"name":".test_shot_variation_fields()","total_count":1,"children":[]},{"name":".test_total_items_count()","total_count":1,"children":[]},{"name":".test_visual_bible_creation()","total_count":1,"children":[]},{"name":".test_visual_element_structure()","total_count":1,"children":[]},{"name":".test_visual_elements_dict_structure()","total_count":1,"children":[]},{"name":"TestArtDirectorAgent","total_count":1,"children":[]},{"name":"TestDirectorAgent","total_count":1,"children":[]},{"name":"TestProductionDesignerAgent","total_count":1,"children":[]},{"name":"TestVisualBibleSchema","total_count":1,"children":[]},{"name":"TestVisualElementsEngine","total_count":1,"children":[]}]},{"name":"test_visual_bible_e2e.py","total_count":1,"children":[{"name":"main()","total_count":1,"children":[]}]},{"name":"__init__.py","total_count":1,"children":[]}]},{"name":"utils","total_count":29,"children":[{"name":"hash_utils.py","total_count":1,"children":[{"name":"compute_story_hash()","total_count":1,"children":[]}]},{"name":"json_repair.py","total_count":2,"children":[{"name":"extract_and_repair_json()","total_count":1,"children":[]},{"name":"repair_json()","total_count":1,"children":[]}]},{"name":"llm_client.py","total_count":4,"children":[{"name":"_build_headers()","total_count":1,"children":[]},{"name":"_init_providers()","total_count":1,"children":[]},{"name":"call_llm()","total_count":1,"children":[]},{"name":"resolve_model()","total_count":1,"children":[]}]},{"name":"stereotype_scan.py","total_count":2,"children":[{"name":"get_culture_traps()","total_count":1,"children":[]},{"name":"scan_for_stereotypes()","total_count":1,"children":[]}]},{"name":"visual_engine.py","total_count":12,"children":[{"name":".__init__()","total_count":1,"children":[]},{"name":"._generate()","total_count":1,"children":[]},{"name":"._get_redis()","total_count":1,"children":[]},{"name":"._has_stereotype()","total_count":1,"children":[]},{"name":"._is_material_valid()","total_count":1,"children":[]},{"name":"._is_valid_hex()","total_count":1,"children":[]},{"name":"._merge()","total_count":1,"children":[]},{"name":"._validate()","total_count":1,"children":[]},{"name":".get()","total_count":1,"children":[]},{"name":"total_items()","total_count":1,"children":[]},{"name":"VisualElementsEngine","total_count":1,"children":[]},{"name":"VisualElementsEngine — Generates structured visual data per culture×timeline com","total_count":1,"children":[]}]},{"name":"wiki_context.py","total_count":7,"children":[{"name":"_load_db_cache()","total_count":1,"children":[]},{"name":"audit_fallback_coverage()","total_count":1,"children":[]},{"name":"format_visual_elements_for_prompt()","total_count":1,"children":[]},{"name":"get_culture_fallback_data()","total_count":1,"children":[]},{"name":"get_db_fallback()","total_count":1,"children":[]},{"name":"get_visual_elements()","total_count":1,"children":[]},{"name":"get_wikipedia_summary()","total_count":1,"children":[]}]},{"name":"__init__.py","total_count":1,"children":[]}]},{"name":"__init__.py","total_count":1,"children":[]}]};
+
+    function transformData(jsonData) {
+        // Helper function to recursively build the children structure
+        function processNode(node, parentL1StageName) {
+            let displayName = node.name;
+            // Append total_count if it exists and is not already in the name
+            if (node.total_count !== undefined) {
+                if (!/\(Total Count: \d+\)$/.test(displayName)) {
+                    displayName += ` (Total Count: ${node.total_count})`;
+                }
+            }
+
+            const newNode = { name: displayName };
+
+            if (parentL1StageName === "Root") {
+                 newNode.originalStageName = node.name;
+            } else {
+                newNode.originalStageName = parentL1StageName;
+            }
+
+            if (node.children && node.children.length > 0) {
+                const stageNameToPass = (parentL1StageName === "Root") ? node.name : parentL1StageName;
+                newNode.children = node.children.map(child => processNode(child, stageNameToPass));
+            }
+
+            return newNode;
+        }
+
+        let rootDisplayName = jsonData.name;
+        if (jsonData.total_count !== undefined && !/\(Total Count: \d+\)$/.test(rootDisplayName)) {
+            rootDisplayName += ` (Total Count: ${jsonData.total_count})`;
+        }
+
+        return {
+            name: rootDisplayName,
+            originalStageName: "Root",
+            children: (jsonData.children || []).map(child => processNode(child, "Root"))
+        };
+    }
+
+    const treeData = transformData(initialJsonData);
+
+    // Auto-populated phaseColors: every depth-1 child of the root gets
+    // a stable colour from a bigger palette so all top-level dirs are
+    // distinguishable.
+    const PALETTE = [
+      ["#3498DB","#2980B9","#AED6F1"], ["#2ECC71","#27AE60","#A9DFBF"],
+      ["#E74C3C","#C0392B","#F5B7B1"], ["#9B59B6","#8E44AD","#D7BDE2"],
+      ["#F39C12","#D68910","#FAD7A0"], ["#1ABC9C","#117864","#A2D9CE"],
+      ["#34495E","#1B2631","#ABB2B9"], ["#E67E22","#BA4A00","#F5CBA7"],
+      ["#16A085","#0E6655","#A2D9CE"], ["#D35400","#A04000","#EDBB99"],
+      ["#7F8C8D","#566573","#D5DBDB"], ["#C0392B","#7B241C","#F5B7B1"],
+      ["#2E86C1","#1B4F72","#A9CCE3"], ["#28B463","#196F3D","#A9DFBF"],
+      ["#AF7AC5","#6C3483","#D2B4DE"],
+    ];
+    const phaseColors = { "Root": { fill: "#4A4A4A", stroke: "#333333", collapsedFill: "#6C757D" },
+                          "Default": { fill: "#BDC3C7", stroke: "#95A5A6", collapsedFill: "#ECF0F1" } };
+    (initialJsonData.children || []).forEach((c, i) => {
+      const pal = PALETTE[i % PALETTE.length];
+      phaseColors[c.name] = { fill: pal[0], stroke: pal[1], collapsedFill: pal[2] };
+    });
+
+    const levelSpecificPalettes = {
+      0: { fill: "#4A4A4A", stroke: "#333333", collapsedFill: "#6C757D" },
+      2: { fill: "#6ab04c", stroke: "#508a38", collapsedFill: "#a3d391" },
+      3: { fill: "#f0932b", stroke: "#d0730f", collapsedFill: "#f6c07e" },
+      4: { fill: "#be2edd", stroke: "#a01cb3", collapsedFill: "#e08bf2" },
+      5: { fill: "#00a8ff", stroke: "#007ac1", collapsedFill: "#74d2ff" },
+      6: { fill: "#e55039", stroke: "#c23620", collapsedFill: "#f09a8d" },
+      default: { fill: "#747d8c", stroke: "#57606f", collapsedFill: "#a4b0be" }
+    };
+
+    const svgElement = d3.select("#tree-svg");
+    const initialSvgWidth = +svgElement.attr("width");
+    const initialSvgHeight = +svgElement.attr("height");
+    const margin = { top: 40, right: 120, bottom: 80, left: 450 };
+    let width = initialSvgWidth - margin.left - margin.right;
+    let height = initialSvgHeight - margin.top - margin.bottom;
+    const duration = 500;
+    let nodeCounter = 0;
+    const g = svgElement.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+    const treemap = d3.tree().nodeSize([40, 0]);
+    let rootNode = d3.hierarchy(treeData, d => d.children);
+    rootNode.x0 = 0;
+    rootNode.y0 = 0;
+
+    if (rootNode.children) {
+      rootNode.children.forEach(d_child => {
+        if (d_child.children) { collapseBranch(d_child); }
+      });
+    }
+    updateTree(rootNode);
+
+    function collapseBranch(d) { if (d.children) { d._children = d.children; d._children.forEach(collapseBranch); d.children = null; } }
+    function expandBranch(d) { if (d._children) { d.children = d._children; d._children = null; } if (d.children) { d.children.forEach(expandBranch); } }
+    window.expandAll = () => { expandBranch(rootNode); updateTree(rootNode); };
+    window.collapseAll = () => { if (rootNode.children) { rootNode.children.forEach(collapseBranch); } updateTree(rootNode); };
+    window.resetView = () => { if (rootNode.children) { rootNode.children.forEach(d_child => { if (d_child.children || d_child._children) { collapseBranch(d_child); } }); } if (rootNode._children && !rootNode.children) { rootNode.children = rootNode._children; rootNode._children = null; } updateTree(rootNode); };
+
+    function updateTree(source) {
+      const treeLayoutData = treemap(rootNode);
+      let nodes = treeLayoutData.descendants();
+      let links = treeLayoutData.descendants().slice(1);
+
+      let minX = 0;
+      let maxX = 0;
+      if (nodes.length > 0) {
+        minX = d3.min(nodes, d => d.x);
+        maxX = d3.max(nodes, d => d.x);
+      }
+
+      let neededHeight = Math.max(initialSvgHeight, maxX - minX + margin.top + margin.bottom + 100);
+      svgElement.transition().duration(duration / 2).attr("height", neededHeight);
+      g.transition().duration(duration / 2).attr("transform", `translate(${margin.left},${margin.top - minX + 40})`);
+
+      nodes.forEach(d => { d.y = d.depth * 400; }); // Adjust horizontal separation if needed
+
+      const node = g.selectAll('g.node').data(nodes, d => d.id || (d.id = ++nodeCounter));
+      const nodeEnter = node.enter().append('g')
+        .attr('class', d => "node" + (d.children || d._children ? " node--internal" : " node--leaf") + (d._children ? " _children" : ""))
+        .attr('transform', d => `translate(${source.y0},${source.x0})`)
+        .on('click', (event, d) => { if (d.children) { d._children = d.children; d.children = null; } else if (d._children) { d.children = d._children; d._children = null; } updateTree(d); })
+        .style('cursor', d => (d.children || d._children) ? 'pointer' : 'default');
+
+      nodeEnter.append('circle').attr('r', 1e-6);
+
+      nodeEnter.append('text')
+        .attr('dy', '.35em')
+        .attr('x', d => d.children || d._children ? -14 : 14)
+        .attr('text-anchor', d => d.children || d._children ? 'end' : 'start')
+        .style("fill-opacity", 1e-6)
+        .call(wrapText, 380);
+
+      const nodeUpdate = nodeEnter.merge(node);
+      nodeUpdate.transition().duration(duration)
+        .attr('transform', d => `translate(${d.y},${d.x})`)
+        .attr('class', d => "node" + (d.children ? " node--internal" : " node--leaf") + (d._children ? " node--internal _children" : ""));
+
+      nodeUpdate.select('circle').attr('r', 8.5)
+        .style('fill', d => {
+            let palette;
+            if (d.depth === 0) {
+                palette = levelSpecificPalettes[0];
+            } else if (d.depth === 1) {
+                palette = phaseColors[d.data.originalStageName] || phaseColors.Default;
+            } else {
+                palette = levelSpecificPalettes[d.depth] || levelSpecificPalettes.default;
+            }
+            if (d._children) return palette.collapsedFill;
+            if (d.children) return palette.fill;
+            return "#fff";
+        })
+        .style('stroke', d => {
+            let palette;
+            if (d.depth === 0) {
+                palette = levelSpecificPalettes[0];
+            } else if (d.depth === 1) {
+                palette = phaseColors[d.data.originalStageName] || phaseColors.Default;
+            } else {
+                palette = levelSpecificPalettes[d.depth] || levelSpecificPalettes.default;
+            }
+            return palette.stroke;
+        });
+      nodeUpdate.select('text').style("fill-opacity", 1).call(wrapText, 380);
+
+      const nodeExit = node.exit().transition().duration(duration).attr('transform', d => `translate(${source.y},${source.x})`).remove();
+      nodeExit.select('circle').attr('r', 1e-6);
+      nodeExit.select('text').style('fill-opacity', 1e-6);
+
+      const link = g.selectAll('path.link').data(links, d => d.id);
+      const linkEnter = link.enter().insert('path', "g").attr('class', 'link').attr('d', d => { const o = { x: source.x0, y: source.y0 }; return diagonal(o, o); });
+
+      linkEnter.merge(link).transition().duration(duration).attr('d', d => diagonal(d, d.parent))
+        .style('stroke', d => {
+            const sourceNode = d.parent;
+            if (!sourceNode) return phaseColors.Default.stroke;
+            const l1AncestorName = sourceNode.data.originalStageName;
+            const colorPalette = phaseColors[l1AncestorName] || phaseColors.Default;
+            return colorPalette.stroke;
+        });
+      link.exit().transition().duration(duration).attr('d', d => { const o = { x: source.x, y: source.y }; return diagonal(o, o); }).remove();
+      nodes.forEach(d => { d.x0 = d.x; d.y0 = d.y; });
+    }
+
+    function diagonal(s, d) { return `M ${s.y} ${s.x} C ${(s.y + d.y) / 2} ${s.x}, ${(s.y + d.y) / 2} ${d.x}, ${d.y} ${d.x}`; }
+
+    function wrapText(textElements, maxWidth) {
+        const textPartColors = {
+            name: '#343a40',
+            count: '#0056b3'
+        };
+        const countRegex = /(\s\(Total Count: \d+\))$/;
+
+        textElements.each(function () {
+            const textD3 = d3.select(this);
+            const originalNodeText = textD3.datum().data.name;
+            const x = parseFloat(textD3.attr("x") || 0);
+            const initialDy = textD3.attr("dy");
+            const textAnchor = textD3.attr("text-anchor");
+            const lineHeight = 1.1;
+
+            textD3.text(null);
+
+            let namePart = originalNodeText;
+            let countPartText = "";
+
+            const countMatch = originalNodeText.match(countRegex);
+            if (countMatch && originalNodeText.endsWith(countMatch[0])) {
+                namePart = originalNodeText.substring(0, originalNodeText.length - countMatch[0].length).trim();
+                countPartText = countMatch[0].trim();
+            }
+
+            const tokens = [];
+            namePart.split(/\s+/).filter(Boolean).forEach(word => {
+                tokens.push({ text: word, type: 'name' });
+            });
+            if (countPartText) {
+                tokens.push({ text: countPartText, type: 'count' });
+            }
+
+            if (tokens.length === 0 && originalNodeText) {
+                tokens.push({ text: originalNodeText, type: 'name' });
+            }
+
+            let currentTspan = textD3.append("tspan").attr("x", x).attr("dy", initialDy);
+            if (textAnchor === "end") currentTspan.attr("text-anchor", "end");
+
+            let lineTokens = [];
+
+            for (let i = 0; i < tokens.length; i++) {
+                const tokenObj = tokens[i];
+
+                lineTokens.push(tokenObj);
+                currentTspan.text(lineTokens.map(t => t.text).join(" "));
+
+                if (currentTspan.node().getComputedTextLength() > maxWidth && lineTokens.length > 1) {
+                    lineTokens.pop();
+
+                    currentTspan.text(null);
+                    lineTokens.forEach((prevToken, idx) => {
+                        currentTspan.append("tspan")
+                            .text((idx > 0 ? " " : "") + prevToken.text)
+                            .style("fill", textPartColors[prevToken.type] || textPartColors.name)
+                            .style("font-weight", prevToken.type === 'count' ? "bold" : "normal");
+                    });
+
+                    lineTokens = [tokenObj];
+                    currentTspan = textD3.append("tspan").attr("x", x).attr("dy", lineHeight + "em");
+                    if (textAnchor === "end") currentTspan.attr("text-anchor", "end");
+                }
+            }
+
+            currentTspan.text(null);
+            lineTokens.forEach((token, idx) => {
+                currentTspan.append("tspan")
+                    .text((idx > 0 ? " " : "") + token.text)
+                    .style("fill", textPartColors[token.type] || textPartColors.name)
+                    .style("font-weight", token.type === 'count' ? "bold" : "normal");
+            });
+
+            if (textD3.selectAll("tspan > tspan").empty() && textD3.select("tspan").text().length === 0 && originalNodeText) {
+                let t = textD3.select("tspan");
+                let displayText = originalNodeText;
+                t.text(displayText).style("fill", textPartColors.name);
+                if (t.node() && t.node().getComputedTextLength() > maxWidth && displayText.length > 20) {
+                    let estimatedChars = Math.floor(maxWidth / (t.node().getComputedTextLength()/displayText.length) );
+                    displayText = displayText.substring(0, Math.max(0, estimatedChars - 3)) + "...";
+                    t.text(displayText);
+                }
+            }
+        });
+    }
+  </script>
+</body>
+</html>

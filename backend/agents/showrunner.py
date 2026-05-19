@@ -55,6 +55,7 @@ class ShowrunnerAgent(BaseAgent):
         director_fn=None,
         pd_fn=None,
         ad_fn=None,
+        image_swarm_fn=None,
     ) -> AsyncGenerator[ProgressEvent, None]:
         yield ProgressEvent("story", "planning", 0, "Creating story blueprint...")
         logger.info("Showrunner: Phase 1 — Planner")
@@ -209,12 +210,46 @@ class ShowrunnerAgent(BaseAgent):
                 f"Visual Bible ready ({vb_agents} agents)", visual_bible,
             )
 
+        image_output = None
+        if image_swarm_fn:
+            yield ProgressEvent(
+                "images", "swarming", 68,
+                "Spawning image swarm for characters and scenes...",
+            )
+
+            try:
+                image_work_order = WorkOrder(
+                    agent_type="image_swarm_lead",
+                    input_data={
+                        "culture": story_request.culture.value,
+                        "timeline": story_request.timeline.value,
+                        "theme": story_request.theme.value,
+                        "characters": story_data.get("characters", []),
+                        "scenes": scenes_data.get("scenes", []),
+                        "visual_bible": visual_bible,
+                    },
+                    story_hash=getattr(story_request, "seed_idea", "unknown"),
+                )
+                image_result = await image_swarm_fn(image_work_order)
+                if image_result.success:
+                    image_output = image_result.output_data
+                    total = image_output.get("total_count", 0)
+                    yield ProgressEvent(
+                        "images", "complete", 85,
+                        f"Image swarm complete: {total} images generated",
+                        image_output,
+                    )
+            except Exception as e:
+                logger.error(f"Image swarm failed: {e}")
+                yield ProgressEvent("images", "failed", 85, f"Image swarm failed: {e}")
+
         combined = {
             "story": story_data,
             "blueprint": blueprint.output_data if blueprint.success else {},
             "scenes": scenes_data,
             "visual_bible": visual_bible,
+            "images": image_output or {},
             "mode": bridge.get("mode", "historical") if bridge else "historical",
         }
 
-        yield ProgressEvent("done", "story_complete", 66, "Story + Visual Bible complete — handing off to production", combined)
+        yield ProgressEvent("done", "story_complete", 85, "All phases complete — final assembly", combined)

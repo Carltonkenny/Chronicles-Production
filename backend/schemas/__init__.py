@@ -3,6 +3,7 @@ from .story import StoryRequest, StoryOutput, StoryGenerationRequest, StoryGener
 from .work_order import WorkOrder, WorkResult, AgentLineage
 from .visual_bible import VisualBible
 from .film import FilmOutput, FilmStatus
+from .image_result import ImageResult, ImageOutput
 
 __all__ = [
     "Culture", "Timeline", "Theme",
@@ -10,4 +11,5 @@ __all__ = [
     "WorkOrder", "WorkResult", "AgentLineage",
     "VisualBible",
     "FilmOutput", "FilmStatus",
+    "ImageResult", "ImageOutput",
 ]

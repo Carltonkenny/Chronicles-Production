@@ -9,7 +9,7 @@ from agents.director import DirectorAgent
 from agents.production_designer import ProductionDesignerAgent
 from schemas import WorkOrder
 from utils.visual_engine import visual_engine
-from image_agent import image_agent
+from image.image_api import ImageAPIClient
 from audio.edge_tts_service import edge_tts_service, get_voice_for_culture
 
 
@@ -67,26 +67,31 @@ async def run_combo(name, culture, timeline, theme, seed, label):
 
     # IMAGES
     print("--- IMAGES ---")
-    st_data = {
-        "title": result.title, "setting": result.setting,
-        "characters": result.characters, "story": result.story,
-        "metadata": {
-            "culture": culture.value, "timeline": timeline.value, "theme": theme.value,
-            "culture_display": culture.value.replace("_", " ").title(),
-            "timeline_display": timeline.value.replace("_", " ").title(),
-            "theme_display": theme.value.capitalize(),
-        }
-    }
     t2 = time.time()
-    img = await image_agent.generate_all_images(st_data, story_hash)
-    setting_url = img["setting"]["url"] if img.get("setting") else None
-    char_count = len(img.get("characters", []))
+    img_api = ImageAPIClient()
+    char_names = []
+    for c in result.characters[:5]:
+        parts = c.split(":", 1)
+        char_names.append(parts[0].strip() if len(parts) > 1 else c.strip())
+
+    setting_prompt = f"{result.setting[:300]}, {culture.value.replace('_', ' ').title()} {timeline.value.replace('_', ' ').title()}, cinematic wide shot, photorealistic, golden hour"
+    scene_url = await img_api.build_scene_url(story_hash, "scene_1", setting_prompt)
+    setting_url = scene_url["url"]
+
+    char_urls = []
+    for name in char_names[:5]:
+        base = f"{name}, {culture.value.replace('_', ' ').title()} {timeline.value.replace('_', ' ').title()}, detailed portrait, photorealistic"
+        variants = await img_api.build_portrait_urls(story_hash, name, base, variations=3)
+        for v in variants:
+            char_urls.append({"character": name, "url": v["url"], "variation": v["variation"]})
+
+    char_count = len(char_urls)
     print(f"  Setting: {'GENERATED' if setting_url else 'FAILED'}")
     if setting_url:
         print(f"    URL: {setting_url[:100]}...")
-    print(f"  Characters: {char_count} portraits")
-    for ch in img.get("characters", [])[:3]:
-        print(f"    - {ch['character']}: {ch['url'][:80]}...")
+    print(f"  Characters: {char_count} total (3 variants each for {len(char_names)} characters)")
+    for ch in char_urls[:6]:
+        print(f"    - {ch['character']} [{ch['variation']}]: {ch['url'][:80]}...")
     print(f"  Time: {time.time()-t2:.1f}s")
     print()
 

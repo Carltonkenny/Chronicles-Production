@@ -27,7 +27,7 @@ from tasks import generate_audio_background, get_audio_status
 from cache import cache_story, get_cached_story, cache_visuals
 from utils.wiki_context import get_culture_fallback_data, audit_fallback_coverage, get_wikipedia_summary
 from agents.showrunner import ShowrunnerAgent, ProgressEvent
-from image_agent import image_agent
+from image import image_api
 from logger_config import api_logger as logger
 
 limiter = Limiter(key_func=get_remote_address, default_limits=["100/hour"])
@@ -407,46 +407,35 @@ async def generate_film(fastapi_request: Request, body: StoryGenerationRequest):
             agent = ArtDirectorAgent()
             return await agent.execute(wo)
 
+        async def image_swarm_fn(wo):
+            from agents.image_swarm_lead import ImageSwarmLead
+            agent = ImageSwarmLead()
+            return await agent.execute(wo)
+
         async for event in showrunner.orchestrate(
             planner_fn, writer_fn, supervisor_fn,
             story_request, wiki_context, bridge,
             director_fn, pd_fn, ad_fn,
+            image_swarm_fn,
         ):
             if event.phase == "done":
+                combined = event.data or {}
+                img_data = combined.get("images", {})
+
+                total = img_data.get("total_count", 0)
+                portraits = img_data.get("portraits", [])
+                scenes = img_data.get("scenes", [])
+                char_map = img_data.get("character_map", {})
+
+                images_payload = {
+                    "setting": scenes[0]["url"] if scenes else None,
+                    "scenes": [s["url"] for s in scenes],
+                    "characters": {name: [p["url"] for p in variants] for name, variants in char_map.items()},
+                    "total_count": total,
+                }
+                yield f"event: images\ndata: {json.dumps({'phase': 'images', 'step': 'complete', 'pct': 85, 'message': f'Image swarm: {total} images', 'data': images_payload})}\n\n"
                 continue
             yield f"event: {event.phase}\ndata: {json.dumps(event.to_dict())}\n\n"
-
-        yield f"event: images\ndata: {json.dumps({'phase': 'images', 'step': 'generating', 'pct': 75, 'message': 'Generating images...'})}\n\n"
-
-        try:
-            img_result = await image_agent.generate_all_images(
-                story_data={
-                    "title": story_request.seed_idea[:50],
-                    "setting": "",
-                    "characters": [],
-                    "story": "",
-                    "metadata": {
-                        "culture": story_request.culture.value,
-                        "timeline": story_request.timeline.value,
-                        "theme": story_request.theme.value,
-                        "culture_display": story_request.culture.value.replace("_", " ").title(),
-                        "timeline_display": story_request.timeline.value.replace("_", " ").title(),
-                        "theme_display": story_request.theme.value.capitalize(),
-                    },
-                },
-                story_hash=story_hash,
-            )
-            img_data = {
-                "setting": img_result["setting"]["url"] if img_result.get("setting") else None,
-                "characters": [c["url"] for c in img_result.get("characters", [])],
-            }
-        except Exception as e:
-            logger.warning(f"Image generation failed: {e}")
-            img_data = {"setting": None, "characters": []}
-
-        char_count = len(img_data["characters"])
-        img_msg = f"Setting + {char_count} character portraits"
-        yield f"event: images\ndata: {json.dumps({'phase': 'images', 'step': 'complete', 'pct': 85, 'message': img_msg, 'data': img_data})}\n\n"
 
         yield f"event: post\ndata: {json.dumps({'phase': 'post', 'step': 'audio', 'pct': 90, 'message': 'Generating narration...'})}\n\n"
 
@@ -465,7 +454,7 @@ async def generate_film(fastapi_request: Request, body: StoryGenerationRequest):
         except Exception as e:
             logger.warning(f"Audio generation failed: {e}")
 
-        yield f"event: done\ndata: {json.dumps({'phase': 'done', 'pct': 100, 'message': 'Film complete', 'data': {'images': img_data, 'audio_url': audio_url, 'mode': mode}})}\n\n"
+        yield f"event: done\ndata: {json.dumps({'phase': 'done', 'pct': 100, 'message': 'Film complete', 'data': {'audio_url': audio_url, 'mode': mode}})}\n\n"
 
     return StreamingResponse(
         event_stream(),
