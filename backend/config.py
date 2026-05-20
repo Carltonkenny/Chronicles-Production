@@ -11,14 +11,7 @@ class Config:
     POLLINATIONS_MODEL: str = os.getenv("POLLINATIONS_MODEL", "gemini-fast")
     POLLINATIONS_API_KEY: str = os.getenv("POLLINATIONS_API_KEY", "")
 
-    OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1/chat/completions"
-    OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY", "")
-    OPENROUTER_MODEL: str = os.getenv("OPENROUTER_MODEL", "nousresearch/hermes-3-llama-3.1-405b:free")
-    OPENROUTER_FALLBACK_MODEL: str = os.getenv("OPENROUTER_FALLBACK_MODEL", "meta-llama/llama-3.2-3b-instruct:free")
-
-    LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "openrouter")
-
-    MAX_STORY_WORDS: int = 700
+    MAX_STORY_WORDS: int = 800
     MIN_STORY_WORDS: int = 350
 
     PLANNER_TEMPERATURE: float = 0.92
@@ -44,7 +37,12 @@ class Config:
     AGENT_TIMEOUT_S: int = 30
 
     TARGET_FILM_DURATION_S: int = 90
-    CLIP_DURATION_S: int = 8
+    CLIP_DURATION_S: int = 10
+
+    VIDEO_PROVIDER: str = os.getenv("VIDEO_PROVIDER", "pollinations")
+    CLOUD_GPU_ENDPOINT: str = os.getenv("CLOUD_GPU_ENDPOINT", "")
+    CLOUD_GPU_API_KEY: str = os.getenv("CLOUD_GPU_API_KEY", "")
+    VIDEO_CLIP_COUNT: int = 6
 
     def validate(self) -> None:
         if not self.POLLINATIONS_MODEL:

@@ -18,7 +18,7 @@ from slowapi.errors import RateLimitExceeded
 from chain import generate_story, detect_mode
 from schemas import (
     StoryRequest, StoryOutput, StoryGenerationRequest,
-    StoryGenerationResponse, Culture, Timeline, Theme
+    StoryGenerationResponse, Culture, Timeline, Theme, WorkOrder
 )
 from config import CONFIG
 from audio import get_voice_for_culture
@@ -27,6 +27,7 @@ from tasks import generate_audio_background, get_audio_status
 from cache import cache_story, get_cached_story, cache_visuals
 from utils.wiki_context import get_culture_fallback_data, audit_fallback_coverage, get_wikipedia_summary
 from agents.showrunner import ShowrunnerAgent, ProgressEvent
+from agents.video_lead import VideoLead
 from image import image_api
 from logger_config import api_logger as logger
 
@@ -194,7 +195,9 @@ async def health_check():
         "status": "healthy",
         "model": CONFIG.POLLINATIONS_MODEL,
         "api_configured": bool(CONFIG.POLLINATIONS_API_KEY),
-        "rate_limit_tier": "anonymous" if not CONFIG.POLLINATIONS_API_KEY else "authenticated"
+        "rate_limit_tier": "anonymous" if not CONFIG.POLLINATIONS_API_KEY else "authenticated",
+        "video_provider": CONFIG.VIDEO_PROVIDER,
+        "cloud_gpu_configured": bool(CONFIG.CLOUD_GPU_ENDPOINT)
     }
 
 
@@ -412,6 +415,10 @@ async def generate_film(fastapi_request: Request, body: StoryGenerationRequest):
             agent = ImageSwarmLead()
             return await agent.execute(wo)
 
+        async def video_swarm_fn(wo):
+            agent = VideoLead()
+            return await agent.execute(wo)
+
         async for event in showrunner.orchestrate(
             planner_fn, writer_fn, supervisor_fn,
             story_request, wiki_context, bridge,
@@ -437,7 +444,46 @@ async def generate_film(fastapi_request: Request, body: StoryGenerationRequest):
                 continue
             yield f"event: {event.phase}\ndata: {json.dumps(event.to_dict())}\n\n"
 
-        yield f"event: post\ndata: {json.dumps({'phase': 'post', 'step': 'audio', 'pct': 90, 'message': 'Generating narration...'})}\n\n"
+        yield f"event: video\ndata: {json.dumps({'phase': 'video', 'step': 'crafting', 'pct': 87, 'message': 'Crafting video prompts...'})}\n\n"
+
+        video_result = None
+        try:
+            scene_list = combined.get("scenes", []) if combined else []
+            vb_data = combined.get("visual_bible", {}) if combined else {}
+            char_bibles = vb_data.get("character_bibles", {}) if vb_data else {}
+            ref_images = {}
+            if char_map:
+                for ch_name, portraits_list in char_map.items():
+                    if portraits_list and len(portraits_list) > 0:
+                        ref_images[ch_name] = portraits_list[0].get("url", "")
+
+            scenes_for_video = []
+            for i in range(CONFIG.VIDEO_CLIP_COUNT):
+                if i < len(scene_list):
+                    scenes_for_video.append(scene_list[i])
+                elif scene_list:
+                    scenes_for_video.append(scene_list[i % len(scene_list)])
+
+            video_wo = WorkOrder(
+                agent_type="video_lead",
+                input_data={
+                    "scenes": scenes_for_video,
+                    "visual_bible": vb_data,
+                    "character_bibles": char_bibles,
+                    "reference_images": ref_images,
+                    "clip_duration": CONFIG.CLIP_DURATION_S,
+                },
+                story_hash=story_hash,
+                priority=1,
+            )
+            video_agent = VideoLead()
+            video_result = await video_agent.execute(video_wo)
+            yield f"event: video\ndata: {json.dumps({'phase': 'video', 'step': 'generation', 'pct': 95, 'message': 'Video generation complete', 'data': video_result.output_data if video_result and video_result.success else {}})}\n\n"
+        except Exception as e:
+            logger.warning(f"Video generation failed: {e}")
+            yield f"event: video\ndata: {json.dumps({'phase': 'video', 'step': 'failed', 'pct': 95, 'message': f'Video generation failed: {e}'})}\n\n"
+
+        yield f"event: post\ndata: {json.dumps({'phase': 'post', 'step': 'audio', 'pct': 96, 'message': 'Generating narration...'})}\n\n"
 
         audio_url = None
         try:
@@ -450,11 +496,15 @@ async def generate_film(fastapi_request: Request, body: StoryGenerationRequest):
             if audio_bytes:
                 edge_tts_service.cache(story_hash, audio_bytes)
                 audio_url = f"/api/audio/{story_hash}"
-                yield f"event: post\ndata: {json.dumps({'phase': 'post', 'step': 'audio_complete', 'pct': 95, 'message': 'Narration ready', 'data': {'audio_url': audio_url}})}\n\n"
+                yield f"event: post\ndata: {json.dumps({'phase': 'post', 'step': 'audio_complete', 'pct': 98, 'message': 'Narration ready', 'data': {'audio_url': audio_url}})}\n\n"
         except Exception as e:
             logger.warning(f"Audio generation failed: {e}")
 
-        yield f"event: done\ndata: {json.dumps({'phase': 'done', 'pct': 100, 'message': 'Film complete', 'data': {'audio_url': audio_url, 'mode': mode}})}\n\n"
+        clips = []
+        if video_result and video_result.success:
+            clips = video_result.output_data.get("clips", [])
+
+        yield f"event: done\ndata: {json.dumps({'phase': 'done', 'pct': 100, 'message': 'Film complete', 'data': {'audio_url': audio_url, 'mode': mode, 'video_clips': clips, 'total_clips': len(clips)}})}\n\n"
 
     return StreamingResponse(
         event_stream(),
