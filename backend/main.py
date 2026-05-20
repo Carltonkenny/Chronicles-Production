@@ -175,7 +175,7 @@ except Exception:
     pass
 
 
-@app.get("/", methods=["GET", "HEAD"])
+@app.get("/")
 async def root():
     return {
         "status": "healthy",
@@ -350,7 +350,7 @@ async def http_exception_handler(request, exc: HTTPException):
 
 @app.post("/generate-film")
 @limiter.limit("10/hour")
-async def generate_film(fastapi_request: Request, body: StoryGenerationRequest):
+async def generate_film(request: Request, body: StoryGenerationRequest):
     try:
         culture_enum = Culture(body.culture.lower())
         timeline_enum = Timeline(body.timeline.lower())

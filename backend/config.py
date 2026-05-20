@@ -11,7 +11,7 @@ class Config:
     POLLINATIONS_MODEL: str = os.getenv("POLLINATIONS_MODEL", "gemini-fast")
     POLLINATIONS_API_KEY: str = os.getenv("POLLINATIONS_API_KEY", "")
 
-    MAX_STORY_WORDS: int = 800
+    MAX_STORY_WORDS: int = 700
     MIN_STORY_WORDS: int = 350
 
     PLANNER_TEMPERATURE: float = 0.92
