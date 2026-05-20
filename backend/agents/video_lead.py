@@ -8,14 +8,13 @@ from schemas import WorkOrder, WorkResult
 from agents.base_agent import BaseAgent
 from agents.video_prompt_crafter import VideoPromptCrafter
 from agents.video_qc import VideoQCAgent
-from video.video_api import VideoProvider, CloudGPUProvider, PollinationsProvider, KenBurnsDegradation, VideoClipResult
+from video.video_api import VideoProvider, CloudGPUProvider, KenBurnsDegradation, VideoClipResult
 from logger_config import setup_logger
 
 logger = setup_logger("VideoLead")
 
 PROVIDER_MAP = {
     "cloud_gpu": CloudGPUProvider,
-    "pollinations": PollinationsProvider,
     "ken_burns": KenBurnsDegradation,
 }
 
@@ -26,7 +25,7 @@ class VideoLead(BaseAgent):
     def __init__(self, timeout_ms: int = None, provider: str = None):
         super().__init__(timeout_ms or 120000)
         provider_name = provider or CONFIG.VIDEO_PROVIDER
-        provider_class = PROVIDER_MAP.get(provider_name, PollinationsProvider)
+        provider_class = PROVIDER_MAP.get(provider_name, CloudGPUProvider)
         self._provider: VideoProvider = provider_class()
 
     async def _execute_internal(self, work_order: WorkOrder) -> WorkResult:
@@ -98,23 +97,13 @@ class VideoLead(BaseAgent):
             })
 
             if not result.success and self._try_fallback():
-                logger.info(f"Primary provider failed, falling back to Pollinations")
-                fallback = PollinationsProvider()
-                result2 = await fallback.generate(
+                logger.info(f"CloudGPU failed, degrading to Ken Burns")
+                kb = KenBurnsDegradation()
+                result2 = await kb.generate(
                     prompt=p.get("video_prompt", ""),
                     reference_image_url=p.get("reference_image_url"),
-                    seed=p.get("seed", 0),
-                    duration_s=p.get("expected_duration_s", clip_duration),
                 )
                 clip_results[-1]["clip_result"] = result2
-                if not result2.success:
-                    logger.info(f"Fallback also failed, degrading to Ken Burns")
-                    kb = KenBurnsDegradation()
-                    result3 = await kb.generate(
-                        prompt=p.get("video_prompt", ""),
-                        reference_image_url=p.get("reference_image_url"),
-                    )
-                    clip_results[-1]["clip_result"] = result3
 
         qc_tasks = []
         for cr in clip_results:

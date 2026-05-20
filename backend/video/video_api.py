@@ -2,7 +2,6 @@ import asyncio
 import logging
 from abc import ABC, abstractmethod
 from typing import Optional, List
-from urllib.parse import quote
 
 import httpx
 
@@ -12,7 +11,6 @@ from logger_config import setup_logger
 logger = setup_logger("VideoAPI")
 
 VIDEO_TIMEOUT = 600
-POLLINATIONS_VIDEO_URL = "https://gen.pollinations.ai/video"
 
 
 class VideoClipResult:
@@ -54,7 +52,7 @@ class CloudGPUProvider(VideoProvider):
                        seed: int = 0, duration_s: int = 8) -> VideoClipResult:
         if not self.endpoint:
             return VideoClipResult(
-                success=False, error="CloudGPU endpoint not configured",
+                success=False, error="CloudGPU endpoint not configured. Set CLOUD_GPU_ENDPOINT in .env",
                 source="cloud_gpu"
             )
         try:
@@ -85,56 +83,6 @@ class CloudGPUProvider(VideoProvider):
         except asyncio.TimeoutError:
             logger.warning("CloudGPU timed out")
             return VideoClipResult(success=False, error="timeout", source="cloud_gpu")
-
-    async def close(self):
-        if self._client:
-            await self._client.aclose()
-            self._client = None
-
-
-class PollinationsProvider(VideoProvider):
-    def __init__(self):
-        self._client: Optional[httpx.AsyncClient] = None
-
-    async def _get_client(self) -> httpx.AsyncClient:
-        if self._client is None:
-            self._client = httpx.AsyncClient(timeout=60.0)
-        return self._client
-
-    def _build_url(self, prompt: str, seed: int) -> str:
-        clean = prompt.replace("**", "").replace("__", "")
-        clean = clean.replace('"', "").replace("'", "")
-        import re as _re
-        clean = _re.sub(r"\s+", " ", clean).strip()
-        if len(clean) > 500:
-            clean = clean[:500].rsplit(" ", 1)[0]
-        encoded = quote(clean, safe="")
-        api_key = CONFIG.POLLINATIONS_API_KEY
-        url = f"{POLLINATIONS_VIDEO_URL}/{encoded}?seed={seed}&model=flux"
-        if api_key:
-            url += f"&key={api_key}"
-        return url
-
-    async def generate(self, prompt: str, reference_image_url: Optional[str] = None,
-                       seed: int = 0, duration_s: int = 8) -> VideoClipResult:
-        try:
-            url = self._build_url(prompt, seed)
-            client = await self._get_client()
-            resp = await client.get(url, follow_redirects=True)
-            if resp.status_code == 200 and len(resp.content) > 1000:
-                logger.info(f"Pollinations generated clip ({len(resp.content)} bytes)")
-                return VideoClipResult(
-                    clip_url=url, clip_bytes=resp.content,
-                    success=True, source="pollinations"
-                )
-            return VideoClipResult(
-                success=False,
-                error=f"Pollinations returned {resp.status_code} ({len(resp.content)} bytes)",
-                source="pollinations"
-            )
-        except httpx.HTTPError as e:
-            logger.warning(f"Pollinations video error: {e}")
-            return VideoClipResult(success=False, error=str(e), source="pollinations")
 
     async def close(self):
         if self._client:

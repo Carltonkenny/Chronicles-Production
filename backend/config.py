@@ -39,7 +39,7 @@ class Config:
     TARGET_FILM_DURATION_S: int = 90
     CLIP_DURATION_S: int = 10
 
-    VIDEO_PROVIDER: str = os.getenv("VIDEO_PROVIDER", "pollinations")
+    VIDEO_PROVIDER: str = os.getenv("VIDEO_PROVIDER", "cloud_gpu")
     CLOUD_GPU_ENDPOINT: str = os.getenv("CLOUD_GPU_ENDPOINT", "")
     CLOUD_GPU_API_KEY: str = os.getenv("CLOUD_GPU_API_KEY", "")
     VIDEO_CLIP_COUNT: int = 6

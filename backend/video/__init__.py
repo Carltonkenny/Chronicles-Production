@@ -1,8 +1,7 @@
-from .video_api import VideoProvider, CloudGPUProvider, PollinationsProvider, KenBurnsDegradation
+from .video_api import VideoProvider, CloudGPUProvider, KenBurnsDegradation
 
 __all__ = [
     "VideoProvider",
     "CloudGPUProvider",
-    "PollinationsProvider",
     "KenBurnsDegradation",
 ]

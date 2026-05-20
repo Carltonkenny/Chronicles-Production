@@ -5,7 +5,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from video.video_api import VideoProvider, CloudGPUProvider, PollinationsProvider, KenBurnsDegradation, VideoClipResult
+from video.video_api import VideoProvider, CloudGPUProvider, KenBurnsDegradation, VideoClipResult
 from schemas import WorkOrder
 from config import CONFIG
 
@@ -16,25 +16,6 @@ class TestVideoProvider:
         result = asyncio.run(provider.generate("test prompt"))
         assert result.success is False
         assert "not configured" in (result.error or "")
-
-    def test_pollinations_build_url(self):
-        provider = PollinationsProvider()
-        url = provider._build_url("test prompt for video", 42)
-        assert "seed=42" in url
-        assert "test%20prompt" in url
-        assert "flux" in url
-
-    def test_pollinations_build_url_no_special_chars(self):
-        provider = PollinationsProvider()
-        url = provider._build_url('**Bold** test; "quotes"', 1)
-        assert "**" not in url
-        assert '"' not in url
-
-    def test_pollinations_build_url_truncates_long(self):
-        provider = PollinationsProvider()
-        long_prompt = "word " * 300
-        url = provider._build_url(long_prompt, 0)
-        assert "seed=0" in url
 
     def test_ken_burns_always_succeeds(self):
         provider = KenBurnsDegradation()
@@ -220,7 +201,7 @@ class TestConfig:
     def test_video_config_defaults(self):
         assert CONFIG.CLIP_DURATION_S == 10
         assert CONFIG.VIDEO_CLIP_COUNT == 6
-        assert CONFIG.VIDEO_PROVIDER in ("pollinations", "cloud_gpu", "ken_burns")
+        assert CONFIG.VIDEO_PROVIDER in ("cloud_gpu", "ken_burns")
 
     def test_video_provider_config_reads_env(self):
         assert isinstance(CONFIG.VIDEO_PROVIDER, str)
