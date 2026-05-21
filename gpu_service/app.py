@@ -175,7 +175,7 @@ async def generate_clip(request: Request, body: GenerateClipRequest):
                 "--prompt", body.prompt,
                 "--num_frames", str(num_frames),
                 "--seed", str(body.seed),
-                "--output_path", str(out),
+                "--output_path", str(output_path),
             ]
 
             if ref_path and ref_path.exists():
