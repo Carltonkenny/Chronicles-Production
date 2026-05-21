@@ -22,9 +22,9 @@ python main.py
 | Phase 1: Core Pipeline | ✅ Complete |
 | Phase 2: Visual Bible | ✅ Complete |
 | Phase 3: Image Swarm | ✅ Complete |
-| Phase 4: Video Swarm | 🔜 Next |
-| Phase 5: Post-Production | ⬜ Pending |
-| Phase 6: Frontend | ⬜ Pending |
+| Phase 4: Video Swarm | ✅ Complete |
+| Phase 5: Post-Production | ✅ Complete |
+| Phase 6: Frontend | 🔜 Next |
 
 ## Completed Components
 
@@ -53,10 +53,35 @@ python main.py
 ✅ SceneKeyframeGen (1 keyframe per scene, 16:9 landscape)
 ✅ ImageSwarmLead (parallel orchestrator, asyncio.gather)
 ✅ Old 657-line monolith archived
-✅ 26 new tests, 61 total passing
+### Phase 4: Video Swarm
+✅ VideoPromptCrafter (Deakins/Storaro cinematographer prompts, 6 clips × 10s)
+✅ VideoQCAgent (PASS/FAIL/WARN with character anchor validation)
+✅ VideoLead orchestrator (parallel crafters → provider → QC → collect)
+✅ CloudGPUProvider for self-hosted LTX-Video 13B (JarvisLabs L4, A100)
+✅ KenBurnsDegradation fallback (static images + zoom)
+✅ GPU service: gpu_service/app.py — FastAPI server running LTX-Video inference
+✅ 20 tests (providers, crafters, QC, orchestrator, config)
+
+### Phase 5: Post-Production
+✅ Groq LLM provider (llama-3.3-70b creative, llama-3.1-8b for QC/crafters, $0.012/film)
+✅ EditorAgent (Schoonmaker/Murch — AssemblyTimeline with transitions, timing)
+✅ SoundDesignerAgent (Burtt/Rydstrom — AudioTimeline with narration offsets)
+✅ ColoristAgent (Sonnenfeld/Bogdanowicz — film-wide ColorGradingSpec)
+✅ FFmpegAssembler (concat, transitions, audio overlay, grading, title card, credits, MP4)
+✅ SSE pipeline wired: editing→sound→color→assembly (96%-99% progress)
+✅ JSON repair: brace-counting algorithm (no more regex bugs)
+✅ /films/{filename} endpoint for serving MP4s
+✅ 10 tests (Editor, Sound, Colorist, Assembler)
+✅ 88/88 total tests passing
+
+## Infrastructure
+✅ Groq LLM (free tier, $0/film)
+✅ Pollinations Image API (free, unlimited)
+✅ Edge TTS Audio (free, unlimited)
+✅ JarvisLabs GPU (L4 spot ₹18/hr, A100 40GB spot ₹74/hr)
 
 ## Next Steps
 
-1. Phase 4: Video Generation Swarm — per-scene video prompts, multi-provider API client, quality validation
-2. Phase 5: Post-Production — Editor, Sound Designer, Colorist, FFmpeg assembly
-3. Phase 6: Frontend — Netflix-style SPA (Landing, Forge, Viewer, Library)
+1. Phase 6: Frontend — Netflix-style SPA (Forge, Viewer, Library, Landing)
+2. GPU: Deploy and test real L4 video generation with JarvisLabs
+3. Phase 5.1: Suno/Udio music integration, Cloudflare R2 storage
