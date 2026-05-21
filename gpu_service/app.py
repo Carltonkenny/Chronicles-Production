@@ -96,7 +96,7 @@ async def load_model():
         import torch
         if torch.cuda.is_available():
             gpu_name = torch.cuda.get_device_name(0)
-            total_vram = torch.cuda.get_device_properties(0).total_memoryory / 1024**3
+            total_vram = torch.cuda.get_device_properties(0).total_memory / 1024**3
             print(f"GPU: {gpu_name} ({total_vram:.1f} GB VRAM)")
             vram_free = (torch.cuda.get_device_properties(0).total_memory -
                          torch.cuda.memory_reserved(0)) / 1024**3
