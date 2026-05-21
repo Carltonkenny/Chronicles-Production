@@ -437,8 +437,8 @@ render deploy --service chronicles-api
 | 3-4 | Core Pipeline | ✅ Complete — Force-blending, Script Supervisor, Showrunner, image agent, Edge TTS audio |
 | 5-6 | Visual Bible | ✅ Complete — Director, Production Designer, Art Director agents, VisualElementsEngine |
 | 7-8 | Image Swarm | Character portraits + Scene keyframes |
-| 9-10 | Video Swarm | 8-12 video clips, QC validated |
-| 11-12 | Post-Production | FFmpeg assembly, full film output |
-| 13-14 | Frontend | Netflix-style UI, full integration |
+| 9-10 | Video Swarm | ✅ Complete — PromptCrafter, QC, VideoLead, CloudGPU, Ken Burns, 20 tests |
+| 11-12 | Post-Production | ✅ Complete — Editor, Sound Designer, Colorist, FFmpeg Assembler, Groq LLM, 88 tests |
+| 13-14 | Frontend | ⬜ Pending — Netflix-style SPA |
 
 **Total: 14 weeks to production-ready MVP.**
