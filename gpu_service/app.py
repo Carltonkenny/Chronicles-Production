@@ -266,4 +266,4 @@ if __name__ == "__main__":
         print(" WARNING: Set GPU_API_KEY env var for production!")
     print()
 
-    uvicorn.run("app:app", host="0.0.0.0", port=8080, log_level="info")
+    uvicorn.run("app:app", host="0.0.0.0", port=int(os.getenv("PORT", "6006")), log_level="info")
