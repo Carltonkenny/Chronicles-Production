@@ -23,12 +23,15 @@ class Config:
     GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
     GROQ_BASE_URL: str = "https://api.groq.com/openai/v1/chat/completions"
 
+    DEEPSEEK_API_KEY: str = os.getenv("DEEPSEEK_API_KEY", "")
+    DEEPSEEK_BASE_URL: str = "https://api.deepseek.com/v1/chat/completions"
+
     OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1/chat/completions"
     OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY", "")
     OPENROUTER_MODEL: str = os.getenv("OPENROUTER_MODEL", "nousresearch/hermes-3-llama-3.1-405b:free")
     OPENROUTER_FALLBACK_MODEL: str = os.getenv("OPENROUTER_FALLBACK_MODEL", "meta-llama/llama-3.2-3b-instruct:free")
 
-    LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "groq")
+    LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "deepseek")
 
     REQUEST_TIMEOUT: int = 120
     MAX_RETRIES: int = 2
@@ -134,9 +137,9 @@ SAFETY_CONSTRAINED_CULTURES: dict[str, str] = {
 }
 
 TASK_MODELS: dict[str, str] = {
-    "planner": "groq:llama-3.3-70b-versatile",
-    "writer": "groq:llama-3.3-70b-versatile",
-    "supervisor": "groq:llama-3.1-8b-instant",
-    "visuals": "groq:llama-3.1-8b-instant",
-    "default": "groq:llama-3.1-8b-instant",
+    "planner": "deepseek:deepseek-v4-pro",
+    "writer": "deepseek:deepseek-v4-pro",
+    "supervisor": "deepseek:deepseek-v4-flash",
+    "visuals": "deepseek:deepseek-v4-flash",
+    "default": "deepseek:deepseek-v4-flash",
 }

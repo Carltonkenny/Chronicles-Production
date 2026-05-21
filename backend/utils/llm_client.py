@@ -11,6 +11,12 @@ PROVIDERS = {}
 def _init_providers():
     if PROVIDERS:
         return
+    PROVIDERS["deepseek"] = {
+        "base_url": CONFIG.DEEPSEEK_BASE_URL,
+        "api_key": CONFIG.DEEPSEEK_API_KEY,
+        "default_model": "deepseek-v4-flash",
+        "extra_body": {"thinking": {"type": "disabled"}},
+    }
     PROVIDERS["groq"] = {
         "base_url": CONFIG.GROQ_BASE_URL,
         "api_key": CONFIG.GROQ_API_KEY,
@@ -62,8 +68,8 @@ async def call_llm(
         temperature = CONFIG.WRITER_TEMPERATURE
 
     _init_providers()
-    primary_name = getattr(CONFIG, "LLM_PROVIDER", "groq")
-    fallback_name = "openrouter" if primary_name != "openrouter" else "pollinations"
+    primary_name = getattr(CONFIG, "LLM_PROVIDER", "deepseek")
+    fallback_name = "groq"
 
     provider_names = [primary_name, fallback_name]
 
@@ -86,6 +92,8 @@ async def call_llm(
             "temperature": temperature,
             "max_tokens": max_tokens,
         }
+        if provider.get("extra_body"):
+            payload.update(provider["extra_body"])
 
         headers = _build_headers(provider)
         last_error = None

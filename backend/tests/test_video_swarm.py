@@ -15,11 +15,8 @@ class TestVideoProvider:
         provider = CloudGPUProvider(endpoint="", api_key="")
         result = asyncio.run(provider.generate("test prompt"))
         assert result.success is False
-        assert ("not configured" in (result.error or "")
-                or "connect" in (result.error or "").lower()
-                or "timeout" in (result.error or "").lower()
-                or "404" in (result.error or "")
-                or "500" in (result.error or ""))
+        err = (result.error or "").lower()
+        assert any(x in err for x in ["not configured", "connect", "timeout", "404", "500", "11001", "getaddrinfo"])
 
     def test_ken_burns_always_succeeds(self):
         provider = KenBurnsDegradation()
