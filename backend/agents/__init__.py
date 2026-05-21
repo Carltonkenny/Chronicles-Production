@@ -9,6 +9,9 @@ from .scene_keyframe_gen import SceneKeyframeGen
 from .video_prompt_crafter import VideoPromptCrafter
 from .video_qc import VideoQCAgent
 from .video_lead import VideoLead
+from .editor import EditorAgent
+from .sound_designer import SoundDesignerAgent
+from .colorist import ColoristAgent
 
 __all__ = [
     "BaseAgent",
@@ -22,4 +25,7 @@ __all__ = [
     "VideoPromptCrafter",
     "VideoQCAgent",
     "VideoLead",
+    "EditorAgent",
+    "SoundDesignerAgent",
+    "ColoristAgent",
 ]

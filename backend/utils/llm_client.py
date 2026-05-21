@@ -1,7 +1,7 @@
 import logging
 import httpx
 import asyncio
-from config import CONFIG
+from config import CONFIG, TASK_MODELS
 
 logger = logging.getLogger("chronicles-llm")
 
@@ -11,6 +11,11 @@ PROVIDERS = {}
 def _init_providers():
     if PROVIDERS:
         return
+    PROVIDERS["groq"] = {
+        "base_url": CONFIG.GROQ_BASE_URL,
+        "api_key": CONFIG.GROQ_API_KEY,
+        "default_model": "llama-3.3-70b-versatile",
+    }
     PROVIDERS["openrouter"] = {
         "base_url": getattr(CONFIG, "OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1/chat/completions"),
         "api_key": getattr(CONFIG, "OPENROUTER_API_KEY", ""),
@@ -32,18 +37,17 @@ def _build_headers(provider: dict) -> dict:
 
 def resolve_model(task: str = "default") -> tuple[str, str]:
     _init_providers()
-    task_models = getattr(CONFIG, "TASK_MODELS", {})
-    model_id = task_models.get(task)
+    model_id = TASK_MODELS.get(task)
     if not model_id:
-        provider_name = getattr(CONFIG, "LLM_PROVIDER", "openrouter")
-        provider = PROVIDERS.get(provider_name, PROVIDERS["pollinations"])
+        provider_name = getattr(CONFIG, "LLM_PROVIDER", "groq")
+        provider = PROVIDERS.get(provider_name, PROVIDERS["groq"])
         model_id = provider["default_model"]
         return provider_name, model_id
-    for pname in ("openrouter", "pollinations"):
+    for pname in PROVIDERS:
         provider = PROVIDERS.get(pname)
-        if provider and model_id.startswith(pname):
-            return pname, model_id
-    provider_name = getattr(CONFIG, "LLM_PROVIDER", "openrouter")
+        if provider and model_id.startswith(f"{pname}:"):
+            return pname, model_id.split(":", 1)[1]
+    provider_name = getattr(CONFIG, "LLM_PROVIDER", "groq")
     return provider_name, model_id
 
 
@@ -58,8 +62,8 @@ async def call_llm(
         temperature = CONFIG.WRITER_TEMPERATURE
 
     _init_providers()
-    primary_name = getattr(CONFIG, "LLM_PROVIDER", "openrouter")
-    fallback_name = "pollinations" if primary_name == "openrouter" else "openrouter"
+    primary_name = getattr(CONFIG, "LLM_PROVIDER", "groq")
+    fallback_name = "openrouter" if primary_name != "openrouter" else "pollinations"
 
     provider_names = [primary_name, fallback_name]
 
@@ -68,9 +72,7 @@ async def call_llm(
         if not provider or not provider.get("base_url"):
             continue
 
-        model_name, _ = resolve_model(task)
-        if not model_name.startswith(pname):
-            model_name = provider["default_model"]
+        _, model_name = resolve_model(task)
 
         payload = {
             "model": model_name,
@@ -108,17 +110,16 @@ async def call_llm(
                         sc = status_code.status_code
                         if sc == 429:
                             retry_after = int(status_code.headers.get('Retry-After', 5))
-                            logger.warning(
-                                f"LLM {pname} rate-limited (429), waiting {retry_after}s"
-                            )
+                            logger.warning(f"LLM {pname} rate-limited (429), waiting {retry_after}s")
                             await asyncio.sleep(retry_after)
                             continue
                     logger.warning(
-                        f"LLM {pname} attempt {attempt}/{CONFIG.MAX_RETRIES} failed: {type(e).__name__}"
+                        f"LLM {pname} attempt {attempt}/{CONFIG.MAX_RETRIES} failed: "
+                        f"{getattr(status_code, 'status_code', '?')} "
+                        f"{getattr(status_code, 'text', '')[:100]}"
                     )
                     if attempt < CONFIG.MAX_RETRIES:
-                        wait_time = 2 ** (attempt - 1)
-                        await asyncio.sleep(wait_time)
+                        await asyncio.sleep(2 ** (attempt - 1))
 
         logger.warning(f"Provider {pname} exhausted, switching to next...")
 
