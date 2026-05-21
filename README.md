@@ -75,10 +75,12 @@ python main.py
 ✅ 88/88 total tests passing
 
 ## Infrastructure
-✅ Groq LLM (free tier, $0/film)
+✅ DeepSeek LLM (V4-Pro for creative, V4-Flash for QC, $0.013/film)
+✅ Groq LLM fallback (free tier, no cost)
 ✅ Pollinations Image API (free, unlimited)
 ✅ Edge TTS Audio (free, unlimited)
-✅ JarvisLabs GPU (L4 spot ₹18/hr, A100 40GB spot ₹74/hr)
+✅ JarvisLabs GPU (A100-80GB spot ₹84/hr, L4 spot ₹18/hr)
+✅ GPU service auto-heals on resume (self-installs missing modules)
 
 ## Next Steps
 

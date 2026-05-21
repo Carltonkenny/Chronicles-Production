@@ -1,6 +1,6 @@
 # Phase 5: Post-Production — Complete
 
-## Status: ✅ COMPLETE | Commit: `04f44f7` (wiring), `457949a` (bug fixes)
+## Status: ✅ COMPLETE | Commits: `04f44f7` (wiring), `457949a` (bug fixes), `a0d660a` (self-healing)
 
 ---
 
@@ -140,7 +140,8 @@ Per IMPLEMENTATION_PLAN.md (Week 13-14):
 
 ## GPU Deployment (JarvisLabs)
 
-- **GPU service** written: `gpu_service/app.py` (FastAPI + LTX-Video 13B FP8 subprocess)
-- **Best value GPU:** A100 40GB spot on JarvisLabs (₹37/hr, ₹1.54/film, 2.5 min generation)
-- **Upgrade path:** L4 (₹2.70/film) → A100 40GB (₹1.54/film) → H100 (₹1.87/film, 60s)
-- **₹500 deposit** on JarvisLabs covers 185 films on L4 or 324 films on A100 40GB spot
+- **GPU service** written: `gpu_service/app.py` (FastAPI + LTX-Video 13B BF16 subprocess)
+- **Self-healing:** app.py auto-installs missing `ltx_video` module on startup. `setup_all.sh` is fully idempotent — sets HF_HOME in ~/.bashrc, force-reinstalls dependencies, cleans stale caches, kills stale processes. One command works fresh or after resume.
+- **Recommended GPU:** A100-80GB spot on JarvisLabs (₹84/hr, 79GB VRAM — fits 13B BF16 model with room to spare, no offloading needed)
+- **Upgrade path:** L4 (₹18/hr, needs FP8+Q8) → A100 40GB (₹74/hr, tight on VRAM) → A100-80GB (₹84/hr, fits perfectly, recommended)
+- **₹364 deposit** on JarvisLabs covers ~4.4 hours of A100-80GB spot (enough for ~20 film sessions)
