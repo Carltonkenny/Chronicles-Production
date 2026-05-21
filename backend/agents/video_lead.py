@@ -55,7 +55,7 @@ class VideoLead(BaseAgent):
                 story_hash=story_hash,
                 priority=2,
             )
-            agent = VideoPromptCrafter(timeout_ms=30000)
+            agent = VideoPromptCrafter(timeout_ms=90000)
             crafter_tasks.append(agent.execute(wo))
 
         sem = asyncio.Semaphore(CONFIG.MAX_CONCURRENT_LLM)

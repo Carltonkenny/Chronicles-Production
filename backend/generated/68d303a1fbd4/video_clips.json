@@ -2,7 +2,7 @@
   {
     "scene_id": "unknown",
     "prompt": "Character is IDENTICAL to reference image https://gen.pollinations.ai/image/Ixchel%20Kawiil%20stands%20with%20a%20neutral%20expression%2C%20her%20piercing%20green%20eyes%20cast%20slightly%20off-center%2C%20as%20if%20lost%20in%20thought%2C%20her%20dark%20hair%20falling%20in%20loose%20waves%20down%20her%20back%2C%20a%20scar%20visible%20above%20her%20left%20eyebrow%2C%20her%20slender%20build%20draped%20in%20traditional%20Maya%20garments%2C%20a%20huipil%20with%20intricate%20embroidery%20in%20shades%20of%20%23f7d2c4%20and%20%236c5ce7%2C%20and%20a%20maxtli%20skirt%20made%20from%20natural%20fibers%2C%20the%20folds%20of%20which%20catch%20the%20warm%2C%20fire-lit%20glow%2C%20with%20a%20worn%20leather-bound%20journal%20clutched%20in%20her%20right%20hand%2C%20and%20a%20small%2C%20intricately%20carved%20wooden%20box%20suspended%20from%20a%20delicate%20%2333cc33%20cord%20around%20her%20neck%2C%20the%20soft%20blur%20of%20a%20distant%2C%20otherworldly%20landscape%20behind%20her%2C%20with%20hints%20of%20%233b3f4e%20rock%20formations%20and%20%23ff69b4%20sunset%20hues%2C%20her%20feet%20sh",
-    "seed": 58394,
+    "seed": 68543,
     "source": "ken_burns",
     "qc_status": "approved",
     "qc_score": 0.5
@@ -10,7 +10,15 @@
   {
     "scene_id": "unknown",
     "prompt": "Character is IDENTICAL to reference image https://gen.pollinations.ai/image/Ixchel%20Kawiil%20stands%20with%20a%20neutral%20expression%2C%20her%20piercing%20green%20eyes%20cast%20slightly%20off-center%2C%20as%20if%20lost%20in%20thought%2C%20her%20dark%20hair%20falling%20in%20loose%20waves%20down%20her%20back%2C%20a%20scar%20visible%20above%20her%20left%20eyebrow%2C%20her%20slender%20build%20draped%20in%20traditional%20Maya%20garments%2C%20a%20huipil%20with%20intricate%20embroidery%20in%20shades%20of%20%23f7d2c4%20and%20%236c5ce7%2C%20and%20a%20maxtli%20skirt%20made%20from%20natural%20fibers%2C%20the%20folds%20of%20which%20catch%20the%20warm%2C%20fire-lit%20glow%2C%20with%20a%20worn%20leather-bound%20journal%20clutched%20in%20her%20right%20hand%2C%20and%20a%20small%2C%20intricately%20carved%20wooden%20box%20suspended%20from%20a%20delicate%20%2333cc33%20cord%20around%20her%20neck%2C%20the%20soft%20blur%20of%20a%20distant%2C%20otherworldly%20landscape%20behind%20her%2C%20with%20hints%20of%20%233b3f4e%20rock%20formations%20and%20%23ff69b4%20sunset%20hues%2C%20her%20feet%20sh",
-    "seed": 58394,
+    "seed": 68543,
+    "source": "ken_burns",
+    "qc_status": "approved",
+    "qc_score": 0.5
+  },
+  {
+    "scene_id": "unknown",
+    "prompt": "Character is IDENTICAL to reference image https://gen.pollinations.ai/image/Ixchel%20Kawiil%20stands%20with%20a%20neutral%20expression%2C%20her%20piercing%20green%20eyes%20cast%20slightly%20off-center%2C%20as%20if%20lost%20in%20thought%2C%20her%20dark%20hair%20falling%20in%20loose%20waves%20down%20her%20back%2C%20a%20scar%20visible%20above%20her%20left%20eyebrow%2C%20her%20slender%20build%20draped%20in%20traditional%20Maya%20garments%2C%20a%20huipil%20with%20intricate%20embroidery%20in%20shades%20of%23f7d2c4%20and%20%236c5ce7%2C%20and%20a%20maxtli%20skirt%20made%20from%20natural%20fibers%2C%20the%20folds%20of%20which%20catch%20the%20warm%2C%20fire-lit%20glow%2C%20with%20a%20worn%20leather-bound%20journal%20clutched%20in%20her%20right%20hand%2C%20and%20a%20small%2C%20intricately%20carved%20wooden%20box%20suspended%20from%20a%20delicate%2033cc33%20cord%20around%20her%20neck%2C%20the%20soft%20blur%20of%20a%20distant%2C%20otherworldly%20landscape%20behind%20her%2C%20with%20hints%20of%23ff69b4%20rock%20formations%20and%20%233b3f4e%20sunset%20hues%2C%20her%20feet%20shod%20in%20",
+    "seed": 68543,
     "source": "ken_burns",
     "qc_status": "approved",
     "qc_score": 0.5
