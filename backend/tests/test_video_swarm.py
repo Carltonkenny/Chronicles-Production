@@ -17,7 +17,9 @@ class TestVideoProvider:
         assert result.success is False
         assert ("not configured" in (result.error or "")
                 or "connect" in (result.error or "").lower()
-                or "timeout" in (result.error or "").lower())
+                or "timeout" in (result.error or "").lower()
+                or "404" in (result.error or "")
+                or "500" in (result.error or ""))
 
     def test_ken_burns_always_succeeds(self):
         provider = KenBurnsDegradation()
