@@ -260,6 +260,24 @@ async def _download_reference(url: str) -> Optional[Path]:
 # ─── Entry point ───────────────────────────────────────────────────
 
 if __name__ == "__main__":
+    # ─── Self-heal: auto-install missing ltx_video module ─────────────
+    try:
+        from ltx_video.inference import infer
+    except ImportError:
+        import subprocess
+        import sys as _sys
+        ltx_dir = os.path.expanduser("~/LTX-Video")
+        print(f"[self-heal] ltx_video not found — reinstalling from {ltx_dir}...")
+        result = subprocess.run(
+            [_sys.executable, "-m", "pip", "install", "-e", f"{ltx_dir}[inference]",
+             "--force-reinstall", "-q"],
+            capture_output=True, text=True, timeout=120,
+        )
+        if result.returncode == 0:
+            print("[self-heal] LTX-Video reinstalled successfully.")
+        else:
+            print(f"[self-heal] Reinstallation failed: {result.stderr[-200:]}")
+
     print("=" * 60)
     print(" Chronicles GPU Video Service")
     print("=" * 60)
