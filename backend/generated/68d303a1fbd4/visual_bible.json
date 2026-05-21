@@ -1,0 +1,183 @@
+{
+  "film_tone": "Dark, brooding, fire-lit with moments of cold dawn introspection",
+  "pacing": "Slow atmospheric discovery \u2192 building tension \u2192 frantic obsession at climax \u2192 quiet, earned resolution",
+  "color_palette": {
+    "primary": [
+      "#3b3f4e",
+      "#f7d2c4",
+      "#6c5ce7"
+    ],
+    "secondary": [
+      "#964b00",
+      "#786c3b",
+      "#455a64"
+    ],
+    "accent": [
+      "#ff69b4",
+      "#33cc33"
+    ]
+  },
+  "lighting_style": "Low-key with fire as primary source, deep shadows with warm rim highlights, cold blue ambient for exterior scenes",
+  "character_bibles": [
+    {
+      "name": "Ixchel K'awiil",
+      "appearance": "Young Maya woman with dark hair and piercing green eyes, slender build, and a scar above her left eyebrow",
+      "costume": "Traditional Maya garments, including a huipil (blouse) and a maxtli (skirt), made from natural fibers such as cotton and silk",
+      "signature_items": [
+        "a worn leather-bound journal",
+        "a small, intricately carved wooden box"
+      ],
+      "emotional_range": "wonder, fear, determination, hope, remorse"
+    },
+    {
+      "name": "K'uk'umatz",
+      "appearance": "Tall, lean Maya man with dark hair and piercing blue eyes, angular features, and a scar above his right eyebrow",
+      "costume": "Modern, high-tech outfit, including a black leather jacket and pants, with a silver pendant bearing the symbol of the corporation",
+      "signature_items": [
+        "a sleek, silver smartphone",
+        "a pair of high-tech, augmented reality glasses"
+      ],
+      "emotional_range": "obsession, fear, guilt, determination"
+    },
+    {
+      "name": "Lady Yaxche",
+      "appearance": "Elderly Maya woman with gray hair and wise, brown eyes, stately build, and a warm smile",
+      "costume": "Traditional Maya garments, including a huipil (blouse) and a maxtli (skirt), made from natural fibers such as cotton and silk",
+      "signature_items": [
+        "a beautifully crafted, handmade wooden staff",
+        "a small, intricately carved stone pendant"
+      ],
+      "emotional_range": "wisdom, compassion, concern, determination"
+    },
+    {
+      "name": "Dr. John Taylor",
+      "appearance": "Middle-aged, Caucasian man with brown hair and glasses, slightly overweight, and a kind face",
+      "costume": "Modern, professional outfit, including a white dress shirt and a black tie, with a silver watch on his wrist",
+      "signature_items": [
+        "a leather-bound, scientific journal",
+        "a pair of high-tech, binoculars"
+      ],
+      "emotional_range": "curiosity, concern, determination, guilt"
+    }
+  ],
+  "location_descriptions": [
+    {
+      "name": "The Pyramid",
+      "description": "A massive, ancient pyramid, covered in intricate hieroglyphics and vines, with a grand staircase leading to the top",
+      "materials": [
+        "stone, wood, vines"
+      ],
+      "lighting": "Low-key, with fire as primary source, deep shadows with warm rim highlights",
+      "time_of_day": "night"
+    },
+    {
+      "name": "The Hidden Chamber",
+      "description": "A small, dimly lit room, with walls adorned with cryptic symbols and murals depicting the destruction of a great city",
+      "materials": [
+        "stone, wood, paint"
+      ],
+      "lighting": "Low-key, with a single, flickering torch as primary source",
+      "time_of_day": "night"
+    },
+    {
+      "name": "The Maya Community",
+      "description": "A bustling, vibrant marketplace, filled with people of all ages and backgrounds, selling traditional goods and services",
+      "materials": [
+        "wood, fabric, ceramics"
+      ],
+      "lighting": "Natural, with sunlight filtering through the thatched roofs",
+      "time_of_day": "day"
+    }
+  ],
+  "prop_list": [
+    "a worn leather-bound journal",
+    "a small, intricately carved wooden box",
+    "a sleek, silver smartphone",
+    "a pair of high-tech, augmented reality glasses",
+    "a beautifully crafted, handmade wooden staff",
+    "a small, intricately carved stone pendant",
+    "a leather-bound, scientific journal",
+    "a pair of high-tech, binoculars"
+  ],
+  "shot_variation_matrix": {
+    "scene_1": [
+      {
+        "shot_id": "scene_1_shot_1",
+        "shot_type": "wide establishing",
+        "focal_length": "24mm",
+        "movement": "static",
+        "description": "Establishing shot of the pyramid at dawn"
+      },
+      {
+        "shot_id": "scene_1_shot_2",
+        "shot_type": "medium",
+        "focal_length": "35mm",
+        "movement": "slow push-in",
+        "description": "Close-up of Ixchel's face as she gazes up at the pyramid"
+      },
+      {
+        "shot_id": "scene_1_shot_3",
+        "shot_type": "close-up",
+        "focal_length": "50mm",
+        "movement": "handheld",
+        "description": "Handheld shot of Ixchel's hands as she touches the hieroglyphics on the pyramid"
+      },
+      {
+        "shot_id": "scene_1_shot_4",
+        "shot_type": "extreme close-up",
+        "focal_length": "85mm",
+        "movement": "static",
+        "description": "Extreme close-up of the hieroglyphics on the pyramid"
+      }
+    ],
+    "scene_2": [
+      {
+        "shot_id": "scene_2_shot_1",
+        "shot_type": "wide establishing",
+        "focal_length": "35mm",
+        "movement": "static",
+        "description": "Establishing shot of the hidden chamber at night"
+      },
+      {
+        "shot_id": "scene_2_shot_2",
+        "shot_type": "medium",
+        "focal_length": "50mm",
+        "movement": "slow dolly",
+        "description": "Close-up of the murals on the walls of the hidden chamber"
+      },
+      {
+        "shot_id": "scene_2_shot_3",
+        "shot_type": "close-up",
+        "focal_length": "24mm",
+        "movement": "handheld",
+        "description": "Handheld shot of Ixchel's face as she gazes at the murals"
+      }
+    ]
+  },
+  "emotion_camera_map": [
+    {
+      "emotion": "wonder",
+      "camera_style": "slow push-in, shallow DOF, 35mm"
+    },
+    {
+      "emotion": "fear",
+      "camera_style": "tightly framed, high contrast, 50mm"
+    },
+    {
+      "emotion": "determination",
+      "camera_style": "medium, wide shot, 24mm"
+    },
+    {
+      "emotion": "hope",
+      "camera_style": "soft focus, warm color palette, 35mm"
+    },
+    {
+      "emotion": "remorse",
+      "camera_style": "close-up, high contrast, 50mm"
+    },
+    {
+      "emotion": "rage",
+      "camera_style": "extreme close-up, high contrast, 85mm"
+    }
+  ]
+}
