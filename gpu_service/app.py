@@ -32,10 +32,10 @@ app = FastAPI(title="Chronicles GPU Video Service", version="1.0.0")
 # ─── Configuration (from environment) ───────────────────────────────
 
 API_KEY = os.environ.get("GPU_API_KEY", "")
-LTX_VIDEO_DIR = Path(os.environ.get("LTX_VIDEO_DIR", "/home/user/LTX-Video"))
+LTX_VIDEO_DIR = Path(os.environ.get("LTX_VIDEO_DIR", os.path.expanduser("~/LTX-Video")))
 MODEL_WEIGHTS_PATH = Path(os.environ.get(
     "MODEL_WEIGHTS_PATH",
-    "/home/user/LTX-Video/models/ltxv-13b-0.9.8-distilled-fp8.safetensors"
+    os.path.expanduser("~/LTX-Video/models/ltxv-13b-0.9.8-distilled-fp8.safetensors")
 ))
 PIPELINE_CONFIG = os.environ.get(
     "PIPELINE_CONFIG",
