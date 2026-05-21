@@ -4,6 +4,7 @@ import hashlib
 import asyncio
 import anyio
 import json
+from pathlib import Path
 from contextlib import asynccontextmanager
 from typing import Optional
 from fastapi import FastAPI, HTTPException, status, Request
@@ -28,6 +29,10 @@ from cache import cache_story, get_cached_story, cache_visuals
 from utils.wiki_context import get_culture_fallback_data, audit_fallback_coverage, get_wikipedia_summary
 from agents.showrunner import ShowrunnerAgent, ProgressEvent
 from agents.video_lead import VideoLead
+from agents.editor import EditorAgent
+from agents.sound_designer import SoundDesignerAgent
+from agents.colorist import ColoristAgent
+from post.assembler import FFmpegAssembler
 from image import image_api
 from logger_config import api_logger as logger
 
@@ -504,7 +509,96 @@ async def generate_film(request: Request, body: StoryGenerationRequest):
         if video_result and video_result.success:
             clips = video_result.output_data.get("clips", [])
 
-        yield f"event: done\ndata: {json.dumps({'phase': 'done', 'pct': 100, 'message': 'Film complete', 'data': {'audio_url': audio_url, 'mode': mode, 'video_clips': clips, 'total_clips': len(clips)}})}\n\n"
+        story_data = combined.get("story", {}) if combined else {}
+        story_title = story_data.get("title", story_request.seed_idea[:40])
+        story_text = story_data.get("story", "")
+        scenes_raw = combined.get("scenes", {}).get("scenes", []) if combined else []
+        vb_data = combined.get("visual_bible", {}) if combined else {}
+
+        # Phase 5: Post-Production
+        yield f"event: post\ndata: {json.dumps({'phase': 'post', 'step': 'editing', 'pct': 96, 'message': 'Creating assembly timeline...'})}\n\n"
+
+        try:
+            editor = EditorAgent()
+            editor_wo = WorkOrder(
+                agent_type="editor",
+                input_data={
+                    "title": story_title,
+                    "culture": story_request.culture.value,
+                    "timeline": story_request.timeline.value,
+                    "theme": story_request.theme.value,
+                    "scenes": scenes_raw,
+                    "clip_data": clips,
+                    "target_duration_s": CONFIG.TARGET_FILM_DURATION_S,
+                },
+                story_hash=story_hash,
+                priority=1,
+            )
+            editor_result = await editor.execute(editor_wo)
+            assembly_timeline = editor_result.output_data.get("assembly_timeline", {}) if editor_result.success else {}
+        except Exception as e:
+            logger.warning(f"Editor failed: {e}")
+            assembly_timeline = {}
+
+        yield f"event: post\ndata: {json.dumps({'phase': 'post', 'step': 'sound', 'pct': 97, 'message': 'Designing audio...'})}\n\n"
+
+        try:
+            sound = SoundDesignerAgent()
+            sound_wo = WorkOrder(
+                agent_type="sound_designer",
+                input_data={
+                    "narration_path": "",
+                    "culture": story_request.culture.value,
+                    "scenes": scenes_raw,
+                },
+                story_hash=story_hash,
+                priority=2,
+            )
+            sound_result = await sound.execute(sound_wo)
+            audio_timeline = sound_result.output_data.get("audio_timeline", {}) if sound_result.success else {}
+        except Exception as e:
+            logger.warning(f"Sound designer failed: {e}")
+            audio_timeline = {}
+
+        yield f"event: post\ndata: {json.dumps({'phase': 'post', 'step': 'color', 'pct': 98, 'message': 'Color grading...'})}\n\n"
+
+        try:
+            color = ColoristAgent()
+            color_wo = WorkOrder(
+                agent_type="colorist",
+                input_data={
+                    "color_palette": vb_data.get("color_palette", "") if vb_data else "",
+                    "lighting_style": vb_data.get("lighting_style", "") if vb_data else "",
+                    "emotional_arc": story_data.get("theme", ""),
+                    "scene_count": len(clips),
+                },
+                story_hash=story_hash,
+                priority=2,
+            )
+            color_result = await color.execute(color_wo)
+            grading_spec = color_result.output_data.get("grading_spec", {}) if color_result.success else {}
+        except Exception as e:
+            logger.warning(f"Colorist failed: {e}")
+            grading_spec = {}
+
+        yield f"event: post\ndata: {json.dumps({'phase': 'post', 'step': 'assembly', 'pct': 99, 'message': 'Assembling final MP4...'})}\n\n"
+
+        mp4_path = None
+        try:
+            assembler = FFmpegAssembler()
+            mp4_path = assembler.assemble(
+                story_hash=story_hash,
+                assembly_timeline=assembly_timeline,
+                audio_timeline=audio_timeline,
+                grading_spec=grading_spec,
+                clip_data=clips,
+            )
+        except Exception as e:
+            logger.warning(f"Assembly failed: {e}")
+
+        mp4_url = f"/films/{story_hash}.mp4" if mp4_path and mp4_path.exists() else None
+
+        yield f"event: done\ndata: {json.dumps({'phase': 'done', 'pct': 100, 'message': 'Film complete', 'data': {'audio_url': audio_url, 'mode': mode, 'video_clips': clips, 'total_clips': len(clips), 'mp4_url': mp4_url}})}\n\n"
 
     return StreamingResponse(
         event_stream(),
@@ -523,7 +617,12 @@ async def get_audio_status_endpoint(story_hash: str):
     return status
 
 
-@app.get("/api/audio/{story_hash}")
+@app.get("/films/{filename}")
+async def serve_film(filename: str):
+    file_path = Path("generated") / filename
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Film not found")
+    return FileResponse(str(file_path), media_type="video/mp4")
 async def get_audio_file(story_hash: str):
     audio_data = edge_tts_service.get_cached(story_hash)
     if not audio_data:
