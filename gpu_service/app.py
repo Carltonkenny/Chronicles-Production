@@ -33,14 +33,20 @@ app = FastAPI(title="Chronicles GPU Video Service", version="1.0.0")
 
 API_KEY = os.environ.get("GPU_API_KEY", "")
 LTX_VIDEO_DIR = Path(os.environ.get("LTX_VIDEO_DIR", os.path.expanduser("~/LTX-Video")))
-MODEL_WEIGHTS_PATH = Path(os.environ.get(
-    "MODEL_WEIGHTS_PATH",
-    os.path.expanduser("~/LTX-Video/models/ltxv-13b-0.9.8-distilled-fp8.safetensors")
-))
-PIPELINE_CONFIG = os.environ.get(
-    "PIPELINE_CONFIG",
-    "configs/ltxv-13b-0.9.8-distilled-fp8.yaml"
-)
+
+def _detect_model() -> tuple:
+    models_dir = LTX_VIDEO_DIR / "models"
+    fp8 = models_dir / "ltxv-13b-0.9.8-distilled-fp8.safetensors"
+    bf16 = models_dir / "ltxv-13b-0.9.8-distilled.safetensors"
+    if fp8.exists():
+        return fp8, "configs/ltxv-13b-0.9.8-distilled-fp8.yaml"
+    if bf16.exists():
+        return bf16, "configs/ltxv-13b-0.9.8-distilled.yaml"
+    return None, "configs/ltxv-13b-0.9.8-distilled.yaml"
+
+_default_weights, _default_config = _detect_model()
+MODEL_WEIGHTS_PATH = Path(os.environ.get("MODEL_WEIGHTS_PATH", str(_default_weights or "")))
+PIPELINE_CONFIG = os.environ.get("PIPELINE_CONFIG", _default_config)
 
 # ─── App state ─────────────────────────────────────────────────────
 
