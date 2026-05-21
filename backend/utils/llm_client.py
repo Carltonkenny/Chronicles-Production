@@ -72,7 +72,10 @@ async def call_llm(
         if not provider or not provider.get("base_url"):
             continue
 
-        _, model_name = resolve_model(task)
+        if pname == primary_name:
+            _, model_name = resolve_model(task)
+        else:
+            model_name = provider["default_model"]
 
         payload = {
             "model": model_name,

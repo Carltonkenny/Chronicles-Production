@@ -48,7 +48,7 @@ def repair_json(json_str: str) -> str:
 
 
 def extract_and_repair_json(raw: str) -> dict:
-    fenced = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", raw, re.DOTALL)
+    fenced = re.search(r"```(?:json)?\s*(\{.*\})\s*```", raw, re.DOTALL)
     json_str = fenced.group(1) if fenced else None
 
     if not json_str:
