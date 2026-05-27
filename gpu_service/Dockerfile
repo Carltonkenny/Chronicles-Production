@@ -19,6 +19,6 @@ ENV LTX_VIDEO_DIR=/opt/LTX-Video
 ENV MODEL_WEIGHTS_PATH=/opt/LTX-Video/models/ltxv-13b-0.9.8-distilled-fp8.safetensors
 ENV PIPELINE_CONFIG=configs/ltxv-13b-0.9.8-distilled-fp8.yaml
 
-EXPOSE 8080
+EXPOSE 6006
 
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "6006"]

@@ -1,6 +1,6 @@
 import asyncio
 import time
-
+from pathlib import Path
 from typing import List
 
 from config import CONFIG
@@ -12,6 +12,8 @@ from video.video_api import VideoProvider, CloudGPUProvider, KenBurnsDegradation
 from logger_config import setup_logger
 
 logger = setup_logger("VideoLead")
+
+CLIPS_DIR = Path(__file__).parent.parent / "generated" / "clips"
 
 PROVIDER_MAP = {
     "cloud_gpu": CloudGPUProvider,
@@ -83,17 +85,31 @@ class VideoLead(BaseAgent):
                 wall_time_ms=(time.time() - start) * 1000,
             )
 
+        CLIPS_DIR.mkdir(parents=True, exist_ok=True)
+
         clip_results = []
         for p in prompts:
+            clip_path = ""
             result = await self._provider.generate(
                 prompt=p.get("video_prompt", ""),
                 reference_image_url=p.get("reference_image_url"),
                 seed=p.get("seed", 0),
                 duration_s=p.get("expected_duration_s", clip_duration),
             )
+            if result.success and result.clip_bytes:
+                scene_id = p.get("scene_id", f"scene_{len(clip_results)}")
+                filename = f"{story_hash}_{scene_id}.mp4"
+                clip_path = str(CLIPS_DIR / filename)
+                try:
+                    Path(clip_path).write_bytes(result.clip_bytes)
+                    result.clip_url = f"/clips/{filename}"
+                except OSError as e:
+                    logger.warning(f"Failed to write clip {filename}: {e}")
+                    clip_path = ""
             clip_results.append({
                 "prompt_data": p,
                 "clip_result": result,
+                "clip_path": clip_path,
             })
 
             if not result.success and self._try_fallback():
@@ -104,6 +120,7 @@ class VideoLead(BaseAgent):
                     reference_image_url=p.get("reference_image_url"),
                 )
                 clip_results[-1]["clip_result"] = result2
+                clip_results[-1]["clip_path"] = ""
 
         qc_tasks = []
         for cr in clip_results:
@@ -143,12 +160,15 @@ class VideoLead(BaseAgent):
         approved_clips = []
         for i, cr in enumerate(clip_results):
             clip = cr["clip_result"]
+            clip_path = cr.get("clip_path", "")
             qc = qc_results[i] if i < len(qc_results) else {"status": "approved", "score": 0.5}
             approved_clips.append({
                 "scene_id": cr["prompt_data"].get("scene_id", f"scene_{i}"),
                 "prompt": cr["prompt_data"].get("video_prompt", ""),
                 "seed": cr["prompt_data"].get("seed", 0),
                 "source": clip.source,
+                "clip_path": clip_path,
+                "clip_url": clip.clip_url or "",
                 "qc_status": qc.get("status", "warning"),
                 "qc_score": qc.get("score", 0.5),
             })

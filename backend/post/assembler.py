@@ -71,9 +71,14 @@ class FFmpegAssembler:
 
         with open(concat_path, "w") as f:
             for clip in clip_data:
-                url = clip.get("clip_url") or clip.get("url") or ""
-                if url:
-                    f.write(f"file '{url}'\n")
+                clip_source = (
+                    clip.get("clip_path")
+                    or clip.get("clip_url")
+                    or clip.get("url")
+                    or ""
+                )
+                if clip_source:
+                    f.write(f"file '{clip_source}'\n")
 
         concat_size = concat_path.stat().st_size
         if concat_size == 0:
@@ -84,6 +89,7 @@ class FFmpegAssembler:
         cmd = [
             FFMPEG, "-y",
             "-f", "concat", "-safe", "0", "-i", str(concat_path),
+            "-bsf:v", "h264_mp4toannexb",
         ]
 
         title = timeline.get("title_card", {}).get("text", "Chronicles Film") if timeline else "Chronicles Film"

@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(Path(__file__).parent / ".env")
 
 
 @dataclass(frozen=True)

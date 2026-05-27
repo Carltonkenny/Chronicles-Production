@@ -14,6 +14,51 @@ class FilmStatus(str, Enum):
     FAILED = "failed"
 
 
+class FilmSummary(BaseModel):
+    story_hash: str
+    title: str
+    culture: str
+    timeline: str
+    theme: str
+    mode: str
+    thumbnail_url: Optional[str] = None
+    duration: int = 90
+    created_at: str
+
+
+class CatalogRow(BaseModel):
+    id: str
+    title: str
+    type: str
+    films: List[FilmSummary]
+
+
+class CatalogResponse(BaseModel):
+    films: List[FilmSummary]
+    rows: List[CatalogRow]
+
+
+class FilmDetail(BaseModel):
+    story_hash: str
+    title: str
+    seed_idea: str
+    culture: str
+    timeline: str
+    theme: str
+    mode: str
+    setting: Optional[str] = None
+    narrative: Optional[str] = None
+    theme_reflection: Optional[str] = None
+    word_count: int = 0
+    character_portraits: List[str] = []
+    scene_images: List[str] = []
+    video_url: Optional[str] = None
+    narration_url: Optional[str] = None
+    agent_count: int = 0
+    generation_time_ms: int = 0
+    created_at: str
+
+
 class FilmOutput(BaseModel):
     film_id: str = Field(..., description="Unique film ID")
     story_hash: str = Field(..., description="Story hash")

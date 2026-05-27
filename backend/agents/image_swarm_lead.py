@@ -31,7 +31,23 @@ class ImageSwarmLead(BaseAgent):
         timeline = data.get("timeline", "")
         theme = data.get("theme", "")
         vb = data.get("visual_bible", {})
-        char_bibles = vb.get("character_bibles", [])
+        char_bibles = (
+            vb.get("director", {}).get("character_bibles")
+            or vb.get("character_bibles", [])
+        )
+        if not char_bibles and characters:
+            logger.info(f"[{self.agent_type}] No character_bibles in VB, building from story characters ({len(characters)} found)")
+            char_bibles = []
+            for char_str in characters:
+                if isinstance(char_str, str) and ':' in char_str:
+                    name, desc = char_str.split(':', 1)
+                    char_bibles.append({
+                        "name": name.strip(),
+                        "appearance": desc.strip()[:300],
+                        "costume": "",
+                        "signature_items": [],
+                        "emotional_range": "",
+                    })
         location_descriptions = vb.get("location_descriptions", [])
 
         start = time.time()

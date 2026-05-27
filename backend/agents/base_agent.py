@@ -100,11 +100,27 @@ class BaseAgent(ABC):
         key = f"{self.agent_type}:{work_order.story_hash}:{hashlib.sha256(str(work_order.input_data).encode()).hexdigest()[:16]}"
         return hashlib.sha256(key.encode()).hexdigest()
 
-    async def _check_cache(self, cache_key: str) -> Optional[WorkResult]:
+    async def _check_cache(self, cache_key: str) -> Optional[Any]:
+        from cache.story_cache import get_cached_agent_result
+        entry = await get_cached_agent_result(cache_key)
+        if entry and "result" in entry:
+            cached = entry["result"]
+            return WorkResult(
+                success=cached.get("success", True),
+                output_data=cached.get("output_data", {}),
+                wall_time_ms=cached.get("wall_time_ms", 0),
+                tokens_used=cached.get("tokens_used", 0),
+            )
         return None
 
     async def _save_to_cache(self, cache_key: str, result: WorkResult) -> None:
-        pass
+        from cache.story_cache import cache_agent_result
+        await cache_agent_result(cache_key, {
+            "success": result.success,
+            "output_data": result.output_data,
+            "wall_time_ms": result.wall_time_ms,
+            "tokens_used": result.tokens_used,
+        })
 
     async def _write_lineage(
         self,

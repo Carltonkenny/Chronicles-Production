@@ -71,6 +71,40 @@ CREATE TABLE IF NOT EXISTS story_bibles (
 );
 
 -- ============================================================================
+-- FILMS TABLE (auto-populated on generation complete)
+-- Provides the Netflix-style catalog of completed films
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS films (
+    story_hash TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    seed_idea TEXT NOT NULL,
+    culture TEXT NOT NULL,
+    timeline TEXT NOT NULL,
+    theme TEXT NOT NULL,
+    mode TEXT NOT NULL DEFAULT 'historical',
+    setting TEXT,
+    narrative TEXT,
+    theme_reflection TEXT,
+    word_count INTEGER,
+    thumbnail_url TEXT,
+    scene_images TEXT,
+    character_portraits TEXT,
+    video_path TEXT,
+    narration_path TEXT,
+    agent_count INTEGER,
+    generation_time_ms INTEGER,
+    status TEXT DEFAULT 'completed',
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_films_culture ON films(culture);
+CREATE INDEX IF NOT EXISTS idx_films_timeline ON films(timeline);
+CREATE INDEX IF NOT EXISTS idx_films_theme ON films(theme);
+CREATE INDEX IF NOT EXISTS idx_films_created ON films(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_films_status ON films(status);
+
+-- ============================================================================
 -- INDEXES (for fast lookups by agents)
 -- ============================================================================
 CREATE INDEX IF NOT EXISTS idx_story_bibles_culture ON story_bibles(culture_id);

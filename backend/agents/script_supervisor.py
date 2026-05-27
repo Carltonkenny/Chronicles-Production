@@ -4,10 +4,9 @@ from .base_agent import BaseAgent
 from schemas import WorkOrder, WorkResult
 from prompts.script_supervisor_prompt import SCRIPT_SUPERVISOR_PROMPT
 from utils import extract_and_repair_json
+from utils.llm_client import call_llm
 from config import CONFIG
 from logger_config import setup_logger
-
-import httpx
 
 logger = setup_logger("ScriptSupervisorAgent")
 
@@ -50,26 +49,14 @@ class ScriptSupervisorAgent(BaseAgent):
 
         system_msg = "You are a film industry script supervisor. Output ONLY valid JSON. No commentary."
 
-        payload = {
-            "model": CONFIG.POLLINATIONS_MODEL,
-            "messages": [
-                {"role": "system", "content": system_msg},
-                {"role": "user", "content": user_msg},
-            ],
-            "temperature": 0.4,
-            "max_tokens": 2500,
-        }
-
         try:
-            async with httpx.AsyncClient(timeout=CONFIG.REQUEST_TIMEOUT) as client:
-                response = await client.post(
-                    CONFIG.POLLINATIONS_BASE_URL,
-                    json=payload,
-                    headers=CONFIG.headers,
-                )
-                response.raise_for_status()
-                data = response.json()
-                raw = data.get("choices", [{}])[0].get("message", {}).get("content", "")
+            raw = await call_llm(
+                system=system_msg,
+                user=user_msg,
+                max_tokens=2500,
+                temperature=0.4,
+                task="supervisor",
+            )
         except Exception as e:
             logger.error(f"Script Supervisor LLM call failed: {e}")
             return WorkResult(

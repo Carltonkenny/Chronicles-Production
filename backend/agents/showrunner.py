@@ -13,14 +13,16 @@ class ProgressEvent:
     step: str
     pct: int
     message: str
-    data: dict | None
+    data: dict
+    error: bool
 
-    def __init__(self, phase: str, step: str, pct: int, message: str, data: dict | None = None):
+    def __init__(self, phase: str, step: str, pct: int, message: str, data: dict | None = None, error: bool = False):
         self.phase = phase
         self.step = step
         self.pct = pct
         self.message = message
         self.data = data or {}
+        self.error = error
 
     def to_dict(self) -> dict:
         return {
@@ -29,6 +31,7 @@ class ProgressEvent:
             "pct": self.pct,
             "message": self.message,
             "data": self.data,
+            "error": self.error,
         }
 
 
@@ -56,6 +59,7 @@ class ShowrunnerAgent(BaseAgent):
         pd_fn=None,
         ad_fn=None,
         image_swarm_fn=None,
+        story_hash: str = "",
     ) -> AsyncGenerator[ProgressEvent, None]:
         yield ProgressEvent("story", "planning", 0, "Creating story blueprint...")
         logger.info("Showrunner: Phase 1 — Planner")
@@ -71,7 +75,7 @@ class ShowrunnerAgent(BaseAgent):
                     "wiki_context": wiki_context,
                     "bridge": bridge,
                 },
-                story_hash=getattr(story_request, "seed_idea", "unknown"),
+                story_hash=story_hash,
             )
             blueprint = await planner_fn(planner_work_order)
         except Exception as e:
@@ -93,7 +97,7 @@ class ShowrunnerAgent(BaseAgent):
                     "wiki_context": wiki_context,
                     "bridge": bridge,
                 },
-                story_hash=getattr(story_request, "seed_idea", "unknown"),
+                story_hash=story_hash,
             )
             story_result = await writer_fn(writer_work_order)
         except Exception as e:
@@ -115,7 +119,7 @@ class ShowrunnerAgent(BaseAgent):
                     "story": story_data.get("story", ""),
                     "wiki_context": wiki_context,
                 },
-                story_hash=getattr(story_request, "seed_idea", "unknown"),
+                story_hash=story_hash,
             )
             scene_result = await supervisor_fn(supervisor_work_order)
         except Exception as e:
@@ -128,6 +132,7 @@ class ShowrunnerAgent(BaseAgent):
         yield ProgressEvent(
             "story", "complete", 50,
             f"Story ready: {story_data.get('title', 'Untitled')} ({len(story_data.get('story', '').split())} words, {len(scenes_data.get('scenes', []))} scenes)",
+            story_data,
         )
 
         visual_bible = {}
@@ -147,7 +152,7 @@ class ShowrunnerAgent(BaseAgent):
                         "scenes": scenes_data.get("scenes", []),
                         "visual_elements": visual_bible.get("visual_elements", {}),
                     },
-                    story_hash=getattr(story_request, "seed_idea", "unknown"),
+                    story_hash=story_hash,
                 )
                 director_result = await director_fn(director_work_order)
                 if director_result.success:
@@ -170,7 +175,7 @@ class ShowrunnerAgent(BaseAgent):
                         "characters": story_data.get("characters", []),
                         "locations": list(set(locations)),
                     },
-                    story_hash=getattr(story_request, "seed_idea", "unknown"),
+                    story_hash=story_hash,
                 )
                 pd_result = await pd_fn(pd_work_order)
                 if pd_result.success:
@@ -195,7 +200,7 @@ class ShowrunnerAgent(BaseAgent):
                         "pd_output": visual_bible.get("production_designer", {}),
                         "visual_elements": ve_data,
                     },
-                    story_hash=getattr(story_request, "seed_idea", "unknown"),
+                    story_hash=story_hash,
                 )
                 ad_result = await ad_fn(ad_work_order)
                 if ad_result.success:
@@ -228,7 +233,7 @@ class ShowrunnerAgent(BaseAgent):
                         "scenes": scenes_data.get("scenes", []),
                         "visual_bible": visual_bible,
                     },
-                    story_hash=getattr(story_request, "seed_idea", "unknown"),
+                    story_hash=story_hash,
                 )
                 image_result = await image_swarm_fn(image_work_order)
                 if image_result.success:
@@ -252,4 +257,4 @@ class ShowrunnerAgent(BaseAgent):
             "mode": bridge.get("mode", "historical") if bridge else "historical",
         }
 
-        yield ProgressEvent("done", "story_complete", 85, "All phases complete — final assembly", combined)
+        yield ProgressEvent("pipeline_complete", "story_complete", 85, "All phases complete — final assembly", combined)

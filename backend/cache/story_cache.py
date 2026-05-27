@@ -117,3 +117,38 @@ async def warm_cache(cultures: list[str], timelines: list[str]) -> None:
             except Exception:
                 pass
     logger.info("Cache warm complete")
+
+
+AGENT_CACHE: OrderedDict[str, dict] = OrderedDict()
+MAX_AGENT_CACHE_SIZE = 100
+
+
+async def cache_agent_result(cache_key: str, result: dict) -> None:
+    entry = {"result": result, "created_at": time.time()}
+    r = await _get_redis()
+    if r:
+        try:
+            await r.setex(f"agent:{cache_key}", 7 * 24 * 3600, json.dumps(entry, default=str))
+        except Exception as e:
+            logger.warning(f"Redis agent cache set failed: {e}")
+    AGENT_CACHE[cache_key] = entry
+    while len(AGENT_CACHE) > MAX_AGENT_CACHE_SIZE:
+        AGENT_CACHE.popitem(last=False)
+    logger.debug(f"Agent result cached: {cache_key[:16]}...")
+
+
+async def get_cached_agent_result(cache_key: str) -> dict | None:
+    r = await _get_redis()
+    if r:
+        try:
+            raw = await r.get(f"agent:{cache_key}")
+            if raw:
+                logger.debug(f"Redis agent cache hit: {cache_key[:16]}")
+                return json.loads(raw)
+        except Exception as e:
+            logger.warning(f"Redis agent cache get failed: {e}")
+    entry = AGENT_CACHE.get(cache_key)
+    if entry:
+        AGENT_CACHE.move_to_end(cache_key)
+        return entry
+    return None
