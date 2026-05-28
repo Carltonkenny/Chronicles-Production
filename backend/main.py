@@ -523,6 +523,8 @@ async def generate_film(request: Request, body: StoryGenerationRequest):
                 showrunner_completed = True
                 yield f"event: images\ndata: {json.dumps({'phase': 'images', 'step': 'complete', 'pct': 85, 'message': f'Image swarm: {total} images', 'data': images_payload})}\n\n"
                 continue
+            if event.phase == "images" and event.step == "complete":
+                continue
             yield f"event: {event.phase}\ndata: {json.dumps(event.to_dict())}\n\n"
 
         if not showrunner_completed:
