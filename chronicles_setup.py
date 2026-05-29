@@ -67,9 +67,9 @@ def setup():
         n = sum(1 for _ in GEMMA_DIR.rglob("*") if _.is_file())
         print(f"  OK: {n} files in {_time.time() - _t:.0f}s")
 
-    tokenizer_file = GEMMA_DIR / "tokenizer.model"
-    if not tokenizer_file.exists():
-        print("  Downloading Gemma tokenizer + config files (separate repo)...")
+    pp_config = GEMMA_DIR / "preprocessor_config.json"
+    if not pp_config.exists():
+        print("  Downloading Gemma tokenizer + all config files (separate repo)...")
         _t = _time.time()
         import os as _os
         snapshot_download("google/gemma-3-12b-it", local_dir=str(GEMMA_DIR),
@@ -89,8 +89,11 @@ def setup():
     ok = GEMMA_DIR.exists()
     print(f"  {'OK' if ok else 'MISSING'}: {GEMMA_DIR.name}")
     if not ok: all_ok = False
-    ok = tokenizer_file.exists()
+    ok = (GEMMA_DIR / "tokenizer.model").exists()
     print(f"  {'OK' if ok else 'MISSING'}: tokenizer.model")
+    if not ok: all_ok = False
+    ok = (GEMMA_DIR / "preprocessor_config.json").exists()
+    print(f"  {'OK' if ok else 'MISSING'}: preprocessor_config.json")
     if not ok: all_ok = False
 
     if all_ok:
