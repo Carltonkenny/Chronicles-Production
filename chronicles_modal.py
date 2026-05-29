@@ -144,6 +144,18 @@ def setup():
         file_count = sum(1 for _ in GEMMA_DIR.rglob("*") if _.is_file())
         print(f"  OK: {file_count} files in {_time.time() - _t:.0f}s")
 
+    # ─── Download tokenizer (not included in GGUF repo) ──────────
+    tokenizer_file = GEMMA_DIR / "tokenizer.model"
+    if not tokenizer_file.exists():
+        print("  Downloading Gemma tokenizer files...")
+        _t = _time.time()
+        snapshot_download(
+            "google/gemma-3-12b-it",
+            local_dir=str(GEMMA_DIR),
+            allow_patterns=["tokenizer.model", "tokenizer_config.json", "*.json"],
+        )
+        print(f"  OK: tokenizer in {_time.time() - _t:.0f}s")
+
     elapsed = _time.time() - t_start
     print(f"\n=== SETUP COMPLETE in {elapsed:.0f}s ({elapsed/60:.0f} min) ===")
 
