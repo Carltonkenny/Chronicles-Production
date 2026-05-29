@@ -78,6 +78,17 @@ def setup():
         file_count = sum(1 for _ in GEMMA_DIR.rglob("*") if _.is_file())
         print(f"  OK: {file_count} files in {_time.time() - _t:.0f}s")
 
+    if safetensors_exists:
+        print(f"  SKIP Gemma safetensors weights (already present)")
+    else:
+        print(f"  DOWNLOAD Gemma safetensors weights (~24GB, 10-15 min)...")
+        _t = _time.time()
+        import os as _os
+        snapshot_download("google/gemma-3-12b-it", local_dir=str(GEMMA_DIR),
+            allow_patterns=["model*.safetensors", "*.safetensors.index.json"],
+            token=_os.environ.get("HF_TOKEN"))
+        print(f"  OK: in {_time.time() - _t:.0f}s")
+
     elapsed = _time.time() - t_start
     print(f"\n=== SETUP COMPLETE in {elapsed:.0f}s ({elapsed/60:.0f} min) ===")
     print("\nVerification:")
@@ -95,6 +106,9 @@ def setup():
     ok = (GEMMA_DIR / "preprocessor_config.json").exists()
     print(f"  {'OK' if ok else 'MISSING'}: preprocessor_config.json")
     if not ok: all_ok = False
+    sf = any(GEMMA_DIR.glob("model*.safetensors"))
+    print(f"  {'OK' if sf else 'MISSING'}: model*.safetensors")
+    if not sf: all_ok = False
 
     if all_ok:
         print("\nALL MODELS READY. Deploy now: modal deploy chronicles_modal.py")
