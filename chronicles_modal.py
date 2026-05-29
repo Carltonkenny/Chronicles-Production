@@ -63,6 +63,7 @@ gpu_image = (
     modal.Image.debian_slim(python_version="3.12")
     .apt_install("ffmpeg", "git", "git-lfs")
     .pip_install(
+        "fastapi[standard]",
         "torch>=2.7.0",
         "diffusers>=0.30",
         "transformers>=4.44",
@@ -220,7 +221,7 @@ def _load_pipeline():
     volumes={str(MODELS_DIR): volume},
     image=gpu_image,
 )
-@modal.fastapi_endpoint(method="POST")
+@modal.fastapi_endpoint()
 async def generate_clip(request):
     """Generate a video clip with synchronized audio using LTX-2.3."""
     import time as _time
@@ -366,7 +367,7 @@ async def generate_clip(request):
 # ═══════════════════════════════════════════════════════════════════
 
 @app.function(image=gpu_image)
-@modal.fastapi_endpoint(method="GET")
+@modal.fastapi_endpoint()
 async def health():
     info = {
         "status": "ok",
