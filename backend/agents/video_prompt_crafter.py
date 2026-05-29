@@ -6,6 +6,7 @@ from prompts.video_prompt_crafter_prompt import (
 from utils.llm_client import call_llm
 from config import CONFIG
 from logger_config import setup_logger
+import hashlib
 
 logger = setup_logger("VideoPromptCrafter")
 
@@ -18,7 +19,8 @@ class VideoPromptCrafter(BaseAgent):
         scene = data.get("scene", {})
         visual_bible = data.get("visual_bible", {})
         character_bibles = data.get("character_bibles", {})
-        reference_images = data.get("reference_images", {})
+        ref_images = data.get("reference_images", {})
+        audio_prompts = data.get("audio_prompts", {})
         clip_duration = data.get("clip_duration", CONFIG.CLIP_DURATION_S)
 
         char_bibles_text = ""
@@ -30,8 +32,8 @@ class VideoPromptCrafter(BaseAgent):
                 if sigs:
                     char_bibles_text += f" | Signature items: {', '.join(sigs)}"
                 char_bibles_text += "\n"
-        if reference_images:
-            for name, url in reference_images.items():
+        if ref_images:
+            for name, url in ref_images.items():
                 ref_images_text += f"- {name}: {url}\n"
 
         color_palette = visual_bible.get("color_palette", [])
@@ -78,19 +80,34 @@ class VideoPromptCrafter(BaseAgent):
                 appearance += f" | Items: {', '.join(sigs)}"
             character_anchors.append(f"{name}: {appearance}")
 
+        scene_id = scene.get("id", "unknown")
+
         ref_image_url = None
+        image_list = []
         chars = scene.get("characters", [])
-        if chars and len(chars) > 0:
-            first_char = chars[0] if isinstance(chars[0], str) else ""
-            ref_image_url = reference_images.get(first_char)
+        for char_name in chars:
+            if isinstance(char_name, str):
+                url = ref_images.get(char_name)
+                if url:
+                    image_list.append({
+                        "url": url, "frame_idx": 0, "strength": 1.0,
+                        "character_name": char_name,
+                    })
+                    if ref_image_url is None:
+                        ref_image_url = url
+
+        scene_id_str = str(scene_id)
+        audio_prompt = audio_prompts.get(scene_id_str, "")
 
         return WorkResult(
             success=True,
             output_data={
-                "scene_id": scene.get("id", "unknown"),
+                "scene_id": scene_id_str,
                 "video_prompt": video_prompt,
+                "audio_prompt": audio_prompt,
                 "reference_image_url": ref_image_url,
-                "seed": abs(hash(f"{work_order.story_hash}_{scene.get('id', '')}")) % 99999,
+                "images": image_list,
+                "seed": int(hashlib.sha256(f"{work_order.story_hash}_{scene_id_str}".encode()).hexdigest(), 16) % 99999,
                 "expected_duration_s": clip_duration,
                 "character_anchors": character_anchors,
             },

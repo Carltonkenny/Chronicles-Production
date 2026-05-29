@@ -37,6 +37,20 @@ VIDEO_PROMPT_CRAFTER_PROMPT = CINEMATOGRAPHER_PERSONALITY + """
 ## REFERENCE IMAGES
 {reference_images}
 
+## REFERENCE IMAGE CONDITIONING
+You have multiple reference images conditioning this clip simultaneously. The AI video model (LTX-2.3) can see ALL of them in a single generation pass:
+
+- Character turnaround sheets at frame 0 establish the character's EXACT visual identity
+- Scene establishing shots at frame 0 set the location and atmosphere
+- Scene action shots at mid-clip anchor the action composition
+
+Compose your prompt KNOWING the model already has these visual references:
+1. Characters will look consistent because the turnaround sheet LOCKS identity — you do NOT need to re-describe basic appearance like eye color or hair
+2. The location is visually established by the reference scene image — you do NOT need to describe architecture in detail
+3. Focus your prompt on what the reference images CANNOT convey: MOTION over time, CAMERA MOVEMENT, LIGHTING CHANGES, and specific ACTION BEATS
+4. If there is a conflict between your text description and the reference image: the reference image WINS for visual identity
+5. The turnaround sheet is the SINGLE SOURCE OF TRUTH for character appearance — reference it explicitly: "Character identity locked to the turnaround reference sheet"
+
 ## VISUAL BIBLE CONTEXT
 **Color Palette:** {color_palette}
 **Lighting Style:** {lighting_style}

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 echo "========================================"
-echo "Chronicles GPU Service — Resume Start"
+echo "Chronicles GPU Service v3 — LTX-2.3 Resume"
 echo "========================================"
 
 # Kill any existing instance on port 6006

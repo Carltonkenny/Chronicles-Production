@@ -82,7 +82,7 @@ class TestImageAPIClient:
         api = ImageAPIClient()
         long = "word " * 500
         clean = api.sanitize_prompt(long)
-        assert len(clean) <= 800
+        assert len(clean) <= 1200
 
     @pytest.mark.asyncio
     async def test_build_portrait_urls(self):

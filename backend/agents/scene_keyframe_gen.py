@@ -96,29 +96,32 @@ class SceneKeyframeGen(BaseAgent):
 
         full_prompt = f"{description}, {culture} {timeline} era, {theme} mood, {SETTING_QUALITY}"
 
-        scene_data = await self._api.build_scene_url(
+        scene_data_list = await self._api.build_scene_variation_urls(
             story_hash=story_hash,
             scene_id=scene_id,
             base_prompt=full_prompt,
         )
 
-        result = ImageResult(
-            url=scene_data["url"],
-            prompt=scene_data["prompt"],
-            seed=scene_data["seed"],
-            variation="scene_keyframe",
-            orientation="landscape",
-            scene_id=scene_id,
-            source="generated",
-        )
+        results = []
+        for sd in scene_data_list:
+            results.append(ImageResult(
+                url=sd["url"],
+                prompt=sd["prompt"],
+                seed=sd["seed"],
+                variation=sd["variation"],
+                orientation="landscape",
+                scene_id=scene_id,
+                source="generated",
+            ))
 
         self.tokens_used = 200
-        logger.info(f"[{self.agent_type}] Generated keyframe for scene {scene_id}")
+        logger.info(f"[{self.agent_type}] Generated {len(results)} keyframes for scene {scene_id}")
         return WorkResult(
             success=True,
             output_data={
                 "scene_id": scene_id,
-                "keyframe": result.model_dump(),
+                "keyframes": [r.model_dump() for r in results],
+                "keyframe": results[0].model_dump(),
             },
             wall_time_ms=self.wall_time_ms,
             tokens_used=self.tokens_used,

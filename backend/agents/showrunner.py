@@ -83,11 +83,11 @@ class ShowrunnerAgent(BaseAgent):
             yield ProgressEvent("story", "planning", 0, f"Planner failed: {e}")
             return
 
-        yield ProgressEvent("story", "writing", 25, "Writing narrative...")
+        yield ProgressEvent("story", "writing_scenes", 25, "Writing narrative and breaking scenes...")
 
         try:
-            writer_work_order = WorkOrder(
-                agent_type="writer",
+            writer_scene_work_order = WorkOrder(
+                agent_type="writer_scene",
                 input_data={
                     "blueprint": blueprint.output_data if blueprint.success else {},
                     "seed_idea": story_request.seed_idea,
@@ -95,39 +95,17 @@ class ShowrunnerAgent(BaseAgent):
                     "timeline": story_request.timeline.value,
                     "theme": story_request.theme.value,
                     "wiki_context": wiki_context,
-                    "bridge": bridge,
                 },
                 story_hash=story_hash,
             )
-            story_result = await writer_fn(writer_work_order)
+            story_result = await writer_fn(writer_scene_work_order)
         except Exception as e:
-            logger.error(f"Writer failed: {e}")
-            yield ProgressEvent("story", "writing", 25, f"Writer failed: {e}")
+            logger.error(f"WriterScene failed: {e}")
+            yield ProgressEvent("story", "writing_scenes", 25, f"WriterScene failed: {e}")
             return
 
-        yield ProgressEvent("story", "supervising", 50, "Breaking down scenes...")
-
-        try:
-            story_data = story_result.output_data if story_result.success else {}
-            supervisor_work_order = WorkOrder(
-                agent_type="script_supervisor",
-                input_data={
-                    "title": story_data.get("title", ""),
-                    "setting": story_data.get("setting", ""),
-                    "characters": story_data.get("characters", []),
-                    "theme": story_request.theme.value,
-                    "story": story_data.get("story", ""),
-                    "wiki_context": wiki_context,
-                },
-                story_hash=story_hash,
-            )
-            scene_result = await supervisor_fn(supervisor_work_order)
-        except Exception as e:
-            logger.error(f"Script Supervisor failed: {e}")
-            yield ProgressEvent("story", "supervising", 50, f"Supervisor failed: {e}")
-            return
-
-        scenes_data = scene_result.output_data if scene_result.success else {"scenes": []}
+        story_data = story_result.output_data if story_result.success else {"story": "", "scenes": [], "dialogues": {}}
+        scenes_data = {"scenes": story_data.get("scenes", [])}
 
         yield ProgressEvent(
             "story", "complete", 50,
@@ -135,91 +113,40 @@ class ShowrunnerAgent(BaseAgent):
             story_data,
         )
 
+        yield ProgressEvent("visual_bible", "architect", 55, "Creating visual bible...")
+
         visual_bible = {}
-        if director_fn:
-            yield ProgressEvent("visual_bible", "director", 55, "Creating visual vision...")
+        try:
+            vba_work_order = WorkOrder(
+                agent_type="visual_bible_architect",
+                input_data={
+                    "title": story_data.get("title", ""),
+                    "culture": story_request.culture.value,
+                    "timeline": story_request.timeline.value,
+                    "theme": story_request.theme.value,
+                    "story": story_data.get("story", ""),
+                    "characters": story_data.get("characters", []),
+                    "scenes": scenes_data.get("scenes", []),
+                },
+                story_hash=story_hash,
+            )
+            vba_result = await director_fn(vba_work_order)
+            if vba_result.success:
+                visual_bible = vba_result.output_data
+        except Exception as e:
+            logger.error(f"VisualBibleArchitect failed: {e}")
 
-            try:
-                director_work_order = WorkOrder(
-                    agent_type="director",
-                    input_data={
-                        "title": story_data.get("title", ""),
-                        "culture": story_request.culture.value,
-                        "timeline": story_request.timeline.value,
-                        "theme": story_request.theme.value,
-                        "story": story_data.get("story", ""),
-                        "characters": story_data.get("characters", []),
-                        "scenes": scenes_data.get("scenes", []),
-                        "visual_elements": visual_bible.get("visual_elements", {}),
-                    },
-                    story_hash=story_hash,
-                )
-                director_result = await director_fn(director_work_order)
-                if director_result.success:
-                    visual_bible["director"] = director_result.output_data
-            except Exception as e:
-                logger.error(f"Director failed: {e}")
-
-        if pd_fn and "director" in visual_bible:
-            yield ProgressEvent("visual_bible", "production_design", 58, "Building world...")
-
-            try:
-                locations = [s.get("location", "") for s in scenes_data.get("scenes", [])]
-                pd_work_order = WorkOrder(
-                    agent_type="production_designer",
-                    input_data={
-                        "culture": story_request.culture.value,
-                        "timeline": story_request.timeline.value,
-                        "theme": story_request.theme.value,
-                        "setting": story_data.get("setting", ""),
-                        "characters": story_data.get("characters", []),
-                        "locations": list(set(locations)),
-                    },
-                    story_hash=story_hash,
-                )
-                pd_result = await pd_fn(pd_work_order)
-                if pd_result.success:
-                    visual_bible["production_designer"] = pd_result.output_data
-            except Exception as e:
-                logger.error(f"PD failed: {e}")
-
-        if ad_fn and "production_designer" in visual_bible:
-            yield ProgressEvent("visual_bible", "art_director", 61, "Designing props and symbols...")
-
-            try:
-                from utils.visual_engine import visual_engine
-                ve_data = await visual_engine.get(story_request.culture.value, story_request.timeline.value)
-                ad_work_order = WorkOrder(
-                    agent_type="art_director",
-                    input_data={
-                        "culture": story_request.culture.value,
-                        "timeline": story_request.timeline.value,
-                        "theme": story_request.theme.value,
-                        "characters": story_data.get("characters", []),
-                        "scenes": scenes_data.get("scenes", []),
-                        "pd_output": visual_bible.get("production_designer", {}),
-                        "visual_elements": ve_data,
-                    },
-                    story_hash=story_hash,
-                )
-                ad_result = await ad_fn(ad_work_order)
-                if ad_result.success:
-                    visual_bible["art_director"] = ad_result.output_data
-            except Exception as e:
-                logger.error(f"AD failed: {e}")
-
-        vb_agents = sum(1 for k in ["director", "production_designer", "art_director"] if k in visual_bible)
-        if vb_agents > 0:
+        if visual_bible:
             yield ProgressEvent(
                 "visual_bible", "complete", 66,
-                f"Visual Bible ready ({vb_agents} agents)", visual_bible,
+                f"Visual Bible ready", visual_bible,
             )
 
         image_output = None
         if image_swarm_fn:
             yield ProgressEvent(
                 "images", "swarming", 68,
-                "Spawning image swarm for characters and scenes...",
+                "Spawning image swarm for characters, props, and scenes...",
             )
 
             try:

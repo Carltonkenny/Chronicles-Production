@@ -1,8 +1,8 @@
 # 🎬 Chronicles Production System — Master Architecture Plan
 
-**Version:** 4.0 — Free-Tier Optimized Film Production Swarm  
+**Version:** 4.0 — Free-Tier Optimized Film Production Swarm (v4.1 update: see IMPLEMENTATION_V4.1.md for agent consolidation)  
 **Date:** May 2026  
-**Status:** Architecture Design Complete
+**Status:** Architecture Design Complete — v4.1 refactoring applied (15→9 agents, LTX-2.3, merged Visual Bible)
 
 ---
 

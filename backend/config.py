@@ -58,6 +58,11 @@ class Config:
     CLOUD_GPU_API_KEY: str = os.getenv("CLOUD_GPU_API_KEY", "")
     VIDEO_CLIP_COUNT: int = 6
 
+    DEFAULT_MUSIC_VOLUME_DB: float = -15.0
+    DEFAULT_AMBIENCE_VOLUME_DB: float = -18.0
+    CROSSFADE_DURATION_S: float = 2.0
+    NARRATION_START_OFFSET_S: float = 3.0
+
     def validate(self) -> None:
         if not self.POLLINATIONS_MODEL:
             raise ValueError("POLLINATIONS_MODEL must be set in .env file")

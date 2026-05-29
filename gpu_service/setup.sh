@@ -2,7 +2,7 @@
 set -euo pipefail
 
 echo "========================================"
-echo "Chronicles GPU Service — Idempotent Setup"
+echo "Chronicles GPU Service — LTX-2.3 Setup"
 echo "========================================"
 
 # ─── 0. Validate environment ──────────────────────────────────────
@@ -19,20 +19,15 @@ GPU_NAME=$(nvidia-smi --query-gpu=name --format=csv,noheader | head -1)
 GPU_MEM_MB=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -1)
 echo "  GPU: $GPU_NAME ($GPU_MEM_MB MB VRAM)"
 
-if [ "$GPU_MEM_MB" -ge 48000 ]; then
-    MODEL_FILE="ltxv-13b-0.9.8-distilled.safetensors"
-    MODEL_CONFIG="configs/ltxv-13b-0.9.8-distilled.yaml"
-    MODEL_SIZE_GB="28.6"
-    echo "  VRAM >= 48GB → using BF16 model (best quality)"
-else
-    MODEL_FILE="ltxv-13b-0.9.8-distilled-fp8.safetensors"
-    MODEL_CONFIG="configs/ltxv-13b-0.9.8-distilled-fp8.yaml"
-    MODEL_SIZE_GB="13"
-    echo "  VRAM < 48GB → using FP8 model (compact)"
-fi
+MODEL_FILE="ltx-2.3-22b-distilled-1.1.safetensors"
+GEMMA_DIR="gemma-3-12b-it-qat-q4_0-unquantized"
+UPSAMPLER_FILE="ltx-2.3-spatial-upscaler-x2-1.1.safetensors"
+LORA_FILE="ltx-2.3-22b-distilled-lora-384-1.1.safetensors"
+MODEL_SIZE_GB="42"
+echo "  Model: LTX-2.3 22B (distilled 1.1)"
 
 FREE_DISK_GB=$(df -BG /home 2>/dev/null | awk 'NR==2 {gsub(/G/,"",$4); print $4}' || echo "0")
-MIN_DISK_GB=$(( $(echo "$MODEL_SIZE_GB" | cut -d. -f1) + 15 ))
+MIN_DISK_GB=$(( $(echo "$MODEL_SIZE_GB" | cut -d. -f1) + 25 ))
 if [ "$FREE_DISK_GB" -lt "$MIN_DISK_GB" ]; then
     echo "FATAL: Only ${FREE_DISK_GB}GB free on /home, need ${MIN_DISK_GB}GB+"
     echo "  Re-launch instance with larger disk (100GB+ recommended)"
@@ -58,65 +53,101 @@ pip install -q -r "$SCRIPT_DIR/requirements.txt" 2>&1 | tail -1 || {
     }
 }
 
-# ─── 3. Clone LTX-Video ──────────────────────────────────────────
+# ─── 3. Clone LTX-2 ──────────────────────────────────────────────
 echo ""
-echo "[3/6] LTX-Video repository..."
-if [ ! -d "$HOME/LTX-Video/.git" ]; then
+echo "[3/6] LTX-2 repository..."
+if [ ! -d "$HOME/LTX-2/.git" ]; then
     echo "  Cloning (first time)..."
     cd "$HOME"
-    git clone https://github.com/Lightricks/LTX-Video.git
+    git clone https://github.com/Lightricks/LTX-2.git
 else
     echo "  Already cloned, updating..."
-    cd "$HOME/LTX-Video"
+    cd "$HOME/LTX-2"
     git pull -q
 fi
 
-echo "  Installing LTX-Video inference package..."
-cd "$HOME/LTX-Video"
-pip install -e ".[inference]" -q 2>&1 | tail -1 || pip install -e ".[inference]" -q --break-system-packages 2>&1 | tail -1
-echo "  LTX-Video OK"
+echo "  Installing LTX-2 packages..."
+cd "$HOME/LTX-2"
+pip install -e packages/ltx-core -q 2>&1 | tail -1 || pip install -e packages/ltx-core -q --break-system-packages 2>&1 | tail -1
+pip install -e packages/ltx-pipelines -q 2>&1 | tail -1 || pip install -e packages/ltx-pipelines -q --break-system-packages 2>&1 | tail -1
+echo "  LTX-2 OK"
 
-# ─── 4. Download model weights ───────────────────────────────────
+# ─── 4. Download models ─────────────────────────────────────────
 echo ""
-echo "[4/6] Model weights (${MODEL_SIZE_GB}GB)..."
-MODEL_PATH="$HOME/LTX-Video/models/$MODEL_FILE"
-mkdir -p "$HOME/LTX-Video/models"
+echo "[4/6] Model weights (~${MODEL_SIZE_GB}GB)..."
+MODELS_DIR="$HOME/LTX-2/models"
+mkdir -p "$MODELS_DIR"
 
-if [ -f "$MODEL_PATH" ]; then
-    echo "  Already downloaded, skipping"
-else
-    echo "  Checking HuggingFace auth..."
+MODEL_PATH="$MODELS_DIR/$MODEL_FILE"
+UPSAMPLER_PATH="$MODELS_DIR/$UPSAMPLER_FILE"
+LORA_PATH="$MODELS_DIR/$LORA_FILE"
+GEMMA_PATH="$MODELS_DIR/$GEMMA_DIR"
+
+check_hf_auth() {
     if ! huggingface-cli whoami &>/dev/null; then
         echo ""
         echo "  ============================================="
         echo "  HuggingFace login REQUIRED"
         echo "  ============================================="
-        echo "  LTX-Video is a gated model — you must:"
-        echo "    1. Go to https://huggingface.co/settings/tokens"
-        echo "    2. Create a token (or copy an existing one)"
-        echo "    3. Paste it below"
+        echo "  1. Go to https://huggingface.co/settings/tokens"
+        echo "  2. Create a token (or copy an existing one)"
+        echo "  3. Paste it below"
         echo "  ============================================="
         echo ""
         huggingface-cli login
     fi
+}
 
-    echo "  Accept model terms at: https://huggingface.co/Lightricks/LTX-Video"
-    echo "  (Do this once, before downloading)"
-    echo "  Downloading (may take 5-10 min)..."
-    huggingface-cli download Lightricks/LTX-Video \
+if [ -f "$MODEL_PATH" ]; then
+    echo "  LTX-2.3 model: already downloaded, skipping"
+else
+    check_hf_auth
+    echo "  Downloading LTX-2.3 22B distilled 1.1 (42GB, may take 10-15 min)..."
+    huggingface-cli download Lightricks/LTX-2.3 \
         "$MODEL_FILE" \
-        --local-dir "$HOME/LTX-Video/models/"
-    echo "  Download complete"
+        --local-dir "$MODELS_DIR/"
 fi
+
+if [ -f "$UPSAMPLER_PATH" ]; then
+    echo "  Upscaler: already downloaded, skipping"
+else
+    check_hf_auth
+    echo "  Downloading spatial upscaler..."
+    huggingface-cli download Lightricks/LTX-2.3 \
+        "$UPSAMPLER_FILE" \
+        --local-dir "$MODELS_DIR/"
+fi
+
+if [ -f "$LORA_PATH" ]; then
+    echo "  Distilled LoRA: already downloaded, skipping"
+else
+    check_hf_auth
+    echo "  Downloading distilled LoRA..."
+    huggingface-cli download Lightricks/LTX-2.3 \
+        "$LORA_FILE" \
+        --local-dir "$MODELS_DIR/"
+fi
+
+if [ -d "$GEMMA_PATH" ]; then
+    echo "  Gemma text encoder: already downloaded, skipping"
+else
+    check_hf_auth
+    echo "  Downloading Gemma 3 text encoder..."
+    huggingface-cli download google/gemma-3-12b-it-qat-q4_0-unquantized \
+        --local-dir "$GEMMA_PATH/"
+fi
+echo "  Downloads complete"
 
 # ─── 5. Generate .env for the service ────────────────────────────
 echo ""
 echo "[5/6] Creating .env configuration..."
 cat > "$SCRIPT_DIR/.env" << ENVEOF
 GPU_API_KEY=chronicles-gpu-key-2026
-LTX_VIDEO_DIR=$HOME/LTX-Video
+LTX_2_DIR=$HOME/LTX-2
 MODEL_WEIGHTS_PATH=$MODEL_PATH
-PIPELINE_CONFIG=$MODEL_CONFIG
+GEMMA_ROOT=$GEMMA_PATH
+SPATIAL_UPSAMPLER_PATH=$UPSAMPLER_PATH
+DISTILLED_LORA_PATH=$LORA_PATH
 PORT=6006
 ENVEOF
 echo "  Created $SCRIPT_DIR/.env"
@@ -145,10 +176,10 @@ else
     exit 1
 fi
 
-if [ -f "$HOME/LTX-Video/$MODEL_CONFIG" ]; then
-    echo "  Config file: $HOME/LTX-Video/$MODEL_CONFIG OK"
+if [ -d "$GEMMA_PATH" ]; then
+    echo "  Gemma encoder: $GEMMA_PATH OK"
 else
-    echo "  WARNING: Config not found — inference may fail"
+    echo "  WARNING: Gemma not found — text-to-video may fail"
 fi
 
 echo ""
