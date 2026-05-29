@@ -69,15 +69,14 @@ def setup():
 
     tokenizer_file = GEMMA_DIR / "tokenizer.model"
     if not tokenizer_file.exists():
-        print("  Downloading Gemma tokenizer files (separate repo)...")
+        print("  Downloading Gemma tokenizer + config files (separate repo)...")
         _t = _time.time()
         import os as _os
-        for tf in ["tokenizer.model", "tokenizer_config.json", "special_tokens_map.json"]:
-            dest = GEMMA_DIR / tf
-            if not dest.exists():
-                hf_hub_download("google/gemma-3-12b-it", tf, local_dir=str(GEMMA_DIR),
-                                token=_os.environ.get("HF_TOKEN"))
-        print(f"  OK: in {_time.time() - _t:.0f}s")
+        snapshot_download("google/gemma-3-12b-it", local_dir=str(GEMMA_DIR),
+            allow_patterns=["tokenizer.model", "*.json"],
+            token=_os.environ.get("HF_TOKEN"))
+        file_count = sum(1 for _ in GEMMA_DIR.rglob("*") if _.is_file())
+        print(f"  OK: {file_count} files in {_time.time() - _t:.0f}s")
 
     elapsed = _time.time() - t_start
     print(f"\n=== SETUP COMPLETE in {elapsed:.0f}s ({elapsed/60:.0f} min) ===")
