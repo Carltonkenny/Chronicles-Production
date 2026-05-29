@@ -97,10 +97,7 @@ class TestSoundDesigner:
     async def test_sound_designer_creates_timeline(self, monkeypatch):
         async def mock_llm(*args, **kwargs):
             return json.dumps({
-                "narration": {"audio_path": "/tmp/test.mp3", "start_offset_s": 3.0, "volume_db": 0.0},
-                "music": [],
-                "ambience": [],
-                "mix_spec": {"music_volume_db": -15.0, "ambience_volume_db": -18.0, "crossfade_duration_s": 2.0},
+                "s1": "Ambient forge sounds. Bjorn (gravelly): 'The iron speaks.' Hammer strikes on anvil. Fire crackling.",
             })
 
         monkeypatch.setattr("agents.sound_designer.call_llm", mock_llm)
@@ -113,15 +110,17 @@ class TestSoundDesigner:
             input_data={
                 "narration_path": "/tmp/test.mp3",
                 "culture": "viking",
+                "timeline": "medieval",
                 "scenes": [{"id": "s1", "summary": "test", "location": "forge", "emotional_beat": "wonder"}],
+                "characters": [],
             },
             story_hash="test",
             priority=2,
         )
         result = await agent.execute(wo)
         assert result.success is True
-        audio = result.output_data.get("audio_timeline", {})
-        assert "narration" in audio
+        audio_prompts = result.output_data.get("audio_prompts", {})
+        assert "s1" in audio_prompts
 
 
 class TestColorist:

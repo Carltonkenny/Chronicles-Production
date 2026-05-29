@@ -15,10 +15,11 @@ SETTING_WIDTH = 1344
 SETTING_HEIGHT = 768
 CHARACTER_WIDTH = 768
 CHARACTER_HEIGHT = 1344
+SQUARE_SIZE = 1024
 MODEL = "flux"
 NOLOGO = True
 SAFE = True
-MAX_PROMPT_LENGTH = 800
+MAX_PROMPT_LENGTH = 1200
 
 SETTING_QUALITY = (
     "cinematic wide-angle photograph, anamorphic lens, "
@@ -54,7 +55,8 @@ class ImageAPIClient:
 
     def compute_seed(self, story_hash: str, suffix: str = "") -> int:
         combined = f"{story_hash}{suffix}"
-        return abs(hash(combined)) % 9999
+        digest = hashlib.sha256(combined.encode()).hexdigest()
+        return int(digest, 16) % 9999
 
     @staticmethod
     def sanitize_prompt(prompt: str) -> str:
@@ -71,8 +73,12 @@ class ImageAPIClient:
     ) -> str:
         clean = self.sanitize_prompt(prompt)
         encoded = quote(clean, safe="")
-        width = CHARACTER_WIDTH if orientation == "portrait" else SETTING_WIDTH
-        height = CHARACTER_HEIGHT if orientation == "portrait" else SETTING_HEIGHT
+        if orientation == "portrait":
+            width, height = CHARACTER_WIDTH, CHARACTER_HEIGHT
+        elif orientation == "square":
+            width = height = SQUARE_SIZE
+        else:
+            width, height = SETTING_WIDTH, SETTING_HEIGHT
         api_key = CONFIG.POLLINATIONS_API_KEY
         url = (
             f"{self.BASE_URL}/{encoded}"
@@ -104,16 +110,27 @@ class ImageAPIClient:
         self, story_hash: str, character_name: str, base_prompt: str, variations: int = 3
     ) -> List[dict]:
         results = []
-        variation_labels = ["full_body", "close_up", "action"]
+        variation_labels = ["full_body", "close_up", "action", "mugshot", "physique_chart", "feature_closeup"]
         for i in range(min(variations, len(variation_labels))):
             vtype = variation_labels[i]
             suffix = f"_char_{character_name.lower().replace(' ', '_')}_{vtype}"
             seed = self.compute_seed(story_hash, suffix)
-            orientation = "portrait" if vtype != "action" else "landscape"
-            if vtype == "action":
-                vprompt = f"{base_prompt}, dynamic action pose, cinematic medium shot"
-            elif vtype == "close_up":
+            if vtype in ("full_body", "close_up", "mugshot", "physique_chart", "feature_closeup"):
+                orientation = "portrait"
+            elif vtype == "character_sheet":
+                orientation = "square"
+            else:
+                orientation = "landscape"
+            if vtype == "close_up":
                 vprompt = f"{base_prompt}, intimate close-up portrait, emotional expression, eyes visible, 85mm lens"
+            elif vtype == "mugshot":
+                vprompt = f"{base_prompt}, front-facing identification photograph, neutral expression, even lighting, plain background, reference photo style"
+            elif vtype == "physique_chart":
+                vprompt = f"{base_prompt}, full body against measurement scale with height markings in feet and metric, anatomical reference pose, clinical lighting, museum archive style"
+            elif vtype == "feature_closeup":
+                vprompt = f"{base_prompt}, extreme close-up of distinguishing features, macro photography, sharp detail on defining characteristics, medical illustration quality"
+            elif vtype == "action":
+                vprompt = f"{base_prompt}, dynamic action pose, cinematic medium shot"
             else:
                 vprompt = f"{base_prompt}, full body standing pose, shows complete costume and signature items, neutral expression"
             url = self.build_image_url(vprompt, seed, orientation)
@@ -125,6 +142,34 @@ class ImageAPIClient:
                 "orientation": orientation,
             })
         return results
+
+    async def build_turnaround_url(
+        self, story_hash: str, character_name: str, prompt: str
+    ) -> dict:
+        suffix = f"_char_{character_name.lower().replace(' ', '_')}_turnaround"
+        seed = self.compute_seed(story_hash, suffix)
+        url = self.build_image_url(prompt, seed, "landscape")
+        return {
+            "url": url,
+            "prompt": prompt,
+            "seed": seed,
+            "variation": "turnaround_sheet",
+            "orientation": "landscape",
+        }
+
+    async def build_character_sheet_url(
+        self, story_hash: str, character_name: str, prompt: str
+    ) -> dict:
+        suffix = f"_char_{character_name.lower().replace(' ', '_')}_sheet"
+        seed = self.compute_seed(story_hash, suffix)
+        url = self.build_image_url(prompt, seed, "square")
+        return {
+            "url": url,
+            "prompt": prompt,
+            "seed": seed,
+            "variation": "character_sheet",
+            "orientation": "square",
+        }
 
     async def build_scene_url(
         self, story_hash: str, scene_id: str, base_prompt: str
@@ -139,6 +184,31 @@ class ImageAPIClient:
             "scene_id": scene_id,
             "orientation": "landscape",
         }
+
+    async def build_scene_variation_urls(
+        self, story_hash: str, scene_id: str, base_prompt: str
+    ) -> List[dict]:
+        variations = [
+            ("establishing_shot", "wide establishing shot, full location visible, architecture and environment emphasized, cinematic landscape"),
+            ("action_shot", "medium action shot, characters in motion, dynamic composition, the main beat of the scene"),
+            ("emotional_closeup", "tight emotional shot, close-up on key character expression, shallow depth of field, intimate framing"),
+            ("world_detail", "detail shot of environment or prop, texture and atmosphere, world-building visual, macro or medium focus"),
+        ]
+        results = []
+        for vtype, v_suffix in variations:
+            suffix = f"_scene_{scene_id}_{vtype}"
+            seed = self.compute_seed(story_hash, suffix)
+            vprompt = f"{base_prompt}, {v_suffix}"
+            url = self.build_image_url(vprompt, seed, "landscape")
+            results.append({
+                "url": url,
+                "prompt": vprompt,
+                "seed": seed,
+                "variation": vtype,
+                "scene_id": scene_id,
+                "orientation": "landscape",
+            })
+        return results
 
     async def download_images_batch(self, items: List[dict]) -> List[dict]:
         tasks = []

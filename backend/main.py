@@ -98,9 +98,7 @@ def _save_film_to_catalog(
 from agents.video_lead import VideoLead
 from agents.editor import EditorAgent
 from agents.sound_designer import SoundDesignerAgent
-from agents.colorist import ColoristAgent
 from post.assembler import FFmpegAssembler
-from image import image_api
 from logger_config import api_logger as logger
 
 limiter = Limiter(key_func=get_remote_address, default_limits=["100/hour"])
@@ -464,29 +462,13 @@ async def generate_film(request: Request, body: StoryGenerationRequest):
             return WorkResult(success=True, output_data=blueprint)
 
         async def writer_fn(wo):
-            from chain import _run_writer
-            story_data = await _run_writer(story_request, wo.input_data["blueprint"], wiki_context, bridge)
-            from schemas import WorkResult
-            return WorkResult(success=True, output_data=story_data)
-
-        async def supervisor_fn(wo):
-            from agents.script_supervisor import ScriptSupervisorAgent
-            agent = ScriptSupervisorAgent()
+            from agents.writer_scene import WriterSceneAgent
+            agent = WriterSceneAgent()
             return await agent.execute(wo)
 
         async def director_fn(wo):
-            from agents.director import DirectorAgent
-            agent = DirectorAgent()
-            return await agent.execute(wo)
-
-        async def pd_fn(wo):
-            from agents.production_designer import ProductionDesignerAgent
-            agent = ProductionDesignerAgent()
-            return await agent.execute(wo)
-
-        async def ad_fn(wo):
-            from agents.art_director import ArtDirectorAgent
-            agent = ArtDirectorAgent()
+            from agents.visual_bible_architect import VisualBibleArchitect
+            agent = VisualBibleArchitect()
             return await agent.execute(wo)
 
         async def image_swarm_fn(wo):
@@ -499,10 +481,10 @@ async def generate_film(request: Request, body: StoryGenerationRequest):
             return await agent.execute(wo)
 
         async for event in showrunner.orchestrate(
-            planner_fn, writer_fn, supervisor_fn,
-            story_request, wiki_context, bridge,
-            director_fn, pd_fn, ad_fn,
-            image_swarm_fn,
+            planner_fn, writer_fn, supervisor_fn=None,
+            story_request=story_request, wiki_context=wiki_context, bridge=bridge,
+            director_fn=director_fn,
+            image_swarm_fn=image_swarm_fn,
             story_hash=story_hash,
         ):
             if event.phase == "pipeline_complete":
@@ -656,24 +638,12 @@ async def generate_film(request: Request, body: StoryGenerationRequest):
 
         yield f"event: post\ndata: {json.dumps({'phase': 'post', 'step': 'color', 'pct': 98, 'message': 'Color grading...', 'data': {}, 'error': False})}\n\n"
 
-        try:
-            color = ColoristAgent()
-            color_wo = WorkOrder(
-                agent_type="colorist",
-                input_data={
-                    "color_palette": vb_data.get("color_palette", "") if vb_data else "",
-                    "lighting_style": vb_data.get("lighting_style", "") if vb_data else "",
-                    "emotional_arc": story_data.get("theme", ""),
-                    "scene_count": len(clips),
-                },
-                story_hash=story_hash,
-                priority=2,
-            )
-            color_result = await color.execute(color_wo)
-            grading_spec = color_result.output_data.get("grading_spec", {}) if color_result.success else {}
-        except Exception as e:
-            logger.warning(f"Colorist failed: {e}")
-            grading_spec = {}
+        from utils.color_grade import compute_grading_spec
+        grading_spec = compute_grading_spec(
+            color_palette=vb_data.get("color_palette", {}) if vb_data else {},
+            film_tone=vb_data.get("film_tone", "") if vb_data else "",
+            lighting_style=vb_data.get("lighting_style", "") if vb_data else "",
+        )
 
         yield f"event: post\ndata: {json.dumps({'phase': 'post', 'step': 'assembly', 'pct': 99, 'message': 'Assembling final MP4...', 'data': {}, 'error': False})}\n\n"
 

@@ -7,7 +7,6 @@ from config import CONFIG
 from schemas import WorkOrder, WorkResult
 from agents.base_agent import BaseAgent
 from agents.video_prompt_crafter import VideoPromptCrafter
-from agents.video_qc import VideoQCAgent
 from video.video_api import VideoProvider, CloudGPUProvider, KenBurnsDegradation, VideoClipResult
 from logger_config import setup_logger
 
@@ -122,46 +121,19 @@ class VideoLead(BaseAgent):
                 clip_results[-1]["clip_result"] = result2
                 clip_results[-1]["clip_path"] = ""
 
-        qc_tasks = []
-        for cr in clip_results:
-            pd = cr["prompt_data"]
-            clip = cr["clip_result"]
-            if not clip.success:
-                continue
-            qc_wo = WorkOrder(
-                agent_type="video_qc",
-                input_data={
-                    "clip_url": clip.clip_url or "",
-                    "video_prompt": pd.get("video_prompt", ""),
-                    "expected_duration_s": pd.get("expected_duration_s", clip_duration),
-                    "character_anchors": pd.get("character_anchors", []),
-                    "color_palette": "",
-                },
-                story_hash=story_hash,
-                priority=3,
-            )
-            agent = VideoQCAgent(timeout_ms=15000)
-            qc_tasks.append(agent.execute(qc_wo))
-
-        qc_results = []
-        if qc_tasks:
-            qc_raw = await asyncio.gather(
-                *[run_with_sem(t) for t in qc_tasks],
-                return_exceptions=True,
-            )
-            for r in qc_raw:
-                if isinstance(r, WorkResult) and r.success:
-                    qc_results.append(r.output_data)
-                elif isinstance(r, Exception):
-                    qc_results.append({"status": "warning", "score": 0.5, "issues": [str(r)]})
-
         wall = (time.time() - start) * 1000
 
         approved_clips = []
         for i, cr in enumerate(clip_results):
             clip = cr["clip_result"]
             clip_path = cr.get("clip_path", "")
-            qc = qc_results[i] if i < len(qc_results) else {"status": "approved", "score": 0.5}
+            qc_status = "approved" if clip.success else "rejected"
+            qc_score = 1.0 if clip.success else 0.0
+            if clip.success and clip_path and Path(clip_path).exists():
+                st = Path(clip_path).stat()
+                if st.st_size < 1000:
+                    qc_status = "warning"
+                    qc_score = 0.5
             approved_clips.append({
                 "scene_id": cr["prompt_data"].get("scene_id", f"scene_{i}"),
                 "prompt": cr["prompt_data"].get("video_prompt", ""),
@@ -169,8 +141,8 @@ class VideoLead(BaseAgent):
                 "source": clip.source,
                 "clip_path": clip_path,
                 "clip_url": clip.clip_url or "",
-                "qc_status": qc.get("status", "warning"),
-                "qc_score": qc.get("score", 0.5),
+                "qc_status": qc_status,
+                "qc_score": qc_score,
             })
 
         success_count = sum(1 for c in clip_results if c["clip_result"].success)

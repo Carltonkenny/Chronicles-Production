@@ -5,7 +5,7 @@ from config import CONFIG
 from schemas import WorkOrder, WorkResult
 from schemas.image_result import ImageResult
 from agents.base_agent import BaseAgent
-from image.image_api import ImageAPIClient, SETTING_QUALITY
+from image.image_api import ImageAPIClient, SETTING_QUALITY, CHARACTER_QUALITY
 from prompts.character_portrait_prompt import CHARACTER_PORTRAIT_PROMPT
 from utils.llm_client import call_llm
 from utils import get_visual_elements
@@ -13,7 +13,7 @@ from logger_config import setup_logger
 
 logger = setup_logger("CharPortraitGen")
 
-VARIATION_TYPES = ["full_body", "close_up", "action"]
+VARIATION_TYPES = ["full_body", "close_up", "action", "mugshot", "physique_chart", "feature_closeup"]
 
 
 class CharacterPortraitGen(BaseAgent):
@@ -85,7 +85,7 @@ class CharacterPortraitGen(BaseAgent):
             if db_clothing:
                 description += f", {db_clothing}"
 
-            quality = f"{SETTING_QUALITY}, {theme} mood"
+            quality = f"{CHARACTER_QUALITY}, {theme} mood" if vtype in ("full_body", "close_up", "mugshot", "physique_chart", "feature_closeup") else f"{SETTING_QUALITY}, {theme} mood"
             base_prompt = f"{description}, {culture} {timeline} era, {quality}"
 
             variant_data = await self._api.build_portrait_urls(

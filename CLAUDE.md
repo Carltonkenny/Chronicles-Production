@@ -248,19 +248,57 @@ Never mix these domains. A Costume Designer doesn't set f-stops.
 
 ---
 
-## 16. REFERENCE IMAGE STRATEGY
+## 16. REFERENCE IMAGE STRATEGY (v4.1)
 
-Character portraits from Phase 3 are REFERENCE IMAGES for Phase 4 video generation:
+Character turnaround sheets and scene images from Phase 3 are REFERENCE IMAGES for Phase 4 video generation with LTX-2.3:
 
-1. Generated once (deterministic seed)
-2. Stored in Cloudflare R2
-3. URL passed to video prompt crafter
-4. Video prompt includes: "Same character as reference image [URL], eyes/hair/scar MUST match"
-5. Video QC validates: signature items visible, colors match reference
+1. CharacterDesignerAgent generates turnaround model sheets (front/back/side/action pose, height scale) — this is the IDENTITY SEED
+2. SceneKeyframeGen generates 4 shots per scene (establishing, action, emotional, detail)
+3. All stored and URL-passed to VideoPromptCrafter
+4. VideoPromptCrafter builds multi-image conditioning list: turnaround at frame 0, scene establishing at frame 0, scene action at frame 33
+5. LTX-2.3 accepts list of ImageConditioningInput(path, frame_idx, strength, crf) — practical limit 4-6 per clip
+6. Video prompt includes: "Character is IDENTICAL to reference turnaround sheet [URL], all signature items MUST match"
 
-This is the PRIMARY mechanism for character consistency across video clips.
+This is the PRIMARY mechanism for character consistency across video clips. The turnaround sheet is the single source of truth for character identity.
 
 ---
+
+## 17. AUDIO STRATEGY (v4.1)
+
+### Two-Layer Audio Architecture
+
+**Layer 1: In-Scene Audio (LTX-2.3 native)**
+- SoundDesignerAgent crafts per-scene audio prompts with dialogue direction, ambience, foley, spatial audio
+- Audio prompt merged into VideoPromptCrafter output — sent to LTX-2.3 simultaneously with video prompt
+- LTX-2.3 generates synchronized video + audio in one pass
+- Audio guider: cfg_scale=7.0, modality_scale=3.0 (controls audio-visual sync)
+- In-scene audio = character dialogue + ambient soundscape + foley
+
+**Layer 2: Narration Overlay (Edge TTS)**
+- Edge TTS generates narrator voiceover from the scene narration_text
+- Overlaid by FFmpegAssembler in post-production
+- Narration is the storyteller voice — separate from character dialogue
+
+**Both layers coexist in final MP4.** LTX-2.3 handles the visual world + live sound. Edge TTS handles the omniscient narrator.
+
+---
+
+## 18. AGENT CONSOLIDATION (v4.1)
+
+### Merged Agents
+| Before | After | Rationale |
+|--------|-------|-----------|
+| WriterAgent + ScriptSupervisorAgent | WriterSceneAgent | Both process same narrative data. One call produces story + scenes + dialogues |
+| DirectorAgent + ProductionDesignerAgent + ArtDirectorAgent | VisualBibleArchitect | All describe same locations/lighting/materials/props. Three sequential dependents → one call |
+| ColoristAgent | compute_grading_spec() pure function | Maps palette → 5 float FFmpeg values. No creative judgment needed |
+| VideoQCAgent | Rule-based file check in VideoLead | LLM cannot evaluate video from text. Check: exists + duration > 0 |
+
+### Repurposed Agents
+| Before | After |
+|--------|-------|
+| SoundDesignerAgent (empty timeline JSON) | SoundDesignerAgent (per-scene audio prompts for LTX-2.3) |
+
+### Total: 15 agents → 9 functional agents + 3 orchestrators. ~30,000 tokens/film (was ~48,000, ~37% reduction).
 
 ## FINAL RULE
 

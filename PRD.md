@@ -1,6 +1,6 @@
 # 📄 PRODUCT REQUIREMENTS DOCUMENT (PRD)
 
-## Chronicles Production v4.0
+## Chronicles Production v4.1
 
 ---
 

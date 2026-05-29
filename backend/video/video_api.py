@@ -13,6 +13,13 @@ logger = setup_logger("VideoAPI")
 VIDEO_TIMEOUT = 600
 
 
+class ImageConditioningInput:
+    def __init__(self, url: str, frame_idx: int = 0, strength: float = 1.0):
+        self.url = url
+        self.frame_idx = frame_idx
+        self.strength = strength
+
+
 class VideoClipResult:
     def __init__(self, clip_bytes: Optional[bytes] = None, clip_url: Optional[str] = None,
                  success: bool = True, error: Optional[str] = None,
@@ -26,7 +33,9 @@ class VideoClipResult:
 
 class VideoProvider(ABC):
     @abstractmethod
-    async def generate(self, prompt: str, reference_image_url: Optional[str] = None,
+    async def generate(self, prompt: str,
+                       images: Optional[List[ImageConditioningInput]] = None,
+                       audio_prompt: Optional[str] = None,
                        seed: int = 0, duration_s: int = 8) -> VideoClipResult:
         pass
 
@@ -48,7 +57,9 @@ class CloudGPUProvider(VideoProvider):
             )
         return self._client
 
-    async def generate(self, prompt: str, reference_image_url: Optional[str] = None,
+    async def generate(self, prompt: str,
+                       images: Optional[List[ImageConditioningInput]] = None,
+                       audio_prompt: Optional[str] = None,
                        seed: int = 0, duration_s: int = 8) -> VideoClipResult:
         if not self.endpoint:
             return VideoClipResult(
@@ -57,14 +68,23 @@ class CloudGPUProvider(VideoProvider):
             )
         try:
             client = await self._get_client()
+            body: dict = {
+                "prompt": prompt,
+                "seed": seed,
+                "duration_s": duration_s,
+            }
+            if images:
+                body["images"] = [
+                    {"url": img.url, "frame_idx": img.frame_idx, "strength": img.strength}
+                    for img in images
+                ]
+            if audio_prompt:
+                body["audio_prompt"] = audio_prompt
+                body["generate_audio"] = True
+
             resp = await client.post(
                 f"{self.endpoint}/generate_clip",
-                json={
-                    "prompt": prompt,
-                    "reference_image_url": reference_image_url,
-                    "seed": seed,
-                    "duration_s": duration_s,
-                },
+                json=body,
             )
             if resp.status_code == 200:
                 logger.info(f"CloudGPU generated clip ({len(resp.content)} bytes) in {resp.elapsed:.1f}s")
@@ -91,11 +111,17 @@ class CloudGPUProvider(VideoProvider):
 
 
 class KenBurnsDegradation(VideoProvider):
-    async def generate(self, prompt: str, reference_image_url: Optional[str] = None,
+    async def generate(self, prompt: str,
+                       images: Optional[List[ImageConditioningInput]] = None,
+                       audio_prompt: Optional[str] = None,
                        seed: int = 0, duration_s: int = 8) -> VideoClipResult:
         logger.warning(f"Ken Burns fallback for prompt: {prompt[:60]}...")
+        ref_url = None
+        if images:
+            first = images[0]
+            ref_url = first.url if isinstance(first, ImageConditioningInput) else str(first)
         return VideoClipResult(
-            clip_url=reference_image_url,
+            clip_url=ref_url,
             success=True,
             source="ken_burns",
         )

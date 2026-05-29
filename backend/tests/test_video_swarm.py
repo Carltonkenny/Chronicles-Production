@@ -20,7 +20,9 @@ class TestVideoProvider:
 
     def test_ken_burns_always_succeeds(self):
         provider = KenBurnsDegradation()
-        result = asyncio.run(provider.generate("test", "http://example.com/img.png"))
+        from video.video_api import ImageConditioningInput
+        images = [ImageConditioningInput(url="http://example.com/img.png")]
+        result = asyncio.run(provider.generate("test", images=images))
         assert result.success is True
         assert result.source == "ken_burns"
         assert result.clip_url == "http://example.com/img.png"

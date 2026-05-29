@@ -196,6 +196,7 @@ let entryId = 0;
 let storyData = null;
 let portraitData = {};
 let audioUrl = null;
+let abortController = null;
 
 async function init() {
   try {
@@ -309,11 +310,14 @@ async function generate() {
   log('story', 'System', `🎬 Generating film: "${seed.substring(0,50)}..."`);
   log('story', 'System', `→ ${payload.culture}, ${payload.timeline}, ${payload.theme}`);
 
+  abortController = new AbortController();
+
   try {
     const resp = await fetch('/generate-film', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
+      signal: abortController.signal,
     });
 
     if (!resp.ok) {
@@ -363,7 +367,7 @@ async function generate() {
 }
 
 function stop() {
-  if (eventSource) { eventSource.close(); eventSource = null; }
+  if (abortController) { abortController.abort(); abortController = null; }
   log('error', 'System', '⏹ Stopped by user');
   document.getElementById('generateBtn').disabled = false;
   document.getElementById('generateBtn').style.display = 'block';
@@ -383,7 +387,7 @@ function handleEvent(data) {
 
   if (p === 'story') {
     category = 'story';
-    agent = s === 'planning' ? 'Planner' : s === 'writing' ? 'Writer' : s === 'supervising' ? 'Supervisor' : 'Story';
+    agent = s === 'planning' ? 'Planner' : s === 'writing_scenes' ? 'WriterScene' : 'Story';
     if (s === 'planning') setPipe('story', 'pending', 'Story');
     if (s === 'complete') {
       if (data.data) {
@@ -397,7 +401,7 @@ function handleEvent(data) {
     }
   } else if (p === 'visual_bible') {
     category = 'visual';
-    agent = s === 'director' ? 'Director' : s === 'pd' ? 'Prod Designer' : s === 'ad' ? 'Art Director' : 'Visual Bible';
+    agent = s === 'architect' ? 'VisualBibleArchitect' : 'Visual Bible';
     if (s === 'complete' || s === 'done') setPipe('visual', 'done', 'Visual Bible');
   } else if (p === 'images') {
     category = 'images';
@@ -405,17 +409,36 @@ function handleEvent(data) {
     if (data.data) {
       document.getElementById('imageGrid').innerHTML = '';
       if (data.data.characters) {
+        const pLabels = ['full body', 'close-up', 'action', 'mugshot', 'physique chart', 'feature closeup'];
         Object.entries(data.data.characters).forEach(([name, urls]) => {
-          const labels = ['full body', 'close-up', 'action'];
-          urls.forEach((url, i) => addImage(url, name, labels[i] || ''));
+          urls.forEach((url, i) => addImage(url, name, pLabels[i] || ''));
         });
         portraitData = data.data.characters;
         const count = Object.values(data.data.characters).flat().length;
         displayMsg = `${count} character portraits generated`;
       }
+      if (data.data.character_designs) {
+        data.data.character_designs.forEach(d => {
+          const vLabel = {turnaround_sheet:'Turnaround', character_sheet:'Design Sheet'}[d.variation] || d.variation;
+          addImage(d.url, d.character || 'Character', vLabel);
+        });
+        displayMsg = (displayMsg||'') + ` + ${data.data.character_designs.length} design sheets`;
+      }
+      if (data.data.props) {
+        data.data.props.forEach(p => {
+          addImage(p.url, p.prop_name, p.prop_type || 'prop');
+        });
+        displayMsg = (displayMsg||'') + ` + ${data.data.props.length} prop images`;
+      }
       if (data.data.scenes) {
-        data.data.scenes.forEach((url, i) => addImage(url, `Scene ${i+1}`));
-        displayMsg += ` + ${data.data.scenes.length} scene keyframes`;
+        const sLabels = ['establishing', 'action', 'emotional', 'detail'];
+        const perScene = 4;
+        data.data.scenes.forEach((url, i) => {
+          const sceneNum = Math.floor(i / perScene) + 1;
+          const sLabel = sLabels[i % perScene];
+          addImage(url, `Scene ${sceneNum}`, sLabel);
+        });
+        displayMsg = (displayMsg||'') + ` + ${data.data.scenes.length} scene shots`;
       }
       if (s === 'swarming') setPipe('images', 'pending', 'Images');
       if (s === 'complete') {
@@ -431,7 +454,7 @@ function handleEvent(data) {
     if (s === 'failed') setPipe('video', 'fail', 'Video');
   } else if (p === 'post') {
     category = 'post';
-    agent = s === 'audio' ? 'Sound Designer' : s === 'editing' ? 'Editor' : s === 'sound' ? 'Sound' : s === 'color' ? 'Colorist' : s === 'assembly' ? 'FFmpeg' : 'Post';
+    agent = s === 'audio' ? 'Sound Designer' : s === 'editing' ? 'Editor' : s === 'sound' ? 'Sound' : s === 'color' ? 'Color Grade' : s === 'assembly' ? 'FFmpeg' : 'Post';
     if (s === 'audio' || s === 'editing') setPipe('post', 'pending', 'Post-Production');
     if (s === 'assembly') { setPipe('post', 'done', 'Post-Production'); }
     if (s === 'audio_complete' && data.data && data.data.audio_url) {
