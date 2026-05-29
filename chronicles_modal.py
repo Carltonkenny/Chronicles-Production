@@ -92,6 +92,7 @@ gpu_image = (
     timeout=3600,
     volumes={str(MODELS_DIR): volume},
     image=setup_image,
+    secrets=[modal.Secret.from_name("hf-secret")],
 )
 def setup():
     """
