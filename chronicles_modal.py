@@ -220,7 +220,7 @@ def _load_pipeline():
     volumes={str(MODELS_DIR): volume},
     image=gpu_image,
 )
-@modal.web_endpoint(method="POST", label="generate-clip")
+@modal.fastapi_endpoint(method="POST")
 async def generate_clip(request):
     """Generate a video clip with synchronized audio using LTX-2.3."""
     import time as _time
@@ -366,7 +366,7 @@ async def generate_clip(request):
 # ═══════════════════════════════════════════════════════════════════
 
 @app.function(image=gpu_image)
-@modal.web_endpoint(method="GET", label="health")
+@modal.fastapi_endpoint(method="GET")
 async def health():
     info = {
         "status": "ok",
