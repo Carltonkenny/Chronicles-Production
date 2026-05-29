@@ -25,6 +25,7 @@ MODELS (auto-downloaded by setup):
 from pathlib import Path
 from typing import Optional, List
 
+import fastapi
 import modal
 
 # ─── Constants ─────────────────────────────────────────────────────
@@ -80,6 +81,9 @@ gpu_image = (
         "cd /ltx2 && pip install -e packages/ltx-core -e packages/ltx-pipelines -q",
     )
 )
+
+# FastAPI app for ASGI serving
+web_app = fastapi.FastAPI(title="Chronicles GPU — LTX-2.3")
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -174,7 +178,6 @@ def _load_pipeline():
     from ltx_core.loader import LTXV_LORA_COMFY_RENAMING_MAP, LoraPathStrengthAndSDOps
     from ltx_pipelines.ti2vid_two_stages import TI2VidTwoStagesPipeline
 
-    # Auto-detect checkpoint
     checkpoint = None
     for candidate in [
         "ltx-2.3-22b-distilled-1.1.safetensors",
@@ -216,14 +219,8 @@ def _load_pipeline():
     )
 
 
-@app.function(
-    gpu="H100",
-    timeout=600,
-    volumes={str(MODELS_DIR): volume},
-    image=gpu_image,
-)
-@modal.fastapi_endpoint(methods=["POST"])
-async def generate_clip(request):
+@web_app.post("/generate_clip")
+async def generate_clip(request: fastapi.Request):
     """Generate a video clip with synchronized audio using LTX-2.3."""
     import time as _time
     import tempfile
@@ -364,11 +361,10 @@ async def generate_clip(request):
 
 
 # ═══════════════════════════════════════════════════════════════════
-# HEALTH — Status check (CPU, free)
+# HEALTH — Status check
 # ═══════════════════════════════════════════════════════════════════
 
-@app.function(image=gpu_image)
-@modal.fastapi_endpoint(methods=["GET"])
+@web_app.get("/health")
 async def health():
     info = {
         "status": "ok",
@@ -385,3 +381,18 @@ async def health():
             (MODELS_DIR / e).exists() for e in expected
         )
     return info
+
+
+# ═══════════════════════════════════════════════════════════════════
+# ASGI WRAPPER — exposes FastAPI app on GPU
+# ═══════════════════════════════════════════════════════════════════
+
+@app.function(
+    gpu="H100",
+    timeout=600,
+    volumes={str(MODELS_DIR): volume},
+    image=gpu_image,
+)
+@modal.asgi_app()
+def server():
+    return web_app
