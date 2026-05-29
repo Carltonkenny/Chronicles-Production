@@ -25,8 +25,13 @@ MODELS (auto-downloaded by setup):
 from pathlib import Path
 from typing import Optional, List
 
-import fastapi
 import modal
+
+try:
+    import fastapi
+    HAS_FASTAPI = True
+except ImportError:
+    HAS_FASTAPI = False
 
 # ─── Constants ─────────────────────────────────────────────────────
 
@@ -81,9 +86,6 @@ gpu_image = (
         "cd /ltx2 && pip install -e packages/ltx-core -e packages/ltx-pipelines -q",
     )
 )
-
-# FastAPI app for ASGI serving
-web_app = fastapi.FastAPI(title="Chronicles GPU — LTX-2.3")
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -181,58 +183,17 @@ def setup():
 
 
 # ═══════════════════════════════════════════════════════════════════
-# GENERATE CLIP — GPU inference (H100, billable)
+# FASTAPI APP BUILDER — creates routes for the ASGI server
 # ═══════════════════════════════════════════════════════════════════
 
-def _load_pipeline():
-    """Load LTX-2.3 pipeline. Cached globally in container memory."""
-    import torch
-    from ltx_core.loader import LTXV_LORA_COMFY_RENAMING_MAP, LoraPathStrengthAndSDOps
-    from ltx_pipelines.ti2vid_two_stages import TI2VidTwoStagesPipeline
-
-    checkpoint = None
-    for candidate in [
-        "ltx-2.3-22b-distilled-1.1.safetensors",
-        "ltx-2.3-22b-distilled.safetensors",
-        "ltx-2.3-22b-dev.safetensors",
-    ]:
-        candidate_path = MODELS_DIR / candidate
-        if candidate_path.exists():
-            checkpoint = str(candidate_path)
-            break
-
-    if not checkpoint:
-        raise RuntimeError(
-            "No LTX-2.3 model found in /models. "
-            "Run: modal run chronicles_modal.py::setup"
-        )
-
-    upscaler = MODELS_DIR / "ltx-2.3-spatial-upscaler-x2-1.1.safetensors"
-    lora = MODELS_DIR / "ltx-2.3-22b-distilled-lora-384-1.1.safetensors"
-    gemma = GEMMA_DIR
-
-    for required, label in [(upscaler, "spatial upscaler"), (lora, "distilled LoRA"), (gemma, "Gemma encoder")]:
-        if not required.exists():
-            raise RuntimeError(
-                f"{label} not found at {required}. "
-                "Run: modal run chronicles_modal.py::setup"
-            )
-
-    distilled_lora = [
-        LoraPathStrengthAndSDOps(str(lora), 0.6, LTXV_LORA_COMFY_RENAMING_MAP),
-    ]
-
-    return TI2VidTwoStagesPipeline(
-        checkpoint_path=checkpoint,
-        distilled_lora=distilled_lora,
-        spatial_upsampler_path=str(upscaler),
-        gemma_root=str(gemma),
-        loras=[],
-    )
+def _build_app():
+    web_app = fastapi.FastAPI(title="Chronicles GPU — LTX-2.3")
+    web_app.post("/generate_clip")(_generate_clip)
+    web_app.get("/health")(_health)
+    return web_app
 
 
-@web_app.post("/generate_clip")
-async def generate_clip(request: fastapi.Request):
+async def _generate_clip(request: fastapi.Request):
     """Generate a video clip with synchronized audio using LTX-2.3."""
     import time as _time
     import tempfile
@@ -372,12 +333,7 @@ async def generate_clip(request: fastapi.Request):
     )
 
 
-# ═══════════════════════════════════════════════════════════════════
-# HEALTH — Status check
-# ═══════════════════════════════════════════════════════════════════
-
-@web_app.get("/health")
-async def health():
+async def _health():
     info = {
         "status": "ok",
         "model": "LTX-2.3 22B",
@@ -394,6 +350,8 @@ async def health():
         )
     return info
 
+    return web_app
+
 
 # ═══════════════════════════════════════════════════════════════════
 # ASGI WRAPPER — exposes FastAPI app on GPU
@@ -407,4 +365,4 @@ async def health():
 )
 @modal.asgi_app()
 def server():
-    return web_app
+    return _build_app()
