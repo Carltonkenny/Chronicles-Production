@@ -219,7 +219,6 @@ def _load_pipeline():
     timeout=600,
     volumes={str(MODELS_DIR): volume},
     image=gpu_image,
-    allow_concurrent_inputs=4,
 )
 @modal.web_endpoint(method="POST", label="generate-clip")
 async def generate_clip(request):
