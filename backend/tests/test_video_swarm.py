@@ -202,8 +202,8 @@ class TestVideoQC:
 
 class TestConfig:
     def test_video_config_defaults(self):
-        assert CONFIG.CLIP_DURATION_S == 10
-        assert CONFIG.VIDEO_CLIP_COUNT == 6
+        assert CONFIG.CLIP_DURATION_S == 12
+        assert CONFIG.VIDEO_CLIP_COUNT == 7
         assert CONFIG.VIDEO_PROVIDER in ("cloud_gpu", "ken_burns")
 
     def test_video_provider_config_reads_env(self):

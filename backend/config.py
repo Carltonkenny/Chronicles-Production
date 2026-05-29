@@ -51,12 +51,12 @@ class Config:
     AGENT_TIMEOUT_S: int = 30
 
     TARGET_FILM_DURATION_S: int = 90
-    CLIP_DURATION_S: int = 10
+    CLIP_DURATION_S: int = 12
 
     VIDEO_PROVIDER: str = os.getenv("VIDEO_PROVIDER", "cloud_gpu")
     CLOUD_GPU_ENDPOINT: str = os.getenv("CLOUD_GPU_ENDPOINT", "")
     CLOUD_GPU_API_KEY: str = os.getenv("CLOUD_GPU_API_KEY", "")
-    VIDEO_CLIP_COUNT: int = 6
+    VIDEO_CLIP_COUNT: int = 7
 
     DEFAULT_MUSIC_VOLUME_DB: float = -15.0
     DEFAULT_AMBIENCE_VOLUME_DB: float = -18.0
