@@ -82,10 +82,11 @@ class CloudGPUProvider(VideoProvider):
                 body["audio_prompt"] = audio_prompt
                 body["generate_audio"] = True
 
-            resp = await client.post(
-                f"{self.endpoint}/generate_clip",
-                json=body,
-            )
+            url = self.endpoint
+            if "/generate_clip" not in url:
+                url = f"{url}/generate_clip"
+
+            resp = await client.post(url, json=body)
             if resp.status_code == 200:
                 logger.info(f"CloudGPU generated clip ({len(resp.content)} bytes) in {resp.elapsed:.1f}s")
                 return VideoClipResult(
