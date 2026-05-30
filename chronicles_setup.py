@@ -78,6 +78,7 @@ def setup():
         file_count = sum(1 for _ in GEMMA_DIR.rglob("*") if _.is_file())
         print(f"  OK: {file_count} files in {_time.time() - _t:.0f}s")
 
+    safetensors_exists = any(GEMMA_DIR.rglob("model*.safetensors"))
     if safetensors_exists:
         print(f"  SKIP Gemma safetensors weights (already present)")
     else:
@@ -106,7 +107,7 @@ def setup():
     ok = (GEMMA_DIR / "preprocessor_config.json").exists()
     print(f"  {'OK' if ok else 'MISSING'}: preprocessor_config.json")
     if not ok: all_ok = False
-    sf = any(GEMMA_DIR.glob("model*.safetensors"))
+    sf = any(GEMMA_DIR.rglob("model*.safetensors"))
     print(f"  {'OK' if sf else 'MISSING'}: model*.safetensors")
     if not sf: all_ok = False
 
