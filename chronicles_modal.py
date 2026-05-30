@@ -33,6 +33,7 @@ gpu_image = (
     .pip_install(
         "fastapi[standard]",
         "torch>=2.7.0",
+        "torchvision",
         "diffusers>=0.30",
         "transformers>=4.44",
         "accelerate>=0.30",
