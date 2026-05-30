@@ -53,6 +53,7 @@ gpu_image = (
 
 def _load_pipeline():
     from ltx_core.loader import LTXV_LORA_COMFY_RENAMING_MAP, LoraPathStrengthAndSDOps
+    from ltx_core.quantization.fp8_cast import build_policy as build_fp8_cast_policy
     from ltx_pipelines.ti2vid_two_stages import TI2VidTwoStagesPipeline
 
     for candidate in ["ltx-2.3-22b-distilled-1.1.safetensors",
@@ -78,6 +79,7 @@ def _load_pipeline():
         spatial_upsampler_path=str(upscaler),
         gemma_root=str(GEMMA_DIR),
         loras=[],
+        quantization=build_fp8_cast_policy(checkpoint),
     )
 
 
@@ -182,4 +184,6 @@ def _build_app():
 @app.function(gpu="H100", timeout=600, volumes={str(MODELS_DIR): volume}, image=gpu_image)
 @modal.asgi_app()
 def server():
+    import os
+    os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
     return _build_app()
