@@ -513,7 +513,30 @@ async def generate_film(request: Request, body: StoryGenerationRequest):
             yield f"event: error\ndata: {json.dumps({'phase': 'error', 'step': 'pipeline_failed', 'pct': 100, 'message': 'Film pipeline stopped before final story package was produced', 'data': {}, 'error': True})}\n\n"
             return
 
-        yield f"event: video\ndata: {json.dumps({'phase': 'video', 'step': 'crafting', 'pct': 87, 'message': 'Crafting video prompts...', 'data': {}, 'error': False})}\n\n"
+        yield f"event: video\ndata: {json.dumps({'phase': 'video', 'step': 'audio_prompts', 'pct': 85, 'message': 'Crafting audio prompts...', 'data': {}, 'error': False})}\n\n"
+
+        audio_prompts = {}
+        try:
+            sd_agent = SoundDesignerAgent()
+            sd_wo = WorkOrder(
+                agent_type="sound_designer",
+                input_data={
+                    "culture": story_request.culture.value,
+                    "timeline": story_request.timeline.value,
+                    "scenes": scene_list if scene_list else [],
+                    "characters": story_data.get("characters", []) if story_data else [],
+                },
+                story_hash=story_hash,
+                priority=2,
+            )
+            sd_result = await sd_agent.execute(sd_wo)
+            if sd_result.success:
+                audio_prompts = sd_result.output_data.get("audio_prompts", {})
+                yield f"event: video\ndata: {json.dumps({'phase': 'video', 'step': 'audio_prompts', 'pct': 87, 'message': f'Audio prompts ready for {len(audio_prompts)} scenes', 'data': {}, 'error': False})}\n\n"
+        except Exception as e:
+            logger.warning(f"SoundDesigner audio prompts failed: {e}")
+
+        yield f"event: video\ndata: {json.dumps({'phase': 'video', 'step': 'crafting', 'pct': 88, 'message': 'Crafting video prompts...', 'data': {}, 'error': False})}\n\n"
 
         video_result = None
         try:
@@ -547,6 +570,7 @@ async def generate_film(request: Request, body: StoryGenerationRequest):
                     "visual_bible": vb_data,
                     "character_bibles": char_bibles,
                     "reference_images": ref_images,
+                    "audio_prompts": audio_prompts,
                     "clip_duration": CONFIG.CLIP_DURATION_S,
                 },
                 story_hash=story_hash,

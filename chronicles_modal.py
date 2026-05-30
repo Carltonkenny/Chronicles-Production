@@ -135,7 +135,8 @@ def _build_app():
                 except Exception as e:
                     print(f"  [ref] failed: {e}")
 
-        num_frames = max(9, duration_s * 8 + 1)
+        num_frames = max(9, duration_s * 25 + 1)
+        num_frames = ((num_frames - 1) // 8) * 8 + 1
         frame_rate = 25.0
         tiling = TilingConfig.default()
 
@@ -181,7 +182,7 @@ def _build_app():
     return web_app
 
 
-@app.function(gpu="H100", timeout=600, volumes={str(MODELS_DIR): volume}, image=gpu_image)
+@app.function(gpu="H200", timeout=600, volumes={str(MODELS_DIR): volume}, image=gpu_image)
 @modal.asgi_app()
 def server():
     import os
