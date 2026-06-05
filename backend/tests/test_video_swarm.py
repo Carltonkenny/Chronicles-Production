@@ -155,6 +155,54 @@ class TestVideoPromptCrafter:
         assert "Bjorn" in data["character_anchors"][0]
         assert data["reference_image_url"] == "http://example.com/bjorn.png"
 
+    @pytest.mark.asyncio
+    async def test_prompt_crafter_uses_structured_refs_and_audio(self, monkeypatch):
+        async def mock_llm(*args, **kwargs):
+            return "A low-angle cinematic shot with strong character continuity and scene match."
+
+        monkeypatch.setattr("agents.video_prompt_crafter.call_llm", mock_llm)
+        from agents.video_prompt_crafter import VideoPromptCrafter
+
+        agent = VideoPromptCrafter()
+        wo = WorkOrder(
+            agent_type="video_prompt_crafter",
+            input_data={
+                "scene": {
+                    "id": "scene_2",
+                    "summary": "Bjorn faces the forge in silence",
+                    "location": "Mountain forge",
+                    "characters": ["Bjorn"],
+                    "emotional_beat": "resolve",
+                },
+                "visual_bible": {},
+                "character_bibles": {
+                    "Bjorn": {
+                        "appearance": "Steel-gray eyes, braided red beard",
+                        "signature_items": ["boar-head hammer"],
+                    }
+                },
+                "reference_images": {
+                    "characters": {"Bjorn": "http://example.com/bjorn.png"},
+                    "scenes": {
+                        "scene_2": [
+                            {"url": "http://example.com/scene-2-establishing.png", "variation": "establishing_shot"}
+                        ]
+                    },
+                },
+                "audio_prompts": {"scene_2": "Heavy forge ambience with distant iron strikes."},
+                "clip_duration": 8,
+            },
+            story_hash="test",
+            priority=2,
+        )
+        result = await agent.execute(wo)
+        assert result.success is True
+        data = result.output_data
+        assert data["audio_prompt"] == "Heavy forge ambience with distant iron strikes."
+        assert len(data["images"]) == 2
+        assert {img["source"] for img in data["images"]} == {"character", "scene"}
+        assert data["reference_image_url"] == "http://example.com/bjorn.png"
+
 
 class TestVideoQC:
     def test_qc_agent_type(self):

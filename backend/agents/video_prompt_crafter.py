@@ -32,8 +32,11 @@ class VideoPromptCrafter(BaseAgent):
                 if sigs:
                     char_bibles_text += f" | Signature items: {', '.join(sigs)}"
                 char_bibles_text += "\n"
-        if ref_images:
-            for name, url in ref_images.items():
+        character_ref_images = ref_images.get("characters", ref_images) if isinstance(ref_images, dict) else {}
+        scene_ref_images = ref_images.get("scenes", {}) if isinstance(ref_images, dict) else {}
+
+        if character_ref_images:
+            for name, url in character_ref_images.items():
                 ref_images_text += f"- {name}: {url}\n"
 
         color_palette = visual_bible.get("color_palette", [])
@@ -87,16 +90,33 @@ class VideoPromptCrafter(BaseAgent):
         chars = scene.get("characters", [])
         for char_name in chars:
             if isinstance(char_name, str):
-                url = ref_images.get(char_name)
+                url = character_ref_images.get(char_name)
                 if url:
                     image_list.append({
                         "url": url, "frame_idx": 0, "strength": 1.0,
-                        "character_name": char_name,
+                        "character_name": char_name, "source": "character",
                     })
                     if ref_image_url is None:
                         ref_image_url = url
 
         scene_id_str = str(scene_id)
+        for idx, scene_ref in enumerate(scene_ref_images.get(scene_id_str, [])):
+            if not isinstance(scene_ref, dict):
+                continue
+            url = scene_ref.get("url", "")
+            if not url:
+                continue
+            image_list.append({
+                "url": url,
+                "frame_idx": 0 if idx == 0 else 16,
+                "strength": 0.85 if idx == 0 else 0.65,
+                "scene_id": scene_id_str,
+                "variation": scene_ref.get("variation", "scene_keyframe"),
+                "source": "scene",
+            })
+            if ref_image_url is None:
+                ref_image_url = url
+
         audio_prompt = audio_prompts.get(scene_id_str, "")
 
         return WorkResult(

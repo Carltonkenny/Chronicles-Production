@@ -513,6 +513,12 @@ async def generate_film(request: Request, body: StoryGenerationRequest):
             yield f"event: error\ndata: {json.dumps({'phase': 'error', 'step': 'pipeline_failed', 'pct': 100, 'message': 'Film pipeline stopped before final story package was produced', 'data': {}, 'error': True})}\n\n"
             return
 
+        story_data = combined.get("story", {}) if combined else {}
+        story_text_content = story_data.get("story", "")
+        scenes_raw = combined.get("scenes", {}).get("scenes", []) if combined else []
+        vb_data = combined.get("visual_bible", {}) if combined else {}
+        scene_list = scenes_raw or (combined.get("supervisor", {}).get("scenes", []) if combined else [])
+
         yield f"event: video\ndata: {json.dumps({'phase': 'video', 'step': 'audio_prompts', 'pct': 85, 'message': 'Crafting audio prompts...', 'data': {}, 'error': False})}\n\n"
 
         audio_prompts = {}
@@ -540,21 +546,29 @@ async def generate_film(request: Request, body: StoryGenerationRequest):
 
         video_result = None
         try:
-            scene_list = combined.get("scenes", {}).get("scenes", []) if combined else []
-            if not scene_list:
-                scene_list = combined.get("supervisor", {}).get("scenes", [])
-            vb_data = combined.get("visual_bible", {}) if combined else {}
             char_bibles = {}
             if vb_data:
                 char_bibles = (
                     vb_data.get("director", {}).get("character_bibles", {})
                     or vb_data.get("character_bibles", {})
                 )
-            ref_images = {}
+            ref_images = {"characters": {}, "scenes": {}}
             if char_map:
                 for ch_name, portraits_list in char_map.items():
                     if portraits_list and len(portraits_list) > 0:
-                        ref_images[ch_name] = portraits_list[0].get("url", "")
+                        ref_images["characters"][ch_name] = portraits_list[0].get("url", "")
+            image_scenes = (combined.get("images", {}) or {}).get("scenes", []) if combined else []
+            for scene_img in image_scenes:
+                if not isinstance(scene_img, dict):
+                    continue
+                scene_id = str(scene_img.get("scene_id", "")).strip()
+                scene_url = scene_img.get("url", "")
+                if not scene_id or not scene_url:
+                    continue
+                ref_images["scenes"].setdefault(scene_id, []).append({
+                    "url": scene_url,
+                    "variation": scene_img.get("variation", "scene_keyframe"),
+                })
 
             scenes_for_video = []
             for i in range(CONFIG.VIDEO_CLIP_COUNT):
@@ -587,11 +601,6 @@ async def generate_film(request: Request, body: StoryGenerationRequest):
 
         audio_url = None
         narration_path = ""
-
-        story_data = combined.get("story", {}) if combined else {}
-        story_text_content = story_data.get("story", "")
-        scenes_raw = combined.get("scenes", {}).get("scenes", []) if combined else []
-        vb_data = combined.get("visual_bible", {}) if combined else {}
 
         try:
             audio_bytes = await edge_tts_service.narrate_story(

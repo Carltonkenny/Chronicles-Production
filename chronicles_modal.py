@@ -26,6 +26,7 @@ GEMMA_DIR = MODELS_DIR / "gemma-3-12b-it-qat-q4_0-unquantized"
 
 app = modal.App("chronicles-gpu")
 volume = modal.Volume.from_name("ltx2-models", create_if_missing=True)
+_PIPELINE = None
 
 gpu_image = (
     modal.Image.debian_slim(python_version="3.12")
@@ -83,6 +84,13 @@ def _load_pipeline():
     )
 
 
+def _get_pipeline():
+    global _PIPELINE
+    if _PIPELINE is None:
+        _PIPELINE = _load_pipeline()
+    return _PIPELINE
+
+
 def _build_app():
     web_app = fastapi.FastAPI(title="Chronicles GPU — LTX-2.3")
 
@@ -106,6 +114,7 @@ def _build_app():
 
         prompt = body.get("prompt", "")
         images_data = body.get("images", [])
+        audio_prompt = body.get("audio_prompt", "")
         seed = body.get("seed", 0)
         duration_s = body.get("duration_s", 8)
 
@@ -114,7 +123,7 @@ def _build_app():
 
         t_load = _time.time()
         try:
-            pipeline = _load_pipeline()
+            pipeline = _get_pipeline()
         except RuntimeError as e:
             raise HTTPException(status_code=503, detail=str(e))
         print(f"[infer] Pipeline loaded in {_time.time() - t_load:.1f}s")
@@ -147,8 +156,11 @@ def _build_app():
 
         print(f"[infer] {num_frames}frames/{duration_s}s, {len(images)}refs, seed={seed}")
         t_infer = _time.time()
+        combined_prompt = prompt
+        if audio_prompt:
+            combined_prompt = f"{prompt}\n\n[AUDIO: {audio_prompt}]"
         video, audio = pipeline(
-            prompt=prompt, negative_prompt="worst quality, low quality, blurry, distorted, deformed",
+            prompt=combined_prompt, negative_prompt="worst quality, low quality, blurry, distorted, deformed",
             seed=seed, height=512, width=768, num_frames=num_frames, frame_rate=frame_rate,
             num_inference_steps=40, video_guider_params=video_guider, audio_guider_params=audio_guider,
             images=images, tiling_config=tiling,
@@ -168,7 +180,7 @@ def _build_app():
         print(f"[infer] OK: {len(mp4_bytes)/1e6:.1f}MB in {elapsed:.1f}s")
         return Response(content=mp4_bytes, media_type="video/mp4",
                         headers={"X-Generation-Time-S": f"{elapsed:.1f}", "X-Seed": str(seed),
-                                 "X-Frames": str(num_frames), "X-Backend": "ltx-2.3-modal-h100"})
+                                 "X-Frames": str(num_frames), "X-Backend": "ltx-2.3-modal-h200"})
 
     @web_app.get("/health")
     async def health():
