@@ -149,8 +149,8 @@ def _build_app():
         frame_rate = 25.0
         tiling = TilingConfig.default()
 
-        video_guider = MultiModalGuiderParams(cfg_scale=3.0, stg_scale=1.0, rescale_scale=0.7, modality_scale=3.0, skip_step=0, stg_blocks=[29])
-        audio_guider = MultiModalGuiderParams(cfg_scale=7.0, stg_scale=1.0, rescale_scale=0.7, modality_scale=3.0, skip_step=0, stg_blocks=[29])
+        video_guider = MultiModalGuiderParams(cfg_scale=1.0, stg_scale=0.0, rescale_scale=0.0, modality_scale=3.0, skip_step=0, stg_blocks=[])
+        audio_guider = MultiModalGuiderParams(cfg_scale=7.0, stg_scale=0.0, rescale_scale=0.0, modality_scale=3.0, skip_step=0, stg_blocks=[])
 
         images = [ImageConditioningInput(r["path"], r["frame_idx"], r["strength"], 33) for r in ref_paths]
 
@@ -162,7 +162,7 @@ def _build_app():
         video, audio = pipeline(
             prompt=combined_prompt, negative_prompt="worst quality, low quality, blurry, distorted, deformed",
             seed=seed, height=512, width=768, num_frames=num_frames, frame_rate=frame_rate,
-            num_inference_steps=40, video_guider_params=video_guider, audio_guider_params=audio_guider,
+            num_inference_steps=20, video_guider_params=video_guider, audio_guider_params=audio_guider,
             images=images, tiling_config=tiling,
         )
         print(f"[infer] Denoised in {_time.time() - t_infer:.1f}s")
