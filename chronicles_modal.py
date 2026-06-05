@@ -55,7 +55,7 @@ gpu_image = (
 def _load_pipeline():
     from ltx_core.loader import LTXV_LORA_COMFY_RENAMING_MAP, LoraPathStrengthAndSDOps
     from ltx_core.quantization.fp8_cast import build_policy as build_fp8_cast_policy
-    from ltx_pipelines.ti2vid_two_stages import TI2VidTwoStagesPipeline
+    from ltx_pipelines.distilled import DistilledPipeline
 
     for candidate in ["ltx-2.3-22b-distilled-1.1.safetensors",
                       "ltx-2.3-22b-distilled.safetensors",
@@ -74,7 +74,7 @@ def _load_pipeline():
         if not p.exists():
             raise RuntimeError(f"{label} missing. Run: modal run chronicles_setup.py::setup")
 
-    return TI2VidTwoStagesPipeline(
+    return DistilledPipeline(
         checkpoint_path=checkpoint,
         distilled_lora=[LoraPathStrengthAndSDOps(str(lora), 0.6, LTXV_LORA_COMFY_RENAMING_MAP)],
         spatial_upsampler_path=str(upscaler),
@@ -101,7 +101,6 @@ def _build_app():
         import httpx
         from pathlib import Path
         from fastapi import Response, HTTPException
-        from ltx_core.components.guiders import MultiModalGuiderParams
         from ltx_core.model.video_vae import TilingConfig, get_video_chunks_number
         from ltx_pipelines.utils.args import ImageConditioningInput
         from ltx_pipelines.utils.media_io import encode_video
@@ -149,9 +148,6 @@ def _build_app():
         frame_rate = 25.0
         tiling = TilingConfig.default()
 
-        video_guider = MultiModalGuiderParams(cfg_scale=1.0, stg_scale=0.0, rescale_scale=0.0, modality_scale=3.0, skip_step=0, stg_blocks=[])
-        audio_guider = MultiModalGuiderParams(cfg_scale=7.0, stg_scale=0.0, rescale_scale=0.0, modality_scale=3.0, skip_step=0, stg_blocks=[])
-
         images = [ImageConditioningInput(r["path"], r["frame_idx"], r["strength"], 33) for r in ref_paths]
 
         print(f"[infer] {num_frames}frames/{duration_s}s, {len(images)}refs, seed={seed}")
@@ -160,9 +156,8 @@ def _build_app():
         if audio_prompt:
             combined_prompt = f"{prompt}\n\n[AUDIO: {audio_prompt}]"
         video, audio = pipeline(
-            prompt=combined_prompt, negative_prompt="worst quality, low quality, blurry, distorted, deformed",
+            prompt=combined_prompt,
             seed=seed, height=512, width=768, num_frames=num_frames, frame_rate=frame_rate,
-            num_inference_steps=20, video_guider_params=video_guider, audio_guider_params=audio_guider,
             images=images, tiling_config=tiling,
         )
         print(f"[infer] Denoised in {_time.time() - t_infer:.1f}s")
