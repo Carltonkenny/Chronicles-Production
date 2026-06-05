@@ -7,7 +7,7 @@ from config import CONFIG
 from schemas import WorkOrder, WorkResult
 from agents.base_agent import BaseAgent
 from agents.video_prompt_crafter import VideoPromptCrafter
-from video.video_api import VideoProvider, CloudGPUProvider, KenBurnsDegradation, VideoClipResult
+from video.video_api import VideoProvider, CloudGPUProvider, KenBurnsDegradation, VideoClipResult, ImageConditioningInput
 from logger_config import setup_logger
 
 logger = setup_logger("VideoLead")
@@ -36,6 +36,7 @@ class VideoLead(BaseAgent):
         visual_bible = data.get("visual_bible", {})
         character_bibles = data.get("character_bibles", {})
         reference_images = data.get("reference_images", {})
+        audio_prompts = data.get("audio_prompts", {})
         clip_duration = data.get("clip_duration", CONFIG.CLIP_DURATION_S)
 
         start = time.time()
@@ -51,6 +52,7 @@ class VideoLead(BaseAgent):
                     "visual_bible": visual_bible,
                     "character_bibles": character_bibles,
                     "reference_images": reference_images,
+                    "audio_prompts": audio_prompts,
                     "clip_duration": clip_duration,
                 },
                 story_hash=story_hash,
@@ -89,9 +91,13 @@ class VideoLead(BaseAgent):
         clip_results = []
         for p in prompts:
             clip_path = ""
+            image_refs = p.get("images", [])
+            images = [ImageConditioningInput(url=img.get("url", ""), frame_idx=img.get("frame_idx", 0), strength=img.get("strength", 1.0))
+                      for img in image_refs] if image_refs else None
             result = await self._provider.generate(
                 prompt=p.get("video_prompt", ""),
-                reference_image_url=p.get("reference_image_url"),
+                images=images,
+                audio_prompt=p.get("audio_prompt"),
                 seed=p.get("seed", 0),
                 duration_s=p.get("expected_duration_s", clip_duration),
             )
@@ -114,9 +120,12 @@ class VideoLead(BaseAgent):
             if not result.success and self._try_fallback():
                 logger.info(f"CloudGPU failed, degrading to Ken Burns")
                 kb = KenBurnsDegradation()
+                image_refs = p.get("images", [])
+                images_fb = [ImageConditioningInput(url=img.get("url", ""), frame_idx=img.get("frame_idx", 0), strength=img.get("strength", 1.0))
+                             for img in image_refs] if image_refs else None
                 result2 = await kb.generate(
                     prompt=p.get("video_prompt", ""),
-                    reference_image_url=p.get("reference_image_url"),
+                    images=images_fb,
                 )
                 clip_results[-1]["clip_result"] = result2
                 clip_results[-1]["clip_path"] = ""
